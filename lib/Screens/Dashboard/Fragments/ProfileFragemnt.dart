@@ -13,7 +13,7 @@ import 'package:ngo_app/Elements/ProfileOption.dart';
 import 'package:ngo_app/Models/ProfileResponse.dart';
 import 'package:ngo_app/Models/UserDetails.dart';
 import 'package:ngo_app/Screens/ProfileRelated/EditProfileScreen.dart';
-import 'package:ngo_app/Screens/ProfileRelated/Fragments/MyDocumentsScreen.dart';
+import 'package:ngo_app/Screens/ProfileRelated/MyDocumentsScreen.dart';
 import 'package:ngo_app/Screens/ProfileRelated/MyCommentsScreen.dart';
 import 'package:ngo_app/Screens/ProfileRelated/MyDonationsScreen.dart';
 import 'package:ngo_app/Screens/ProfileRelated/MyFundraisersScreen.dart';
@@ -35,8 +35,6 @@ class _ProfileFragmentState extends State<ProfileFragment> {
     super.initState();
     profileBloc = new ProfileBloc();
     profileBloc.getProfileInfo();
-
-
   }
 
   @override

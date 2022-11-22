@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ngo_app/Constants/CommonMethods.dart';
-import 'package:ngo_app/Constants/CommonWidgets.dart';
 import 'package:ngo_app/Constants/CustomColorCodes.dart';
 import 'package:ngo_app/Constants/EnumValues.dart';
-import 'package:ngo_app/Screens/Dashboard/ViewAllScreen.dart';
 import 'package:ngo_app/Screens/Lend/PaymentInputAmountScreen.dart';
-import 'package:ngo_app/Screens/MakeDonation/DonationAmountScreen.dart';
 
 class DonateNowCardWidget extends StatelessWidget {
   @override
@@ -86,7 +82,7 @@ class DonateNowCardWidget extends StatelessWidget {
               }*/
             },
             child: Text(
-              "Donate Now",
+              "Donate To NGO",
               textAlign: TextAlign.center,
               style: TextStyle(
                   color: Color(colorCodeWhite),

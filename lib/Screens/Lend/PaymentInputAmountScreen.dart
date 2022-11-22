@@ -7,6 +7,7 @@ import 'package:ngo_app/Constants/CommonMethods.dart';
 import 'package:ngo_app/Constants/CommonWidgets.dart';
 import 'package:ngo_app/Constants/CustomColorCodes.dart';
 import 'package:ngo_app/Constants/EnumValues.dart';
+import 'package:ngo_app/Elements/CommonAppBar.dart';
 import 'package:ngo_app/Elements/CommonButton.dart';
 import 'package:ngo_app/Screens/MakeDonation/AddDonorInfoScreen.dart';
 import 'PaymentScreen.dart';
@@ -36,17 +37,7 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
   _PaymentInputAmountScreenState(this._amount);
 
   String _amount;
-  List<String> amountsInfo = [
-    "1000",
-    "2000",
-    "3000",
-    "4000",
-    "5000",
-    "6000",
-    "7000",
-    "8000",
-    "9000"
-  ];
+
 
   TextEditingController _textEditingController = TextEditingController();
   FocusNode _focusNode = FocusNode();
@@ -77,56 +68,13 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
         child: Scaffold(
       backgroundColor: Color(colorCodeGreyPageBg),
       resizeToAvoidBottomInset: true,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(65.0),
-        child: Container(
-          child: Column(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Expanded(
-                      child: Text(
-                        "Donate",
-                        textAlign: TextAlign.left,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            color: Colors.white,
-                            height: 1.5,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 17.0),
-                      ),
-                      flex: 1,
-                    ),
-                    IconButton(
-                      iconSize: 26,
-                      icon: Icon(
-                        Icons.close,
-                        color: Colors.grey,
-                      ),
-                      onPressed: () {
-                        Get.back();
-                        // CommonWidgets().showDonationAlertDialog();
-                      },
-                    ),
-                  ],
-                ),
-                flex: 1,
-              ),
-              Container(
-                width: double.infinity,
-                height: 0.5,
-                color: Colors.white,
-                margin: EdgeInsets.fromLTRB(15, 2, 15, 4),
-              )
-            ],
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(60.0), // here the desired height
+            child: CommonAppBar(
+              text: "Donate",
+              buttonHandler: _backPressFunction,
+            ),
           ),
-        ),
-      ),
       body: Container(
         color: Colors.transparent,
         height: double.infinity,
@@ -163,7 +111,6 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
                     visible: widget.isCampaignRelated &&
                         CommonMethods().isAuthTokenExist(),
                   ),
-                  _buildAmountSuggestions(),
                   SizedBox(height: MediaQuery.of(context).size.height * .04),
                 ],
               ),
@@ -223,6 +170,11 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
     return Future.value(false);
   }
 
+  void _backPressFunction() {
+    print("_sendOtpFunction clicked");
+    Get.back();
+  }
+
   _buildAmountTypingSection() {
     return GestureDetector(
       child: Container(
@@ -274,49 +226,8 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
     );
   }
 
-  _buildAmountSuggestions() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 8),
-      child: Wrap(
-          direction: Axis.horizontal,
-          spacing: 30.0,
-          runAlignment: WrapAlignment.spaceAround,
-          runSpacing: 30.0,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [for (var data in amountsInfo) _buildAmountItem(data)]),
-    );
-  }
 
-  _buildAmountItem(String data) {
-    return Material(
-        color: Color(colorCoderRedBg),
-        borderRadius: BorderRadius.circular(10.0),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(10.0),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(width: 0.3, color: Color(colorCodeWhite)),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-            child: Text(
-              "₹ $data",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Color(colorCodeWhite),
-              ),
-            ),
-          ),
-          onTap: () {
-            setState(() {
-              _textEditingController.text = data;
-              _textEditingController.selection =
-                  TextSelection.fromPosition(TextPosition(offset: data.length));
-            });
-          },
-        ));
-  }
+
 
   _buildSubscribeSection() {
     return Column(

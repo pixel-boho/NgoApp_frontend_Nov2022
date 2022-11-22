@@ -9,6 +9,7 @@ import 'package:ngo_app/CustomLibraries/CustomLoader/RoundedLoader.dart';
 import 'package:ngo_app/Elements/CommonApiErrorWidget.dart';
 import 'package:ngo_app/Elements/CommonApiLoader.dart';
 import 'package:ngo_app/Elements/CommonApiResultsEmptyWidget.dart';
+import 'package:ngo_app/Elements/CommonAppBar.dart';
 import 'package:ngo_app/Elements/CommonButton.dart';
 import 'package:ngo_app/Elements/PainationLoader.dart';
 import 'package:ngo_app/Interfaces/LoadMoreListener.dart';
@@ -80,57 +81,10 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen>
           backgroundColor: Color(colorCodeGreyPageBg),
           resizeToAvoidBottomInset: false,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(65.0), // here the desired height
-            child: Container(
-              color: Colors.transparent,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Expanded(
-                          child: Text(
-                            widget.isFromCategories
-                                ? "All Categories"
-                                : "Start a Fundraiser",
-                            textAlign: TextAlign.left,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                color: Colors.white,
-                                height: 1.5,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 17.0),
-                          ),
-                          flex: 1,
-                        ),
-                        IconButton(
-                          iconSize: 26,
-                          icon: Icon(
-                            Icons.close,
-                            color: Colors.grey,
-                          ),
-                          onPressed: () {
-                            Get.back();
-                          },
-                        ),
-                      ],
-                    ),
-                    flex: 1,
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: 0.5,
-                    color: Colors.white,
-                    margin: EdgeInsets.fromLTRB(15, 2, 15, 4),
-                  )
-                ],
-              ),
+            preferredSize: Size.fromHeight(60.0), // here the desired height
+            child: CommonAppBar(
+              text: "Start a Fundraiser",
+              buttonHandler: _backPressFunction,
             ),
           ),
           body: RefreshIndicator(
@@ -192,6 +146,11 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen>
 
   void _errorWidgetFunction() {
     if (_campaignTypesBloc != null) _campaignTypesBloc.getCampaignTypes(false);
+  }
+
+  void _backPressFunction() {
+    print("_sendOtpFunction clicked");
+    Get.back();
   }
 
   void _nextBtnClickFunction() {
