@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:ngo_app/Blocs/panbloc.dart';
 import 'package:ngo_app/Constants/CommonWidgets.dart';
 import 'package:ngo_app/Constants/CustomColorCodes.dart';
 import 'package:ngo_app/CustomLibraries/CustomLoader/RoundedLoader.dart';
@@ -16,18 +17,20 @@ import 'package:ngo_app/Elements/PainationLoader.dart';
 import 'package:ngo_app/Interfaces/LoadMoreListener.dart';
 import 'package:ngo_app/Interfaces/RefreshPageListener.dart';
 import 'package:ngo_app/Models/CommonResponse.dart';
-
+import 'package:ngo_app/Models/PancardUploadResponse.dart';
+import 'package:ngo_app/Models/UserPancardResponse.dart';
 import 'package:ngo_app/Screens/Dashboard/Home.dart';
 import 'package:ngo_app/Screens/Dashboard/ViewAllScreen.dart';
 import 'package:ngo_app/Screens/DetailPages/ItemDetailScreen.dart';
+import 'package:ngo_app/Screens/ProfileRelated/photoview.dart';
 import 'package:ngo_app/ServiceManager/ApiResponse.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
 
 class MyDocumentsScreen extends StatefulWidget {
   @override
-  MyDocumentsScreen({Key key,this.userid,this.url}) : super(key: key);
- final userid;
- final url ;
+  MyDocumentsScreen({Key key, this.userid, this.url}) : super(key: key);
+  final userid;
+  final url;
   _MyDocumentsScreenState createState() => _MyDocumentsScreenState();
 }
 
@@ -39,6 +42,7 @@ class _MyDocumentsScreenState extends State<MyDocumentsScreen>
         ImagePickerListener {
   bool isLoadingMore = false;
   TextEditingController _documentName = new TextEditingController();
+  PanBloc _panbloc;
   String _imageUrl = "";
   ImagePickerHandler imagePicker;
   AnimationController _controller;
@@ -50,6 +54,8 @@ class _MyDocumentsScreenState extends State<MyDocumentsScreen>
   void initState() {
     super.initState();
     print("userid->>${widget.url}");
+    _panbloc = PanBloc();
+    _panbloc.getUserRecords(widget.userid.toString());
     _controller = new AnimationController(
       duration: const Duration(milliseconds: 500),
       vsync: this,
@@ -67,7 +73,7 @@ class _MyDocumentsScreenState extends State<MyDocumentsScreen>
   }
 
   @override
-  String Response ="";
+  String Response = "";
   Widget build(BuildContext context) {
     return SafeArea(
       child: WillPopScope(
@@ -113,9 +119,8 @@ class _MyDocumentsScreenState extends State<MyDocumentsScreen>
                     SizedBox(
                       height: 10,
                     ),
-
                     StreamBuilder<ApiResponse<dynamic>>(
-
+                        stream: _panbloc.userRecordStream,
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             switch (snapshot.data.status) {
@@ -125,14 +130,16 @@ class _MyDocumentsScreenState extends State<MyDocumentsScreen>
                                   child: CommonApiLoader(),
                                 );
                               case Status.COMPLETED:
-
+                                UserPancardResponse resp = snapshot.data.data;
+                                print("userpancardresponse->${resp}");
                                 return ListView.builder(
                                     physics: NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
-                                    itemCount: 2,
+                                    itemCount:
+                                        resp.userDetails.status.bitLength,
                                     itemBuilder:
                                         (BuildContext context, int index) {
-                                      return Text("jnjl");
+                                      return _buildUserRecords(resp);
                                     });
                               case Status.ERROR:
                                 return Container(
@@ -161,50 +168,43 @@ class _MyDocumentsScreenState extends State<MyDocumentsScreen>
     );
   }
 
-  // Widget _buildUserRecords(UserPancardResponse userdetails) {
-  //   print("=======>${userdetails.baseurl}");
-  //
-  //   return Card(
-  //     color: Colors.grey[200],
-  //     margin: EdgeInsets.only(top: 10),
-  //     child: Padding(
-  //       padding: const EdgeInsets.all(8.0),
-  //       child: Column(
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: [
-  //           SizedBox(
-  //             height: 10,
-  //           ),
-  //           InkWell(
-  //             onTap: () {
-  //               Get.to(() => PhotoViewer(
-  //                 image: userdetails.baseurl+userdetails.userDetails.pancard_image,
-  //                 networkImage: true,
-  //               ));
-  //             },
-  //             child: ClipRRect(
-  //               borderRadius: BorderRadius.circular(5),
-  //               child: CachedNetworkImage(
-  //                 fit: BoxFit.fitWidth,
-  //                 imageUrl:userdetails.baseurl+userdetails.userDetails.pancard_image,
-  //                 placeholder: (context, url) => Center(
-  //                   child: CircularProgressIndicator(),
-  //                 ),
-  //                 errorWidget: (context, url, error) => Container(
-  //                     margin: EdgeInsets.all(5),
-  //                     child: Image(
-  //                       image: AssetImage('assets/images/no_data.png'),
-  //                     )),
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-
+  Widget _buildUserRecords(UserPancardResponse userdetails) {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.4,
+        child: Card(
+          color: Colors.grey[200],
+          margin: EdgeInsets.only(top: 10),
+          child: InkWell(
+            onTap: () {
+              Get.to(() => PhotoViewer(
+                    image: userdetails.baseurl +
+                        userdetails.userDetails.pancard_image,
+                    networkImage: true,
+                  ));
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: CachedNetworkImage(
+                fit: BoxFit.fitWidth,
+                imageUrl:
+                    userdetails.baseurl + userdetails.userDetails.pancard_image,
+                placeholder: (context, url) => Center(
+                  child: CircularProgressIndicator(),
+                ),
+                errorWidget: (context, url, error) => Container(
+                    margin: EdgeInsets.all(5),
+                    child: Image(
+                      image: AssetImage('assets/images/no_data.png'),
+                    )),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   void _backPressFunction() {
     print("_sendOtpFunction clicked");
@@ -293,8 +293,8 @@ class _MyDocumentsScreenState extends State<MyDocumentsScreen>
             ),
             onPressed: () {
               Get.offAll(() => DashboardScreen(
-                fragmentToShow: 1,
-              ));
+                    fragmentToShow: 1,
+                  ));
             },
             child: Text(
               "Browse fundraisers",
@@ -364,8 +364,9 @@ class _MyDocumentsScreenState extends State<MyDocumentsScreen>
               buttonHandler: () async {
                 print("image->${_image}");
                 if (_image != null) {
-                  // await _updateDocument(_image,);
-
+                  return _updateDocument(
+                    _image,
+                  );
                 }
                 return Fluttertoast.showToast(msg: "Select Document Image");
               },
@@ -380,25 +381,22 @@ class _MyDocumentsScreenState extends State<MyDocumentsScreen>
     );
   }
 
-  // Future _updateDocument(File reportFile) async {
-  //   try {
-  //     PancardResponse response = await _panbloc.uploadUserRecords(reportFile);
-  //     Get.back();
-  //     print("response==>${response}");
-  // Response =response.baseUrl;
-  //     print("response==>${Response}");
-  //     print(response.baseUrl);
-  //     if (response.success) {
-  //       Fluttertoast.showToast(msg: "${response.message}");
-  //       await _panbloc.uploadUserRecords(reportFile);
-  //     } else {
-  //       Fluttertoast.showToast(msg: "${response.message}");
-  //     }
-  //   } catch (e, s) {
-  //     Completer().completeError(e, s);
-  //     Fluttertoast.showToast(msg: "Something went wrong. Please try again");
-  //   }
-  // }
+  Future _updateDocument(File reportFile) async {
+    try {
+      PancardResponse response = await _panbloc.uploadUserRecords(reportFile);
+      Get.back();
+      Response = response.baseUrl;
+      if (response.success) {
+        Fluttertoast.showToast(msg: response.message);
+        await _panbloc.uploadUserRecords(reportFile);
+      } else {
+        Fluttertoast.showToast(msg: response.message);
+      }
+    } catch (e, s) {
+      Completer().completeError(e, s);
+      Fluttertoast.showToast(msg: "Something went wrong. Please try again");
+    }
+  }
 
   _buildImageSection() {
     return Container(
@@ -455,91 +453,137 @@ class _MyDocumentsScreenState extends State<MyDocumentsScreen>
       return Center(
         child: _image == null
             ? Container(
-          color: Colors.black12,
-          child: CachedNetworkImage(
-            width: double.infinity,
-            height: double.infinity,
-            fit: BoxFit.cover,
-            imageUrl: _imageUrl,
-            placeholder: (context, url) => Center(
-              child: RoundedLoader(),
-            ),
-            errorWidget: (context, url, error) => Container(
-              child: Image.asset(
-                ('assets/images/no_image.png'),
-                fit: BoxFit.fill,
-              ),
-            ),
-          ),
-          padding: EdgeInsets.all(0),
-        )
+                color: Colors.black12,
+                child: CachedNetworkImage(
+                  width: double.infinity,
+                  height: double.infinity,
+                  fit: BoxFit.cover,
+                  imageUrl: _imageUrl,
+                  placeholder: (context, url) => Center(
+                    child: RoundedLoader(),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    child: Image.asset(
+                      ('assets/images/no_image.png'),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+                padding: EdgeInsets.all(0),
+              )
             : Container(
-          height: 180.0,
-          width: double.infinity,
-          child: Image.file(_image, fit: BoxFit.fill, errorBuilder:
-              (BuildContext context, Object exception,
-              StackTrace stackTrace) {
-            return Container(
-              child: Image.asset(
-                ('assets/images/no_image.png'),
-                fit: BoxFit.fill,
+                height: 180.0,
+                width: double.infinity,
+                child: Image.file(_image, fit: BoxFit.fill, errorBuilder:
+                    (BuildContext context, Object exception,
+                        StackTrace stackTrace) {
+                  return Container(
+                    child: Image.asset(
+                      ('assets/images/no_image.png'),
+                      fit: BoxFit.fill,
+                    ),
+                  );
+                }),
+                decoration: BoxDecoration(
+                  color: Colors.cyan[100],
+                  borderRadius:
+                      new BorderRadius.all(const Radius.circular(80.0)),
+                  image: new DecorationImage(
+                      image: new AssetImage('assets/images/no_image.png'),
+                      fit: BoxFit.cover),
+                ),
               ),
-            );
-          }),
-          decoration: BoxDecoration(
-            color: Colors.cyan[100],
-            borderRadius:
-            new BorderRadius.all(const Radius.circular(80.0)),
-            image: new DecorationImage(
-                image: new AssetImage('assets/images/no_image.png'),
-                fit: BoxFit.cover),
-          ),
-        ),
       );
     } else {
       return Center(
         child: _image == null
             ? Container(
-          color: Colors.black12,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Image(
-                  image: AssetImage('assets/images/no_image.png'),
-                  height: double.infinity,
-                  width: double.infinity,
+                color: Colors.black12,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Image(
+                        image: AssetImage('assets/images/no_image.png'),
+                        height: double.infinity,
+                        width: double.infinity,
+                      ),
+                      flex: 1,
+                    ),
+                  ],
                 ),
-                flex: 1,
-              ),
-            ],
-          ),
-          padding: EdgeInsets.all(5),
-        )
+                padding: EdgeInsets.all(5),
+              )
             : Container(
-          height: 190.0,
-          width: double.infinity,
-          child: Image.file(_image, fit: BoxFit.fill, errorBuilder:
-              (BuildContext context, Object exception,
-              StackTrace stackTrace) {
-            return Container(
-              child: Image.asset(
-                ('assets/images/no_image.png'),
-                fit: BoxFit.fill,
+                height: 190.0,
+                width: double.infinity,
+                child: Image.file(_image, fit: BoxFit.fill, errorBuilder:
+                    (BuildContext context, Object exception,
+                        StackTrace stackTrace) {
+                  return Container(
+                    child: Image.asset(
+                      ('assets/images/no_image.png'),
+                      fit: BoxFit.fill,
+                    ),
+                  );
+                }),
+                decoration: BoxDecoration(
+                  color: Colors.cyan[100],
+                  borderRadius:
+                      new BorderRadius.all(const Radius.circular(80.0)),
+                  image: new DecorationImage(
+                      image: new AssetImage('assets/images/no_image.png'),
+                      fit: BoxFit.cover),
+                ),
               ),
-            );
-          }),
-          decoration: BoxDecoration(
-            color: Colors.cyan[100],
-            borderRadius:
-            new BorderRadius.all(const Radius.circular(80.0)),
-            image: new DecorationImage(
-                image: new AssetImage('assets/images/no_image.png'),
-                fit: BoxFit.cover),
-          ),
-        ),
       );
     }
   }
+  // _showDialog(BuildContext context,String text) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         shape: RoundedRectangleBorder(
+  //             borderRadius: BorderRadius.all(Radius.circular(14.0))),
+  //         backgroundColor: Colors.white,
+  //         insetPadding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 60.0,),
+  //         elevation: 0.0,
+  //         title: Column(
+  //           children: [
+  //             Positioned(
+  //               left: 10,
+  //               right: 20,
+  //               child: CircleAvatar(
+  //                 backgroundColor: Colors.transparent,
+  //                 radius:70,
+  //                 child: ClipRRect(
+  //                   borderRadius: BorderRadius.all(Radius.circular(10)),
+  //                   child: Image(
+  //                     //  color: Colors.green[900],
+  //
+  //                     image: AssetImage('assets/images/icons8-ok.gif'),
+  //                     height: 50,
+  //                     width: 50,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //             Text(text,style: TextStyle(color: Colors.red[900]),),
+  //           ],
+  //         ),
+  //         // content: const Text('this is a demo alert diolog'),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: const Text('OK',style: TextStyle(color: Colors.green),),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 }

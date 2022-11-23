@@ -90,12 +90,12 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
     if (widget.fromPage != null) {
       if (widget.fromPage == FromPage.EditFundraiserPage) {
         Get.offAll(() => DashboardScreen(
-              fragmentToShow: 3,
-            ));
+          fragmentToShow: 3,
+        ));
       } else if (widget.fromPage == FromPage.FromPushNotification) {
         Get.offAll(() => DashboardScreen(
-              fragmentToShow: 0,
-            ));
+          fragmentToShow: 0,
+        ));
       } else {
         Get.back();
       }
@@ -253,7 +253,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
                   child: CachedNetworkImage(
                     fit: BoxFit.fill,
                     imageUrl:
-                        getImage(data.baseUrl, data.fundraiserDetails.imageUrl),
+                    getImage(data.baseUrl, data.fundraiserDetails.imageUrl),
                     placeholder: (context, url) => Center(
                       child: RoundedLoader(),
                     ),
@@ -388,7 +388,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
               width: double.infinity,
               margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: CommonButton(
-                  buttonText: "Donate Now",
+                  buttonText: "Donate To NGO",
                   bgColorReceived: Color(colorCoderRedBg),
                   borderColorReceived: Color(colorCoderRedBg),
                   textColorReceived: Color(colorCodeWhite),
@@ -396,7 +396,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
                     if (data.fundraiserDetails.isAmountCollected == 1) {
                       Fluttertoast.showToast(
                           msg:
-                              "Successfully collected the required amount, thank you");
+                          "Successfully collected the required amount, thank you");
                     } else {
                       if (CommonMethods().isAuthTokenExist()) {
                         Get.to(() => PaymentInputAmountScreen(
@@ -405,9 +405,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
                             amount: data.fundraiserDetails.fundRequired -
                                 data.fundraiserDetails.fundRaised,
                             isCampaignRelated:
-                                data.fundraiserDetails.isCampaign == 1
-                                    ? true
-                                    : false));
+                            data.fundraiserDetails.isCampaign == 1
+                                ? true
+                                : false));
                       } else {
                         /*CommonWidgets().showCommonDialog(
                             "You need to login before use this feature!!",
@@ -429,7 +429,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
                   }),
             ),
             visible: !CommonMethods()
-                    .checkIsOwner(data.fundraiserDetails?.createdBy) &&
+                .checkIsOwner(data.fundraiserDetails?.createdBy) &&
                 data.fundraiserDetails?.isApproved == 1 &&
                 data.fundraiserDetails?.isCancelled == 0,
           ),
@@ -483,7 +483,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
               ],
             ),
             visible: CommonMethods()
-                    .checkIsOwner(data.fundraiserDetails?.createdBy) &&
+                .checkIsOwner(data.fundraiserDetails?.createdBy) &&
                 data.fundraiserDetails?.isApproved == 1,
           ),
           Visibility(
@@ -498,7 +498,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
                   textColorReceived: Color(colorCodeWhite),
                   buttonHandler: () async {
                     final isCancelOptionAdded = await Get.to(
-                        () => CancelRequestScreen(widget.fundraiserIdReceived),
+                            () => CancelRequestScreen(widget.fundraiserIdReceived),
                         opaque: false,
                         fullscreenDialog: true);
                     print("*****");
@@ -511,7 +511,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
                   }),
             ),
             visible: CommonMethods()
-                    .checkIsOwner(data.fundraiserDetails?.createdBy) &&
+                .checkIsOwner(data.fundraiserDetails?.createdBy) &&
                 data.fundraiserDetails?.isApproved == 1 &&
                 data.fundraiserDetails?.isCancelled == 0,
           ),
@@ -722,7 +722,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
             padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
             alignment: FractionalOffset.centerLeft,
             child: Text(
-              "A/c No.  :  ${data.fundraiserDetails.virtualAccountNumber}",
+              "A/c No.  :  ${data.fundraiserDetails.beneficiaryAccountNumber}",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -735,7 +735,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
             padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
             alignment: FractionalOffset.centerLeft,
             child: Text(
-              "A/c Name  :  ${data.fundraiserDetails.virtualAccountName}",
+              "A/c Name  :  ${data.fundraiserDetails.beneficiaryAccountName}",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -761,7 +761,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
             padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
             alignment: FractionalOffset.centerLeft,
             child: Text(
-              "IFSC      :  ${data.fundraiserDetails.virtualAccountIfsc}",
+              "IFSC      :  ${data.fundraiserDetails.beneficiaryIfsc}",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -846,10 +846,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
                                       ? "${data.campaignerDetails?.name}"
                                       : "${data.fundraiserDetails?.patientName}",
                                   ColorGenerator.materialColors,
-                                  (bool selected) {
-                            // on tap callback
-                            print("on tap callback");
-                          },
+                                      (bool selected) {
+                                    // on tap callback
+                                    print("on tap callback");
+                                  },
                                   false,
                                   60.0,
                                   60.0,
@@ -937,7 +937,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
           margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
           elevation: 8,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           child: ExpansionTile(
             title: Text(
               "Top Donors",
@@ -967,7 +967,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
                 ),
                 onPressed: () {
                   Get.to(
-                      () => ViewAllDonorsScreen(widget.fundraiserIdReceived));
+                          () => ViewAllDonorsScreen(widget.fundraiserIdReceived));
                 },
                 child: Text(
                   "View All",
@@ -999,7 +999,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
           margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
           elevation: 8,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           child: ExpansionTile(
             title: Text(
               "Supporters (${data.supportersCount})",
@@ -1061,7 +1061,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
           margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
           elevation: 8,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           child: ExpansionTile(
             title: Text(
               "Comments",
@@ -1215,7 +1215,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
               ],
             ),
             visible:
-                CommonMethods().checkIsOwner(data.fundraiserDetails?.createdBy),
+            CommonMethods().checkIsOwner(data.fundraiserDetails?.createdBy),
           ),
           SizedBox(
             height: 5,
@@ -1268,7 +1268,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
               ],
             ),
             visible:
-                CommonMethods().checkIsOwner(data.fundraiserDetails?.createdBy),
+            CommonMethods().checkIsOwner(data.fundraiserDetails?.createdBy),
           ),
           SizedBox(
             height: 5,
@@ -1394,7 +1394,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
           foregroundColor: Colors.white,
           onPressed: () async {
             final isReviewAdded = await Get.to(
-                () => ReviewItemScreen(widget.fundraiserIdReceived),
+                    () => ReviewItemScreen(widget.fundraiserIdReceived),
                 opaque: false,
                 fullscreenDialog: true);
             print("*****");
@@ -1527,7 +1527,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
                   }
                 }),
             visible:
-                CommonMethods().checkIsOwner(data.fundraiserDetails?.createdBy),
+            CommonMethods().checkIsOwner(data.fundraiserDetails?.createdBy),
           ),
           SizedBox(
             width: 5,
@@ -1688,7 +1688,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
             text: TextSpan(children: [
               TextSpan(
                 text:
-                    "Note: If you feel anything suspicious regarding this!, feel free to  ",
+                "Note: If you feel anything suspicious regarding this!, feel free to  ",
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.black,
@@ -1763,7 +1763,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
               )
             ],
           )
-          /*child: RichText(
+        /*child: RichText(
             textAlign: TextAlign.left,
             text: TextSpan(children: [
               TextSpan(
@@ -1776,7 +1776,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
                 ),
               ),
             ])),*/
-          );
+      );
     } else {
       return Container();
     }

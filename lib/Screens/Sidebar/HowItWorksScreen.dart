@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:ngo_app/Constants/CommonWidgets.dart';
 import 'package:ngo_app/Constants/CustomColorCodes.dart';
 import 'package:ngo_app/Elements/CommonAppBar.dart';
+import 'package:ngo_app/Screens/Sidebar/Fragments/FundScreen.dart';
+import 'package:ngo_app/Screens/Sidebar/Fragments/HowWorksScreen.dart';
+import 'package:ngo_app/Screens/Sidebar/Fragments/PricingScreen.dart';
+
 
 class HowItWorksScreen extends StatefulWidget {
+  final int fragmentToShow;
+  HowItWorksScreen({Key key, @required this.fragmentToShow}) : super(key: key);
   @override
   _HowItWorksScreenState createState() => _HowItWorksScreenState();
 }
 
-class _HowItWorksScreenState extends State<HowItWorksScreen> {
+class _HowItWorksScreenState extends State<HowItWorksScreen> with SingleTickerProviderStateMixin {
+  var selectedTabPos = 0;
+  TabController _tabController;
+
   @override
   void initState() {
     super.initState();
+    _tabController = new TabController(vsync: this, length: 3);
+    selectedTabPos = widget.fragmentToShow != null ? widget.fragmentToShow : 0;
+    _tabController.animateTo(selectedTabPos);
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -30,26 +42,29 @@ class _HowItWorksScreenState extends State<HowItWorksScreen> {
               buttonHandler: _backPressFunction,
             ),
           ),
-          body: SingleChildScrollView(
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-            child: Column(
-              children: [
-                _buildFundraiserInfo(),
-                SizedBox(
-                  height: 10,
+          body: Column(
+            children: <Widget>[
+              Container(
+                color: Colors.white,
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                constraints: BoxConstraints.expand(height: 55),
+                child: BottomAppBar(
+                  child: infoTabs(),
+                  color: Colors.white,
                 ),
-                _buildDonationInfo()
-              ],
-            ),
-          ),
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: CommonWidgets().showHelpDesk(),
+              ),
+              Expanded(
+                child: getSubFragment(selectedTabPos),
+                flex: 1,
+              ),
+            ],
           ),
         ),
       ),
     );
   }
+
+
 
   void _backPressFunction() {
     print("_sendOtpFunction clicked");
@@ -60,115 +75,84 @@ class _HowItWorksScreenState extends State<HowItWorksScreen> {
     return Future.value(true);
   }
 
-  _buildFundraiserInfo() {
-    return Card(
-      margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-      elevation: 10,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-      child: ExpansionTile(
-        title: Text(
-          "How to start a fundraiser!",
-          style: TextStyle(
-              fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.black),
+  infoTabs() {
+    return TabBar(
+      controller: _tabController,
+      onTap: tabItemClicked,
+      tabs: [
+        Tab(
+          child: tabItem(context, 'How It'),
         ),
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-            alignment: FractionalOffset.centerLeft,
-            child: Text(
-              "How crowd funding works..",
-              style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 13.0,
-                  color: Color(colorCoderItemTitle)),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-            alignment: FractionalOffset.centerLeft,
-            child: Text(
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12.0,
-                  height: 1.8,
-                  color: Color(colorCoderItemSubTitle)),
-            ),
-          ),
-          _buildInfo("01", "Sign up or login if not", AssetImage('assets/images/ic_login_step.png')),
-          _buildInfo("02", "Enter OTP", AssetImage('assets/images/ic_otp_step.png')),
-          _buildInfo("03", "Click Start a Fundraiser", AssetImage('assets/images/ic_start_fundraiser_step.png')),
-          _buildInfo("04", "Choose your purpose", AssetImage('assets/images/ic_choose_purpose.png')),
-          _buildInfo("05", "Enter Personal Details", AssetImage('assets/images/ic_personal_details_step.png')),
-          _buildInfo("06", "Enter Beneficiary Details", AssetImage('assets/images/ic_beneficiary_step.png')),
-          _buildInfo("07", "Add Account Details", AssetImage('assets/images/ic_account_step.png')),
-          _buildInfo("08", "Upload Image and Other Details", AssetImage('assets/images/ic_upload_step.png')),
-          SizedBox(
-            height: 20,
-          )
-        ],
+        Tab(
+          child: tabItem(context, 'Pricing'),
+        ),
+      ],
+      labelColor: Color(colorCoderRedBg),
+      unselectedLabelColor: Color(colorCoderItemSubTitle),
+      indicatorSize: TabBarIndicatorSize.tab,
+      indicatorColor: Colors.red,
+      indicatorWeight: 3,
+      indicator: UnderlineTabIndicator(
+        borderSide: BorderSide(color: Colors.red, width: 2.0),
+        insets: getIndicatorPadding(),
       ),
     );
   }
 
-  _buildDonationInfo() {
-    return Card(
-      margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-      elevation: 10,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-      child: ExpansionTile(
-        initiallyExpanded: true,
-        title: Text(
-          "How to initiate a Donation!",
-          style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 13.0,
-              color: Color(colorCoderItemTitle)),
-        ),
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-            alignment: FractionalOffset.centerLeft,
-            child: Text(
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12.0,
-                  height: 1.8,
-                  color: Color(colorCoderItemSubTitle)),
-            ),
-          ),
-          _buildInfo("01", "Sign up or login if you wish, then follow steps else skip step 2", AssetImage('assets/images/ic_login_step.png')),
-          _buildInfo("02", "Enter OTP", AssetImage('assets/images/ic_otp_step.png')),
-          _buildInfo("03", "Click Donate Now Button", AssetImage('assets/images/ic_choose_purpose.png')),
-          _buildInfo("04", "Choose or Type the Donation Amount", AssetImage('assets/images/ic_donation_step.png')),
-          _buildInfo("05", "Choose Payment option", AssetImage('assets/images/ic_pay_step.png')),
-          SizedBox(
-            height: 20,
-          )
-        ],
-      ),
-    );
+  getIndicatorPadding() {
+    if (selectedTabPos == 0) {
+      return EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 2.0);
+    } else {
+      return EdgeInsets.fromLTRB(0.0, 0.0, 5.0, 2.0);
+    }
   }
 
-  _buildInfo(String title, String subTitle, AssetImage assetImage) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
-      child: ListTile(
-        title: Text(
-          title,
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w800, color: Colors.black45),
-        ),
-        subtitle: Text(
-          subTitle,
-          style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.w600, color: Color(colorCoderItemSubTitle)),
-        ),
-        leading: Image(
-          image: assetImage,
-          height: 40.0,
-          width: 40.0,
-        ),
-      ),
-    );
+  Row tabItem(BuildContext context, var title) {
+    return Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600),
+            ),
+            flex: 2,
+          ),
+        ]);
   }
+
+  /*
+    While clicking a tab item
+   */
+  void tabItemClicked(int index) {
+    if (mounted) {
+      setState(() {
+        selectedTabPos = index;
+      });
+    }
+  }
+  getSubFragment(int pos) {
+    switch (pos) {
+      case 0:
+        return HowWorksScreen();
+        break;
+      case 1:
+        return PricingScreen();
+        break;
+
+      default:
+        return new Center(
+          child: Text("Error"),
+        );
+    }
+  }
+
 }

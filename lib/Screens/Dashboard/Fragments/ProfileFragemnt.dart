@@ -376,30 +376,33 @@ class _ProfileFragmentState extends State<ProfileFragment> {
   }
 
   _buildOptionsSection( baseurl,userid ) {
-    return Wrap(
-      direction: Axis.horizontal,
-      // alignment: WrapAlignment.center,
-      spacing: 30.0,
-      runAlignment: WrapAlignment.spaceAround,
-      runSpacing: 30.0,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      // textDirection: TextDirection.rtl,
-      // verticalDirection: VerticalDirection.up,
-      children: <Widget>[
-        ProfileOption(_profileOptionSelected, " My Donations ",
-            "assets/images/ic_my_donation.png", ProfileOptionsType.MyDonation),
-        ProfileOption(
-            _profileOptionSelected,
-            "My Fundraisers",
-            "assets/images/ic_my_fundraisers.png",
-            ProfileOptionsType.MyFundraiser),
-        ProfileOption(_profileOptionSelected, " My Comments ",
-            "assets/images/ic_my_comment.png", ProfileOptionsType.MyComments),
-        ProfileOption(_profileOptionSelected, "  My Loans   ",
-            "assets/images/ic_my_loans.png", ProfileOptionsType.MyLoans),
-        ProfileOption(_profileOptionSelected, " My Documents ",
-            "assets/images/ic_my_documents.png", ProfileOptionsType.MyDocuments),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(left:5 ,right: 5),
+      child: Wrap(
+        direction: Axis.horizontal,
+        // alignment: WrapAlignment.center,
+        spacing: 20.0,
+        runAlignment: WrapAlignment.spaceAround,
+        runSpacing: 30.0,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        // textDirection: TextDirection.rtl,
+        // verticalDirection: VerticalDirection.up,
+        children: <Widget>[
+          ProfileOption(_profileOptionSelected, " My Donations ",
+              "assets/images/ic_my_donation.png", ProfileOptionsType.MyDonation),
+          ProfileOption(
+              _profileOptionSelected,
+              "My Fundraisers",
+              "assets/images/ic_my_fundraisers.png",
+              ProfileOptionsType.MyFundraiser),
+          ProfileOption(_profileOptionSelected, " My Comments ",
+              "assets/images/ic_my_comment.png", ProfileOptionsType.MyComments),
+          ProfileOption(_profileOptionSelected, "  My Loans   ",
+              "assets/images/ic_my_loans.png", ProfileOptionsType.MyLoans),
+          ProfileOption(_profileOptionSelected, " My Documents ",
+              "assets/images/ic_my_documents.png", ProfileOptionsType.MyDocuments),
+        ],
+      ),
     );
   }
 
