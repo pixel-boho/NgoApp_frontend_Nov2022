@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/route_manager.dart';
@@ -60,9 +61,9 @@ class _FormSetPricingState extends State<FormSetPricing> {
           backgroundColor: Color(colorCodeGreyPageBg),
           resizeToAvoidBottomInset: true,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(60.0), // here the desired height
+            preferredSize: Size.fromHeight(65.0), // here the desired height
             child: CommonAppBar(
-              text:  "Start a Fundraiser",
+              text: "Start a Fundraiser",
               buttonHandler: _backPressFunction,
             ),
           ),
@@ -98,8 +99,11 @@ class _FormSetPricingState extends State<FormSetPricing> {
                             return CommonApiLoader();
                             break;
                           case Status.COMPLETED:
-                            return _buildPricingStrategies(
-                                _pricingBloc.pricingList);
+                            return Column(
+                              children: [
+                                _buildPricingStrategies(_pricingBloc.pricingList),
+                              ],
+                            );
                             break;
                           case Status.ERROR:
                             return CommonApiErrorWidget(
@@ -108,12 +112,23 @@ class _FormSetPricingState extends State<FormSetPricing> {
                             break;
                         }
                       }
-
                       return Container();
                     },
                   ),
                   flex: 1,
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(width: MediaQuery.of(context).size.width * .06),
+                    Icon(Icons.warning_amber_rounded,color: Colors.yellow,size: 20,),
+                    SizedBox(width: MediaQuery.of(context).size.width * .03),
+                    Text("Bank charges deducted",style: TextStyle(color: Colors.white,fontSize: 10,
+                        fontWeight: FontWeight.w500),),
+                  ],
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * .04),
+
               ],
             ),
           ),
@@ -133,6 +148,11 @@ class _FormSetPricingState extends State<FormSetPricing> {
     );
   }
 
+  void _backPressFunction() {
+    print("_sendOtpFunction clicked");
+    Get.back();
+  }
+
   Widget _buildPricingStrategies(List<PricingInfo> pricingList) {
     if (pricingList != null) {
       if (pricingList.length > 0) {
@@ -140,7 +160,8 @@ class _FormSetPricingState extends State<FormSetPricing> {
           scrollDirection: Axis.vertical,
           itemCount: pricingList.length,
           itemBuilder: (context, index) {
-            return _buildPricingInfo(index, pricingList[index]);
+            return
+              _buildPricingInfo(index, pricingList[index]);
           },
           shrinkWrap: true,
           physics: const ClampingScrollPhysics(),
@@ -154,18 +175,13 @@ class _FormSetPricingState extends State<FormSetPricing> {
     }
   }
 
-  void _backPressFunction() {
-    print("_sendOtpFunction clicked");
-    Get.back();
-  }
-
   Widget _buildPricingInfo(int index, PricingInfo pricingInfo) {
     return Container(
       padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
       margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
       decoration: BoxDecoration(
         color:
-            pricingInfo.isSelected ? Colors.black : Color(colorCodeGreyPageBg),
+        pricingInfo.isSelected ? Colors.black : Color(colorCodeGreyPageBg),
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(15),
             topRight: Radius.circular(15),
@@ -274,7 +290,7 @@ class _FormSetPricingState extends State<FormSetPricing> {
       if (LoginModel().startFundraiserMap != null) {
         if (LoginModel().startFundraiserMap.containsKey("campaignSelected")) {
           CampaignItem campaignItem =
-              LoginModel().startFundraiserMap["campaignSelected"];
+          LoginModel().startFundraiserMap["campaignSelected"];
           callApiToUpdateFundraiser(campaignItem);
         }
       }
@@ -284,7 +300,7 @@ class _FormSetPricingState extends State<FormSetPricing> {
         if (LoginModel().startFundraiserMap != null) {
           if (LoginModel().startFundraiserMap.containsKey("campaignSelected")) {
             CampaignItem campaignItem =
-                LoginModel().startFundraiserMap["campaignSelected"];
+            LoginModel().startFundraiserMap["campaignSelected"];
             callApiToCreateFundraiser(campaignItem);
           }
         }
@@ -366,7 +382,7 @@ class _FormSetPricingState extends State<FormSetPricing> {
 
     if (LoginModel().startFundraiserMap.containsKey("beneficiary_image")) {
       File _beneficiaryImage =
-          LoginModel().startFundraiserMap["beneficiary_image"];
+      LoginModel().startFundraiserMap["beneficiary_image"];
       if (_beneficiaryImage != null) {
         formData.files.add(MapEntry(
           "beneficiary_image",
@@ -393,9 +409,9 @@ class _FormSetPricingState extends State<FormSetPricing> {
 
     if (LoginModel().startFundraiserMap.containsKey("main_image")) {
       File _mainImage =
-          LoginModel().startFundraiserMap.containsKey("main_image")
-              ? LoginModel().startFundraiserMap["main_image"]
-              : null;
+      LoginModel().startFundraiserMap.containsKey("main_image")
+          ? LoginModel().startFundraiserMap["main_image"]
+          : null;
       if (_mainImage != null) {
         formData.files.add(MapEntry(
           "main_image",
@@ -428,9 +444,9 @@ class _FormSetPricingState extends State<FormSetPricing> {
         LoginModel().isFundraiserEditMode = false;
         Fluttertoast.showToast(msg: response.message);
         Get.to(() => ItemDetailScreen(
-              LoginModel().itemDetailResponseInEditMode?.fundraiserDetails?.id,
-              fromPage: FromPage.EditFundraiserPage,
-            ));
+          LoginModel().itemDetailResponseInEditMode?.fundraiserDetails?.id,
+          fromPage: FromPage.EditFundraiserPage,
+        ));
       } else {
         Fluttertoast.showToast(
             msg: response.message ?? StringConstants.apiFailureMsg);
@@ -526,9 +542,9 @@ class _FormSetPricingState extends State<FormSetPricing> {
     }
 
     File _beneficiaryImage =
-        LoginModel().startFundraiserMap.containsKey("beneficiary_image")
-            ? LoginModel().startFundraiserMap["beneficiary_image"]
-            : null;
+    LoginModel().startFundraiserMap.containsKey("beneficiary_image")
+        ? LoginModel().startFundraiserMap["beneficiary_image"]
+        : null;
     if (_beneficiaryImage != null) {
       formData.files.add(MapEntry(
         "beneficiary_image",
@@ -537,9 +553,9 @@ class _FormSetPricingState extends State<FormSetPricing> {
     }
 
     List<File> _documentPaths =
-        LoginModel().startFundraiserMap.containsKey("upload_documents")
-            ? LoginModel().startFundraiserMap["upload_documents"]
-            : null;
+    LoginModel().startFundraiserMap.containsKey("upload_documents")
+        ? LoginModel().startFundraiserMap["upload_documents"]
+        : null;
     if (_documentPaths != null) {
       for (var imageFile in _documentPaths) {
         String fileName = imageFile.path.split('/').last;
@@ -636,7 +652,7 @@ class _FormSetPricingState extends State<FormSetPricing> {
   void _alertOkBtnClickFunction() {
     print("_alertOkBtnClickFunction clicked");
     Get.offAll(() => DashboardScreen(
-          fragmentToShow: 0,
-        ));
+      fragmentToShow: 0,
+    ));
   }
 }
