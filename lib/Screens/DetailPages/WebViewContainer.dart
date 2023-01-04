@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:get/route_manager.dart';
-import 'package:ngo_app/CustomLibraries/CustomLoader/LinearLoader.dart';
-import 'package:ngo_app/CustomLibraries/CustomLoader/dot_type.dart';
 import 'package:ngo_app/Elements/CommonAppBar.dart';
 
 class WebViewContainer extends StatefulWidget {
