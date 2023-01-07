@@ -29,12 +29,12 @@ class CommonInfoRepository {
 
   Future<HomeResponse> getHomeItems() async {
     final response =
-        await apiProvider.getInstance().get(RemoteConfig.getHomeItems);
+    await apiProvider.getInstance().get(RemoteConfig.getHomeItems);
     return HomeResponse.fromJson(response.data);
   }
 
-  Future<CampaignTypesResponse> getCampaignTypes(
-      int pageNumber, int perPage) async {
+  Future<CampaignTypesResponse> getCampaignTypes(int pageNumber,
+      int perPage) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getCategories +
             "?page=" +
@@ -44,8 +44,8 @@ class CommonInfoRepository {
     return CampaignTypesResponse.fromJson(response.data);
   }
 
-  Future<CommonViewAllResponse> getAllFundraiserItems(
-      int pageNumber, int perPage, int category, String sortOption) async {
+  Future<CommonViewAllResponse> getAllFundraiserItems(int pageNumber,
+      int perPage, int category, String sortOption) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getAllFundraiserItems +
             "?page=" +
@@ -57,8 +57,8 @@ class CommonInfoRepository {
     return CommonViewAllResponse.fromJson(response.data);
   }
 
-  Future<CommonViewAllResponse> getAllCampaignRelatedItems(
-      int pageNumber, int perPage, int category, String sortOption) async {
+  Future<CommonViewAllResponse> getAllCampaignRelatedItems(int pageNumber,
+      int perPage, int category, String sortOption) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getAllCampaignRelatedItems +
             "?page=" +
@@ -111,8 +111,8 @@ class CommonInfoRepository {
     return ItemDetailResponse.fromJson(response.data);
   }
 
-  Future<CommentsListResponse> getAllComments(
-      int pageNumber, int perPage, int fundraiserId) async {
+  Future<CommentsListResponse> getAllComments(int pageNumber, int perPage,
+      int fundraiserId) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getAllComments +
             "?fundraiser_id=" +
@@ -124,8 +124,8 @@ class CommonInfoRepository {
     return CommentsListResponse.fromJson(response.data);
   }
 
-  Future<ParticipantsListResponse> getAllDonors(
-      int pageNumber, int perPage, int fundraiserId) async {
+  Future<ParticipantsListResponse> getAllDonors(int pageNumber, int perPage,
+      int fundraiserId) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getAllDonors +
             "?fundraiser_id=" +
@@ -137,8 +137,8 @@ class CommonInfoRepository {
     return ParticipantsListResponse.fromJson(response.data);
   }
 
-  Future<ParticipantsListResponse> getAllSupporters(
-      int pageNumber, int perPage, int fundraiserId) async {
+  Future<ParticipantsListResponse> getAllSupporters(int pageNumber, int perPage,
+      int fundraiserId) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getAllSupporters +
             "?fundraiser_id=" +
@@ -157,8 +157,8 @@ class CommonInfoRepository {
     return CommonResponse.fromJson(response.data);
   }
 
-  Future<CommentsListResponse> getMyComments(
-      int pageNumber, int perPage) async {
+  Future<CommentsListResponse> getMyComments(int pageNumber,
+      int perPage) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getMyComments +
             "?page=" +
@@ -168,8 +168,8 @@ class CommonInfoRepository {
     return CommentsListResponse.fromJson(response.data);
   }
 
-  Future<CommonViewAllResponse> getMyOwnFundraiserItems(
-      int pageNumber, int perPage) async {
+  Future<CommonViewAllResponse> getMyOwnFundraiserItems(int pageNumber,
+      int perPage) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getMyFundraisers +
             "?page=" +
@@ -179,8 +179,8 @@ class CommonInfoRepository {
     return CommonViewAllResponse.fromJson(response.data);
   }
 
-  Future<MyDonationsResponse> getMyDonations(
-      int pageNumber, int perPage) async {
+  Future<MyDonationsResponse> getMyDonations(int pageNumber,
+      int perPage) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getMyDonations +
             "?page=" +
@@ -206,7 +206,7 @@ class CommonInfoRepository {
 
   Future<RelationsResponse> getRelations() async {
     final response =
-        await apiProvider.getInstance().get(RemoteConfig.getRelations);
+    await apiProvider.getInstance().get(RemoteConfig.getRelations);
     return RelationsResponse.fromJson(response.data);
   }
 
@@ -219,7 +219,7 @@ class CommonInfoRepository {
 
   Future<PricingStrategiesResponse> getPricingInfo() async {
     final response =
-        await apiProvider.getInstance().post(RemoteConfig.getPricingStrategies);
+    await apiProvider.getInstance().post(RemoteConfig.getPricingStrategies);
     return PricingStrategiesResponse.fromJson(response.data);
   }
 
@@ -284,14 +284,35 @@ class CommonInfoRepository {
 
   Future<PointsResponse> getPointsInfo() async {
     final response =
-        await apiProvider.getInstance().post(RemoteConfig.getPointsInfo);
+    await apiProvider.getInstance().post(RemoteConfig.getPointsInfo);
     return PointsResponse.fromJson(response.data);
   }
 
-  Future<CommonResponse> transferAmount(String body) async {
+  // Future<CommonResponse> transferAmount(String body) async {
+  //   final response = await apiProvider
+  //       .getInstance()
+  //       .post(RemoteConfig.transferAmount, data: body);
+  //   print("response->${response}");
+  //   return CommonResponse.fromJson(response.data);
+  // }
+  Future<CommonResponse> transferAmounts(String body,String accountName,accountnum,ifsc) async {
     final response = await apiProvider
         .getInstance()
         .post(RemoteConfig.transferAmount, data: body);
+    print("response->${response}");
+    if (response.data["entity"] == "contact") {
+      final responseforfundaccount = await apiProvider
+          .getInstance()
+          .post("https://www.cocoalabs.in/ngo/api/web/v1/razorpay/fund-account",
+          data: ({"contact_id":response.data["id"],
+            "name":accountName,
+            "ifsc":ifsc,
+            "account_number":accountnum
+
+          }));
+      print("response->${responseforfundaccount}");
+      return CommonResponse.fromJson(responseforfundaccount.data);
+    }
     return CommonResponse.fromJson(response.data);
   }
 

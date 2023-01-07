@@ -455,7 +455,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
                                 "Are you sure you, you want to transfer now?",
                                 AssetImage(
                                     'assets/images/ic_notification_message.png'),
-                                _transferFundraiserAmount,
+                                _transferFundraiserAmount(data),
                                 false,
                                 true);
                           } else {
@@ -650,7 +650,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
     );
   }
 
-  _buildAccountDetails(ItemDetailResponse data) {
+    _buildAccountDetails(ItemDetailResponse data) {
     return Container(
       alignment: FractionalOffset.center,
       padding: EdgeInsets.fromLTRB(0, 20, 0, 25),
@@ -1537,13 +1537,14 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
     );
   }
 
-  _transferFundraiserAmount() {
+  _transferFundraiserAmount( data) {
     Get.back();
     var bodyParams = {};
+
     bodyParams["id"] = widget.fundraiserIdReceived;
 
     CommonWidgets().showNetworkProcessingDialog();
-    _commonBloc.transferAmount(json.encode(bodyParams)).then((value) {
+    _commonBloc.transferAmount(json.encode(bodyParams),data.fundraiserDetails.beneficiaryAccountName,data.fundraiserDetails.beneficiaryAccountNumber,data.fundraiserDetails.beneficiaryIfsc).then((value) {
       Get.back();
       CommonResponse commonResponse = value;
       if (commonResponse.success) {

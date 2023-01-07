@@ -159,10 +159,10 @@ class CommonBloc {
     }
   }
 
-  Future<CommonResponse> transferAmount(String body) async {
+  Future<CommonResponse> transferAmount(String body,String benificiaryname,accountNumber,ifsc) async {
     try {
       CommonResponse commonResponse =
-          await _commonInfoRepository.transferAmount(body);
+          await _commonInfoRepository.transferAmounts(body, benificiaryname,accountNumber,ifsc);
       return commonResponse;
     } catch (error) {
       throw CommonMethods().getNetworkError(error);
