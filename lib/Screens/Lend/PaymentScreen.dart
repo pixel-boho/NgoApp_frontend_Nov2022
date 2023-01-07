@@ -15,7 +15,12 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class PaymentScreen extends StatefulWidget {
   final PaymentInfo paymentInfo;
-  const PaymentScreen({Key key, this.paymentInfo}) : super(key: key);
+  final int id;
+  final String amount;
+  final String email;
+  final String phone;
+  final String name;
+  const PaymentScreen({Key key, this.paymentInfo,this.amount,this.phone,this.email,this.id,this.name, String phonenumber}): super(key: key);
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
 }
@@ -36,6 +41,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   void initState() {
     super.initState();
     paymentInfo = widget.paymentInfo;
+   //print("pa->${paymentInfo.name}");
     _razorPay = Razorpay();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _initPayment();
@@ -53,7 +59,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Future _initPayment() async {
-    bool isSuccess = await getGatewayKey();
+   bool isSuccess = await getGatewayKey();
 
     if (!isSuccess) {
       Fluttertoast.showToast(
@@ -100,11 +106,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
     }
 
     String path = '';
-    if (paymentInfo.paymentType == PaymentType.Lend) {
+    if (PaymentType.Lend == PaymentType.Lend) {
       notes = {
         'type': 'loan',
-        'lid': '${paymentInfo.id}',
-        'amt': '${paymentInfo.amount}',
+        'lid': '${widget.id}',
+        'amt': '${widget.name}',
         'cna': '${paymentInfo.form80G?.name ?? ''}',
         'cad': '',
         'cph': '${paymentInfo.form80G?.mobile ?? ''}',
@@ -113,7 +119,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
       };
 
       path = 'master/get-api-key?loan_id=${paymentInfo.id}';
-    } else if (paymentInfo.paymentType == PaymentType.Donation) {
+    }
+    else if (PaymentType.Donation == PaymentType.Donation) {
       notes = {
         'type': 'donate',
         'amt': '${paymentInfo.amount}',
@@ -149,7 +156,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     } else if (paymentInfo.paymentType == PaymentType.Donation) {
       if (id != null) {
         path =
-            'master/get-order-id?amount=${paymentInfo.amount}&fundraiser_id=$id';
+        'master/get-order-id?amount=${paymentInfo.amount}&fundraiser_id=$id';
       } else {
         path = 'master/get-order-id?amount=${paymentInfo.amount}';
       }
@@ -179,7 +186,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   //
   //   return map['success'] ?? false;
   // }
-  //
+
   // Future<bool> donationPaymentSuccess() async {
   //   dio.FormData formData = dio.FormData.fromMap({
   //     'transaction_id': '${_paymentSuccessResponse.paymentId}',
@@ -209,15 +216,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
   bool startPayment(Function onPaymentSuccess, Function onPaymentErrorFn) {
     try {
       _razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
-          (PaymentSuccessResponse paymentSuccessResponse) {
-        _paymentSuccessResponse = paymentSuccessResponse;
-        onPaymentSuccess(_paymentSuccessResponse);
-      });
+              (PaymentSuccessResponse paymentSuccessResponse) {
+            _paymentSuccessResponse = paymentSuccessResponse;
+            onPaymentSuccess(_paymentSuccessResponse);
+          });
       _razorPay.on(Razorpay.EVENT_PAYMENT_ERROR,
-          (PaymentFailureResponse paymentFailureResponse) {
-        _paymentFailureResponse = paymentFailureResponse;
-        onPaymentErrorFn(_paymentFailureResponse);
-      });
+              (PaymentFailureResponse paymentFailureResponse) {
+            _paymentFailureResponse = paymentFailureResponse;
+            onPaymentErrorFn(_paymentFailureResponse);
+          });
 
       _razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, onExternalWalletResponse);
 
