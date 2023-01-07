@@ -10,6 +10,7 @@ import 'package:ngo_app/Constants/EnumValues.dart';
 import 'package:ngo_app/Elements/CommonAppBar.dart';
 import 'package:ngo_app/Elements/CommonButton.dart';
 import 'package:ngo_app/Screens/MakeDonation/AddDonorInfoScreen.dart';
+import '../../Utilities/LoginModel.dart';
 import 'PaymentScreen.dart';
 
 class PaymentInputAmountScreen extends StatefulWidget {
@@ -37,7 +38,7 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
   _PaymentInputAmountScreenState(this._amount);
 
   String _amount;
-
+  bool _isAnonymous = false;
 
   TextEditingController _textEditingController = TextEditingController();
   FocusNode _focusNode = FocusNode();
@@ -134,7 +135,6 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
 
   Future<void> _nextBtnClickFunction() async {
     _amount = _textEditingController.text;
-
     if (_amount.isNotEmpty && int.parse(_amount) > 0) {
       if (widget.paymentType == PaymentType.Donation && !widget.isForNgoTrust) {
         if (widget.amount < int.parse(_amount)) {
@@ -156,7 +156,25 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
         CommonWidgets().show80GFormAlertDialog(context, paymentInfo);
         // Navigator.of(context).push(PageRouteBuilder(opaque: false, pageBuilder: (_, __, ___) => PaymentScreen(paymentInfo: paymentInfo,)));
       } else if (widget.paymentType == PaymentType.Donation) {
-        Get.to(() => AddDonorInfoScreen(paymentInfo: paymentInfo));
+        if(CommonMethods().isAuthTokenExist() ? _isAnonymous : true)
+          Get.to(() =>
+              AddDonorInfoScreen(paymentInfo: paymentInfo));
+        else {
+          paymentInfo.paymentType= widget.paymentType;
+          paymentInfo.id= widget?.id ?? null;
+          paymentInfo.amount= _amount;
+          paymentInfo.isSubscriptionNeeded= _isSubscriptionAvailable;
+          paymentInfo.name = LoginModel().userDetails.name??'';
+          paymentInfo.email = LoginModel().userDetails.email??'';
+          paymentInfo.countryCode = LoginModel().userDetails.countryCode?.toString()??'';
+          paymentInfo.mobile =LoginModel().userDetails.phoneNumber?.toString()??'';
+          paymentInfo.isAnonymous =
+          CommonMethods().isAuthTokenExist() ? _isAnonymous : true;
+    //       opaque: false,
+    // fullscreenDialog: true
+          Get.to(() =>
+              PaymentScreen(paymentInfo: paymentInfo));
+        }
       } else {
         //neglect
       }
@@ -201,7 +219,7 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
             maxLines: 1,
             minLines: 1,
             maxLength: 7,
-            onChanged: (val) => _amount = val,
+            onChanged: (val) { _amount = val;},
             style: TextStyle(
                 fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
