@@ -14,7 +14,7 @@ class GatewayKeyResponse {
 
   GatewayKeyResponse.fromJson(Map<String, dynamic> json) {
     apiKey = json['apiKey'];
-    customerId = json['customerId'];
+    customerId = json['user_details']['customer_id'];
     statusCode = json['statusCode'];
     message = json['message'];
     success = json['success'];
