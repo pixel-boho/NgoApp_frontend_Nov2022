@@ -26,7 +26,8 @@ class RemoteConfig {
   static const createFundraiser = "fundraiser-scheme/start-fundraiser";
   static const getPricingStrategies = "master/pricing";
   static const withdrawFundraiser = "fundraiser-scheme/withdraw";
-  static const transferAmount = "razorpay/transfer";
+  //static const transferAmount = "razorpay/transfer";
+  static const transferAmount = "razorpay/get-contact";
   static const updateFundraiser = "fundraiser-scheme/update-fundraiser";
   static const getFaqItems = "faq/list";
   static const getMediaItems = "media/list";

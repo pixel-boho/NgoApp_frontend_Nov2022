@@ -1540,10 +1540,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
   _transferFundraiserAmount() {
     Get.back();
     var bodyParams = {};
+var body =
     bodyParams["id"] = widget.fundraiserIdReceived;
-
+ItemDetailResponse data;
     CommonWidgets().showNetworkProcessingDialog();
-    _commonBloc.transferAmount(json.encode(bodyParams)).then((value) {
+    _commonBloc.transferAmount(json.encode(bodyParams),data.fundraiserDetails.beneficiaryAccountName,data.fundraiserDetails.beneficiaryAccountNumber,data.fundraiserDetails.beneficiaryIfsc).then((value) {
       Get.back();
       CommonResponse commonResponse = value;
       if (commonResponse.success) {

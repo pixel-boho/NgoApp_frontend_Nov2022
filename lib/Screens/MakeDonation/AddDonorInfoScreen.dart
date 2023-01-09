@@ -11,11 +11,10 @@ import 'package:ngo_app/Elements/CommonButton.dart';
 import 'package:ngo_app/Elements/CommonTextFormField.dart';
 import 'package:ngo_app/Screens/Lend/PaymentScreen.dart';
 
-
 class AddDonorInfoScreen extends StatefulWidget {
   final PaymentInfo paymentInfo;
-  final amount ;
-  const AddDonorInfoScreen({Key key, @required this.paymentInfo, this.amount})
+
+  const AddDonorInfoScreen({Key key, @required this.paymentInfo})
       : super(key: key);
 
   @override
@@ -52,16 +51,15 @@ class _AddDonorInfoScreenState extends State<AddDonorInfoScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: WillPopScope(
-
         onWillPop: onWillPop,
         child: Scaffold(
           backgroundColor: Color(colorCodeGreyPageBg),
           resizeToAvoidBottomInset: true,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(65.0), // here the desired height
+            preferredSize: Size.fromHeight(60.0), // here the desired height
             child: CommonAppBar(
               text: "Donate",
-              buttonHandler:_backPressFunction,
+              buttonHandler: _backPressFunction,
             ),
           ),
           body: Container(
@@ -236,23 +234,24 @@ class _AddDonorInfoScreenState extends State<AddDonorInfoScreen> {
   void _nextBtnClickFunction() {
     print("_clearBtnClickFunction clicked");
     if (_formKey.currentState.validate()) {
-      // paymentInfo.name = _name.trim();
-      // paymentInfo.email = _email.trim();
-      // paymentInfo.countryCode = _countryCode;
-      // paymentInfo.mobile = _phone.trim();
-      // paymentInfo.isAnonymous =
-      // CommonMethods().isAuthTokenExist() ? _isAnonymous : true;
-
-      // if (_is80gFormRequired) {
-      //   paymentInfo.form80G = Form80G(
-      //       name: _name.trim(),
-      //       pan: _panCard.trim(),
-      //       countryCode: _countryCode,
-      //       mobile: _phone.trim());
-      // }
+      paymentInfo.name = _name.trim();
+      paymentInfo.email = _email.trim();
+      paymentInfo.countryCode = _countryCode;
+      paymentInfo.mobile = _phone.trim();
+      paymentInfo.isAnonymous =
+      CommonMethods().isAuthTokenExist() ? _isAnonymous : true;
+      if (_is80gFormRequired) {
+        paymentInfo.form80G = Form80G(
+            name: _name.trim(),
+            pan: _panCard.trim(),
+            countryCode: _countryCode,
+            mobile: _phone.trim());
+      }
 
       Get.to(
-              () => PaymentScreen(name: _name,email: _email,phonenumber: _phone,amount: widget.amount.toString(),),
+              () => PaymentScreen(
+            paymentInfo: paymentInfo,
+          ),
           opaque: false,
           fullscreenDialog: true);
     } else {
@@ -298,7 +297,6 @@ class _AddDonorInfoScreenState extends State<AddDonorInfoScreen> {
           ],
         ),
         SizedBox(height: MediaQuery.of(context).size.height * .01),
-
       ],
     );
   }
@@ -382,4 +380,5 @@ class _AddDonorInfoScreenState extends State<AddDonorInfoScreen> {
         _is80gFormRequired = false;
       });
     }
-  }}
+  }
+}
