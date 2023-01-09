@@ -159,7 +159,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       path = 'master/get-order-id?amount=${paymentInfo.amount}&loan_id=$id';
     } else if (paymentInfo.paymentType == PaymentType.Donation) {
       path =
-          'master/payment-order-id?amount=${paymentInfo.amount}&name=${paymentInfo.name}&email=${paymentInfo.email}';
+      'master/payment-order-id?amount=${paymentInfo.amount}&name=${paymentInfo.name}&email=${paymentInfo.email}';
       // path = 'master/get-order-id?amount=${paymentInfo.amount}';
     } else {
       Fluttertoast.showToast(msg: 'Unknown Payment type');
@@ -183,10 +183,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
     } else if (paymentInfo.paymentType == PaymentType.Donation) {
       if (id != null) {
         path =
-            'master/get-order-id?amount=${paymentInfo.amount}&fundraiser_id=$id';
+        'master/get-order-id?amount=${paymentInfo.amount}&fundraiser_id=$id';
       } else {
         path =
-            'master/get-order-id?amount=${paymentInfo.amount}&fundraiser_id=$id';
+        'master/get-order-id?amount=${paymentInfo.amount}&fundraiser_id=$id';
       }
       // path = 'master/get-order-id?amount=${paymentInfo.amount}';
     } else {
@@ -219,20 +219,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
   //   return map['success'] ?? false;
   // }
 
-   Future<bool> donationPaymentSuccess() async {
-    // dio.FormData formData = dio.FormData.fromMap({
-    //   'transaction_id': '${_paymentSuccessResponse.paymentId}',
-    //   'amount': '${paymentInfo.amount}',
-    //   'fundraiser_id': '${paymentInfo.id}',
-    //   'name': '${paymentInfo.name}',
-    //   'email': '${paymentInfo.email}',
-    //   'show_donor_information': '${paymentInfo.isAnonymous}?1:0',
-    //   'certificate_name': '${paymentInfo.form80G?.name ?? ''}',
-    //   'certificate_address': '',
-    //   'certificate_phone': '${paymentInfo.form80G?.mobile ?? ''}',
-    //   'certificate_pan': '${paymentInfo.form80G?.pan ?? ''}'
-    // });
-     print("donorinfo->${paymentInfo.isAnonymous}?1:0");
+  Future<bool> donationPaymentSuccess() async {
+
+    print("donorinfo->${paymentInfo.isAnonymous}?1:0");
 
     final response = await apiProvider.getInstance().post(
         'fundraiser-scheme/donate', data: ({
@@ -250,10 +239,55 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
 
     Map<String, dynamic> map = response.data;
-print("map=>${map}");
+    print("map=>${map}");
     return map['success'] ?? false;
   }
+  Future<bool> loginDonationPaymentSuccess() async {
 
+    print("donorinfo->${paymentInfo.isAnonymous}?1:0");
+
+    final response = await apiProvider.getInstance().post(
+        'fundraiser-scheme/donate-ngo', data: ({
+      'transaction_id': '${_paymentSuccessResponse.paymentId}',
+      'amount': '${paymentInfo.amount}',
+      'user_id': '${LoginModel().userDetails.id}',
+      'name': '${paymentInfo.name}',
+      'email': '${paymentInfo.email}',
+      'show_donor_information': '${paymentInfo.isAnonymous?0:1}',
+      'certificate_name': '${paymentInfo.form80G?.name ?? ''}',
+      'certificate_address': '',
+      'certificate_phone': '${paymentInfo.form80G?.mobile ?? ''}',
+      'certificate_pan': '${paymentInfo.form80G?.pan ?? ''}'
+    })
+    );
+
+    Map<String, dynamic> map = response.data;
+    print("map=>${map}");
+    return map['success'] ?? false;
+  }
+  Future<bool> guestDonationPaymentSuccess() async {
+
+    print("donorinfo->${paymentInfo.isAnonymous}?1:0");
+
+    final response = await apiProvider.getInstance().post(
+        'fundraiser-scheme/donate-ngo', data: ({
+      'transaction_id': '${_paymentSuccessResponse.paymentId}',
+      'amount': '${paymentInfo.amount}',
+      'fundraiser_id': '${paymentInfo.id}',
+      'name': '${paymentInfo.name}',
+      'email': '${paymentInfo.email}',
+      'show_donor_information': '${paymentInfo.isAnonymous?0:1}',
+      'certificate_name': '${paymentInfo.form80G?.name ?? ''}',
+      'certificate_address': '',
+      'certificate_phone': '${paymentInfo.form80G?.mobile ?? ''}',
+      'certificate_pan': '${paymentInfo.form80G?.pan ?? ''}'
+    })
+    );
+    print("map=>${response.data}");
+    var map = response.data;
+    print("map=>${map}");
+    return map['success'] ?? false;
+  }
   onExternalWalletResponse(ExternalWalletResponse response) {
     print('_onExternalWallet:${response.walletName}');
   }
@@ -261,16 +295,16 @@ print("map=>${map}");
   bool startPayment(Function onPaymentSuccess, Function onPaymentErrorFn) {
     try {
       _razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
-          (PaymentSuccessResponse paymentSuccessResponse) {
-        _paymentSuccessResponse = paymentSuccessResponse;
-        onPaymentSuccess(_paymentSuccessResponse);
-        donationPaymentSuccess();
-      });
+              (PaymentSuccessResponse paymentSuccessResponse) {
+            _paymentSuccessResponse = paymentSuccessResponse;
+            onPaymentSuccess(_paymentSuccessResponse);
+            if(paymentInfo.id==null){loginDonationPaymentSuccess();}else{donationPaymentSuccess();}
+          });
       _razorPay.on(Razorpay.EVENT_PAYMENT_ERROR,
-          (PaymentFailureResponse paymentFailureResponse) {
-        _paymentFailureResponse = paymentFailureResponse;
-        onPaymentErrorFn(_paymentFailureResponse);
-      });
+              (PaymentFailureResponse paymentFailureResponse) {
+            _paymentFailureResponse = paymentFailureResponse;
+            onPaymentErrorFn(_paymentFailureResponse);
+          });
 
       _razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, onExternalWalletResponse);
 
@@ -308,16 +342,16 @@ print("map=>${map}");
       Function onPaymentSuccess, Function onPaymentErrorFn) {
     try {
       _razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
-          (PaymentSuccessResponse paymentSuccessResponse) {
-        _paymentSuccessResponse = paymentSuccessResponse;
-        onPaymentSuccess(_paymentSuccessResponse);
-        donationPaymentSuccess();
-      });
+              (PaymentSuccessResponse paymentSuccessResponse) {
+            _paymentSuccessResponse = paymentSuccessResponse;
+            onPaymentSuccess(_paymentSuccessResponse);
+            guestDonationPaymentSuccess();
+          });
       _razorPay.on(Razorpay.EVENT_PAYMENT_ERROR,
-          (PaymentFailureResponse paymentFailureResponse) {
-        _paymentFailureResponse = paymentFailureResponse;
-        onPaymentErrorFn(_paymentFailureResponse);
-      });
+              (PaymentFailureResponse paymentFailureResponse) {
+            _paymentFailureResponse = paymentFailureResponse;
+            onPaymentErrorFn(_paymentFailureResponse);
+          });
 
       _razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, onExternalWalletResponse);
 
