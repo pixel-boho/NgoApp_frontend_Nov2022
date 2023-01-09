@@ -227,7 +227,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         'fundraiser-scheme/donate', data: ({
       'transaction_id': '${_paymentSuccessResponse.paymentId}',
       'amount': '${paymentInfo.amount}',
-      'user_id': '${LoginModel().userDetails.id}',
+      'fundraiser_id': '${paymentInfo.id}',
       'name': '${paymentInfo.name}',
       'email': '${paymentInfo.email}',
       'show_donor_information': '${paymentInfo.isAnonymous?0:1}',
@@ -242,7 +242,29 @@ class _PaymentScreenState extends State<PaymentScreen> {
 print("map=>${map}");
     return map['success'] ?? false;
   }
+  Future<bool> loginDonationPaymentSuccess() async {
 
+    print("donorinfo->${paymentInfo.isAnonymous}?1:0");
+
+    final response = await apiProvider.getInstance().post(
+        'fundraiser-scheme/donate-ngo', data: ({
+      'transaction_id': '${_paymentSuccessResponse.paymentId}',
+      'amount': '${paymentInfo.amount}',
+      'user_id': '${LoginModel().userDetails.id}',
+      'name': '${paymentInfo.name}',
+      'email': '${paymentInfo.email}',
+      'show_donor_information': '${paymentInfo.isAnonymous?0:1}',
+      'certificate_name': '${paymentInfo.form80G?.name ?? ''}',
+      'certificate_address': '',
+      'certificate_phone': '${paymentInfo.form80G?.mobile ?? ''}',
+      'certificate_pan': '${paymentInfo.form80G?.pan ?? ''}'
+    })
+    );
+
+    Map<String, dynamic> map = response.data;
+    print("map=>${map}");
+    return map['success'] ?? false;
+  }
   Future<bool> guestDonationPaymentSuccess() async {
 
     print("donorinfo->${paymentInfo.isAnonymous}?1:0");
@@ -276,7 +298,7 @@ print("map=>${map}");
           (PaymentSuccessResponse paymentSuccessResponse) {
         _paymentSuccessResponse = paymentSuccessResponse;
         onPaymentSuccess(_paymentSuccessResponse);
-        donationPaymentSuccess();
+ if(paymentInfo.id==null){loginDonationPaymentSuccess();}else{donationPaymentSuccess();}
       });
       _razorPay.on(Razorpay.EVENT_PAYMENT_ERROR,
           (PaymentFailureResponse paymentFailureResponse) {
