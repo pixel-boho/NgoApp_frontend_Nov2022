@@ -220,25 +220,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
   // }
 
    Future<bool> donationPaymentSuccess() async {
-    // dio.FormData formData = dio.FormData.fromMap({
-    //   'transaction_id': '${_paymentSuccessResponse.paymentId}',
-    //   'amount': '${paymentInfo.amount}',
-    //   'fundraiser_id': '${paymentInfo.id}',
-    //   'name': '${paymentInfo.name}',
-    //   'email': '${paymentInfo.email}',
-    //   'show_donor_information': '${paymentInfo.isAnonymous}?1:0',
-    //   'certificate_name': '${paymentInfo.form80G?.name ?? ''}',
-    //   'certificate_address': '',
-    //   'certificate_phone': '${paymentInfo.form80G?.mobile ?? ''}',
-    //   'certificate_pan': '${paymentInfo.form80G?.pan ?? ''}'
-    // });
+
      print("donorinfo->${paymentInfo.isAnonymous}?1:0");
 
     final response = await apiProvider.getInstance().post(
         'fundraiser-scheme/donate', data: ({
       'transaction_id': '${_paymentSuccessResponse.paymentId}',
       'amount': '${paymentInfo.amount}',
-      'fundraiser_id': '${paymentInfo.id}',
+      'user_id': '${LoginModel().userDetails.id}',
       'name': '${paymentInfo.name}',
       'email': '${paymentInfo.email}',
       'show_donor_information': '${paymentInfo.isAnonymous?0:1}',
@@ -254,6 +243,29 @@ print("map=>${map}");
     return map['success'] ?? false;
   }
 
+  Future<bool> guestDonationPaymentSuccess() async {
+
+    print("donorinfo->${paymentInfo.isAnonymous}?1:0");
+
+    final response = await apiProvider.getInstance().post(
+        'fundraiser-scheme/donate-ngo', data: ({
+      'transaction_id': '${_paymentSuccessResponse.paymentId}',
+      'amount': '${paymentInfo.amount}',
+      'fundraiser_id': '${paymentInfo.id}',
+      'name': '${paymentInfo.name}',
+      'email': '${paymentInfo.email}',
+      'show_donor_information': '${paymentInfo.isAnonymous?0:1}',
+      'certificate_name': '${paymentInfo.form80G?.name ?? ''}',
+      'certificate_address': '',
+      'certificate_phone': '${paymentInfo.form80G?.mobile ?? ''}',
+      'certificate_pan': '${paymentInfo.form80G?.pan ?? ''}'
+    })
+    );
+    print("map=>${response.data}");
+    var map = response.data;
+    print("map=>${map}");
+    return map['success'] ?? false;
+  }
   onExternalWalletResponse(ExternalWalletResponse response) {
     print('_onExternalWallet:${response.walletName}');
   }
@@ -311,7 +323,7 @@ print("map=>${map}");
           (PaymentSuccessResponse paymentSuccessResponse) {
         _paymentSuccessResponse = paymentSuccessResponse;
         onPaymentSuccess(_paymentSuccessResponse);
-        donationPaymentSuccess();
+        guestDonationPaymentSuccess();
       });
       _razorPay.on(Razorpay.EVENT_PAYMENT_ERROR,
           (PaymentFailureResponse paymentFailureResponse) {

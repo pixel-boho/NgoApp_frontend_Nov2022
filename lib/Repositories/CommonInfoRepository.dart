@@ -295,7 +295,7 @@ class CommonInfoRepository {
   //   print("response->${response}");
   //   return CommonResponse.fromJson(response.data);
   // }
-  Future<CommonResponse> transferAmounts(String body,String accountName,accountnum,ifsc) async {
+  Future<CommonResponse> transferAmounts(String body,String acccountName,accountNum,accountIfsc) async {
     final response = await apiProvider
         .getInstance()
         .post(RemoteConfig.transferAmount, data: body);
@@ -305,9 +305,9 @@ class CommonInfoRepository {
           .getInstance()
           .post("https://www.cocoalabs.in/ngo/api/web/v1/razorpay/fund-account",
           data: ({"contact_id":response.data["id"],
-            "name":accountName,
-            "ifsc":ifsc,
-            "account_number":accountnum
+            "name":acccountName,
+            "ifsc":accountIfsc,
+            "account_number":accountNum
 
           }));
       print("response->${responseforfundaccount}");
