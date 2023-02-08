@@ -25,6 +25,7 @@ void main() async {
 
 class NgoApp extends StatelessWidget {
   @override
+
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,

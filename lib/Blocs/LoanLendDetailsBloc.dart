@@ -1,4 +1,4 @@
-import 'dart:async';
+ import 'dart:async';
 
 import 'package:ngo_app/Constants/CommonMethods.dart';
 import 'package:ngo_app/Models/LoanLendDetailsResponse.dart';
@@ -15,7 +15,7 @@ class LoanLendDetailsBloc {
   Stream<ApiResponse<LoanLendDetailsResponse>> get detailStream =>
       _itemsController.stream;
 
-  LoanLendDetailsBloc() {
+  LoanLendDetailsBloc()   {
     _lendRepository = LendRepository();
     _itemsController = StreamController<ApiResponse<LoanLendDetailsResponse>>();
   }
