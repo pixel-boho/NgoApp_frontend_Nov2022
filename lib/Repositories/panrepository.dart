@@ -12,10 +12,6 @@ class ProfileRepositoryUser {
   }
 
 
-
-
-
-
   Future<CommonResponse> uploadUserRecords(
       String reportName,  reportFile) async {
     String fileName = reportFile.path.split('/').last;

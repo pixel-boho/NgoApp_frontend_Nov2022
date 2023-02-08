@@ -48,7 +48,7 @@ dependencies:
   http: ^0.13.3
   razorpay_flutter: ^1.2.6
   onesignal_flutter: ^3.0.0
-  badges: ^2.0.1
+  badges: ^3.0.2
   flutter_webview_plugin: ^0.4.0
   dotted_decoration: ^2.0.0
   photo_view: ^0.14.0

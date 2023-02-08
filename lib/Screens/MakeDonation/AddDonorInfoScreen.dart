@@ -14,7 +14,7 @@ import 'package:ngo_app/Screens/Lend/PaymentScreen.dart';
 class AddDonorInfoScreen extends StatefulWidget {
   final PaymentInfo paymentInfo;
 
-  const AddDonorInfoScreen({Key key, @required this.paymentInfo})
+  const AddDonorInfoScreen({Key key, @required this.paymentInfo, String amount})
       : super(key: key);
 
   @override
