@@ -267,13 +267,14 @@ print("map=>${map}");
   }
   Future<bool> guestDonationPaymentSuccess() async {
 
-    print("donorinfo->${paymentInfo.isAnonymous}?1:0");
+    print("donorinfo->${paymentInfo.id}");
 
     final response = await apiProvider.getInstance().post(
         'fundraiser-scheme/donate-ngo', data: ({
       'transaction_id': '${_paymentSuccessResponse.paymentId}',
       'amount': '${paymentInfo.amount}',
       'fundraiser_id': '${paymentInfo.id}',
+      'donor_type': 'Guest',
       'name': '${paymentInfo.name}',
       'email': '${paymentInfo.email}',
       'show_donor_information': '${paymentInfo.isAnonymous?0:1}',
