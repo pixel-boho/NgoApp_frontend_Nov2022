@@ -64,7 +64,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
   CommonBloc _commonBloc;
   var documentToRemove;
   ItemDetailResponse itemInfoFetched;
+String beneficiary_account_name = "";
+  String beneficiary_account_number = "";
 
+  String beneficiary_ifsc ="";
   @override
   void initState() {
     LoginModel().isFundraiserEditMode = false;
@@ -183,6 +186,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
   }
 
   _buildUserWidget(ItemDetailResponse data) {
+    beneficiary_account_name = data.fundraiserDetails.name;
+    beneficiary_account_number = data.fundraiserDetails.beneficiaryAccountNumber;
+    beneficiary_ifsc = data.fundraiserDetails.beneficiaryIfsc;
     return CustomScrollView(slivers: <Widget>[
       SliverPadding(
         padding: EdgeInsets.fromLTRB(0.0, 0, 0, 70),
@@ -451,6 +457,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
                         textColorReceived: Color(colorCodeWhite),
                         buttonHandler: () {
                           if (data.fundraiserDetails?.fundRaised != 0) {
+
                             CommonWidgets().showCommonDialog(
                                 "Are you sure you, you want to transfer now?",
                                 AssetImage(
@@ -1542,20 +1549,13 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
     var bodyParams = {};
 var body =
     bodyParams["id"] = widget.fundraiserIdReceived;
-ItemDetailResponse data;
+        ItemDetailResponse data;
     CommonWidgets().showNetworkProcessingDialog();
-    _commonBloc.transferAmount(json.encode(bodyParams),data.fundraiserDetails.beneficiaryAccountName,data.fundraiserDetails.beneficiaryAccountNumber,data.fundraiserDetails.beneficiaryIfsc).then((value) {
+    _commonBloc.transferAmount(json.encode(bodyParams),beneficiary_account_name,beneficiary_account_number,beneficiary_ifsc).then((value) {
       Get.back();
       CommonResponse commonResponse = value;
-      if (commonResponse.success) {
-        Fluttertoast.showToast(msg: commonResponse.message);
-        Get.back(result: {'isFundraiserWithdrawn': true});
-      } else {
-        Fluttertoast.showToast(
-            msg: commonResponse.message ?? StringConstants.apiFailureMsg);
-      }
-    }).catchError((err) {
-      CommonWidgets().showNetworkErrorDialog(err?.toString());
+      print("response->${commonResponse}");
+
     });
   }
 
