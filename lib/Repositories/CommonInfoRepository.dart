@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ngo_app/Models/BankInfo.dart';
 import 'package:ngo_app/Models/CampaignTypesResponse.dart';
@@ -20,6 +22,7 @@ import 'package:ngo_app/Models/SearchResponse.dart';
 import 'package:ngo_app/Models/TeamResponse.dart';
 import 'package:ngo_app/ServiceManager/ApiProvider.dart';
 import 'package:ngo_app/ServiceManager/RemoteConfig.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class CommonInfoRepository {
   ApiProvider apiProvider;
@@ -296,7 +299,7 @@ class CommonInfoRepository {
   //   print("response->${response}");
   //   return CommonResponse.fromJson(response.data);
   // }
-  Future<CommonResponse> transferAmounts(String body,String acccountName,accountNum,accountIfsc) async {
+  Future<CommonResponse> transferAmounts(String body,String acccountName,accountNum,accountIfsc,context) async {
     final response = await apiProvider
         .getInstance()
         .post(RemoteConfig.transferAmount, data: body);
@@ -320,8 +323,15 @@ class CommonInfoRepository {
             data: ({"amount":100,
                     "fund_account_id":Contactid
             }));
-        print("resp=>${responseforpayout.data["code"]}");
-        Fluttertoast.showToast(msg: responseforpayout.data["code"]);
+
+        if (responseforpayout.data["message"] =="Amount Transffered Successfully"){
+          ElevatedButton(
+            child: Text('You can change the status of Sales Person'),
+            onPressed: () => _onAlertButtonsPressed(
+                context, ),
+          );
+
+        }
 
         return CommonResponse.fromJson(responseforpayout.data);
       }
@@ -350,4 +360,37 @@ class CommonInfoRepository {
         .post(RemoteConfig.cancelFundraiser, data: body);
     return CommonResponse.fromJson(response.data);
   }
+}
+_onAlertButtonsPressed(context,) {
+  Alert(
+    context: context,
+    type: AlertType.warning,
+    title: "Are You Sure",
+    desc: "Change the Status",
+    buttons: [
+      DialogButton(
+        child: Text(
+          "Active",
+          style: TextStyle(color: Colors.white, fontSize: 18),
+        ),
+        onPressed: () {
+          //statusRetun.getStataus(id, 1);
+        },
+        color: Color.fromRGBO(0, 179, 134, 1.0),
+      ),
+      DialogButton(
+        child: Text(
+          "InActive",
+          style: TextStyle(color: Colors.white, fontSize: 18),
+        ),
+        onPressed: () => {//statusRetun.getStataus(id, 0)
+
+          },
+        gradient: LinearGradient(colors: [
+          Color.fromRGBO(116, 116, 191, 1.0),
+          Color.fromRGBO(52, 138, 199, 1.0),
+        ]),
+      )
+    ],
+  ).show();
 }
