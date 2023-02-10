@@ -1551,7 +1551,7 @@ var body =
     bodyParams["id"] = widget.fundraiserIdReceived;
         ItemDetailResponse data;
     CommonWidgets().showNetworkProcessingDialog();
-    _commonBloc.transferAmount(json.encode(bodyParams),beneficiary_account_name,beneficiary_account_number,beneficiary_ifsc,context).then((value) {
+    _commonBloc.transferAmount(json.encode(bodyParams),beneficiary_account_name,beneficiary_account_number,beneficiary_ifsc,widget.fundraiserIdReceived,context).then((value) {
       Get.back();
       CommonResponse commonResponse = value;
       print("response->${commonResponse}");
