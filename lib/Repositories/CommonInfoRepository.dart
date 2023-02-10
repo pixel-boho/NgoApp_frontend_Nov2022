@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ngo_app/Models/BankInfo.dart';
 import 'package:ngo_app/Models/CampaignTypesResponse.dart';
 import 'package:ngo_app/Models/CommentsListResponse.dart';
@@ -310,7 +311,20 @@ class CommonInfoRepository {
             "account_number":accountNum
 
           }));
-      print("response->${responseforfundaccount}");
+      String Contactid = responseforfundaccount.data["id"];
+      print("response->${responseforfundaccount.data["id"]}");
+      if(response.statusCode==200){
+        final responseforpayout = await apiProvider
+            .getInstance()
+            .post("https://www.cocoalabs.in/ngo/api/web/v1/razorpay/pay-out",
+            data: ({"amount":100,
+                    "fund_account_id":Contactid
+            }));
+        print("resp=>${responseforpayout.data["code"]}");
+        Fluttertoast.showToast(msg: responseforpayout.data["code"]);
+
+        return CommonResponse.fromJson(responseforpayout.data);
+      }
       return CommonResponse.fromJson(responseforfundaccount.data);
     }
     return CommonResponse.fromJson(response.data);
