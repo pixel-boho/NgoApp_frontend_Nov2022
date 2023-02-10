@@ -159,7 +159,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       path = 'master/get-order-id?amount=${paymentInfo.amount}&loan_id=$id';
     } else if (paymentInfo.paymentType == PaymentType.Donation) {
       path =
-          'master/payment-order-id?amount=${paymentInfo.amount}&name=${paymentInfo.name}&email=${paymentInfo.email}';
+      'master/payment-order-id?amount=${paymentInfo.amount}&name=${paymentInfo.name}&email=${paymentInfo.email}';
       // path = 'master/get-order-id?amount=${paymentInfo.amount}';
     } else {
       Fluttertoast.showToast(msg: 'Unknown Payment type');
@@ -183,10 +183,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
     } else if (paymentInfo.paymentType == PaymentType.Donation) {
       if (id != null) {
         path =
-            'master/get-order-id?amount=${paymentInfo.amount}&fundraiser_id=$id';
+        'master/get-order-id?amount=${paymentInfo.amount}&fundraiser_id=$id';
       } else {
         path =
-            'master/get-order-id?amount=${paymentInfo.amount}&fundraiser_id=$id';
+        'master/get-order-id?amount=${paymentInfo.amount}&fundraiser_id=$id';
       }
       // path = 'master/get-order-id?amount=${paymentInfo.amount}';
     } else {
@@ -219,9 +219,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
   //   return map['success'] ?? false;
   // }
 
-   Future<bool> donationPaymentSuccess() async {
+  Future<bool> donationPaymentSuccess() async {
 
-     print("donorinfo->${paymentInfo.isAnonymous}?1:0");
+    print("donorinfo->${paymentInfo.isAnonymous}?1:0");
 
     final response = await apiProvider.getInstance().post(
         'fundraiser-scheme/donate', data: ({
@@ -239,7 +239,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
 
     Map<String, dynamic> map = response.data;
-print("map=>${map}");
+    print("map=>${map}");
     return map['success'] ?? false;
   }
   Future<bool> loginDonationPaymentSuccess() async {
@@ -296,16 +296,16 @@ print("map=>${map}");
   bool startPayment(Function onPaymentSuccess, Function onPaymentErrorFn) {
     try {
       _razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
-          (PaymentSuccessResponse paymentSuccessResponse) {
-        _paymentSuccessResponse = paymentSuccessResponse;
-        onPaymentSuccess(_paymentSuccessResponse);
- if(paymentInfo.id==null){loginDonationPaymentSuccess();}else{donationPaymentSuccess();}
-      });
+              (PaymentSuccessResponse paymentSuccessResponse) {
+            _paymentSuccessResponse = paymentSuccessResponse;
+            onPaymentSuccess(_paymentSuccessResponse);
+            if(paymentInfo.id==null){loginDonationPaymentSuccess();}else{donationPaymentSuccess();}
+          });
       _razorPay.on(Razorpay.EVENT_PAYMENT_ERROR,
-          (PaymentFailureResponse paymentFailureResponse) {
-        _paymentFailureResponse = paymentFailureResponse;
-        onPaymentErrorFn(_paymentFailureResponse);
-      });
+              (PaymentFailureResponse paymentFailureResponse) {
+            _paymentFailureResponse = paymentFailureResponse;
+            onPaymentErrorFn(_paymentFailureResponse);
+          });
 
       _razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, onExternalWalletResponse);
 
@@ -343,16 +343,16 @@ print("map=>${map}");
       Function onPaymentSuccess, Function onPaymentErrorFn) {
     try {
       _razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
-          (PaymentSuccessResponse paymentSuccessResponse) {
-        _paymentSuccessResponse = paymentSuccessResponse;
-        onPaymentSuccess(_paymentSuccessResponse);
-        guestDonationPaymentSuccess();
-      });
+              (PaymentSuccessResponse paymentSuccessResponse) {
+            _paymentSuccessResponse = paymentSuccessResponse;
+            onPaymentSuccess(_paymentSuccessResponse);
+            guestDonationPaymentSuccess();
+          });
       _razorPay.on(Razorpay.EVENT_PAYMENT_ERROR,
-          (PaymentFailureResponse paymentFailureResponse) {
-        _paymentFailureResponse = paymentFailureResponse;
-        onPaymentErrorFn(_paymentFailureResponse);
-      });
+              (PaymentFailureResponse paymentFailureResponse) {
+            _paymentFailureResponse = paymentFailureResponse;
+            onPaymentErrorFn(_paymentFailureResponse);
+          });
 
       _razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, onExternalWalletResponse);
 

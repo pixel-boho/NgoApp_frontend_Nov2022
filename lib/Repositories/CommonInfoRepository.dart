@@ -1,9 +1,8 @@
 import 'dart:convert';
-
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ngo_app/Constants/CustomColorCodes.dart';
 import 'package:ngo_app/Models/BankInfo.dart';
 import 'package:ngo_app/Models/CampaignTypesResponse.dart';
 import 'package:ngo_app/Models/CommentsListResponse.dart';
@@ -22,6 +21,7 @@ import 'package:ngo_app/Models/SearchResponse.dart';
 import 'package:ngo_app/Models/TeamResponse.dart';
 import 'package:ngo_app/ServiceManager/ApiProvider.dart';
 import 'package:ngo_app/ServiceManager/RemoteConfig.dart';
+import 'package:ngo_app/Utilities/LoginModel.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class CommonInfoRepository {
@@ -292,14 +292,7 @@ class CommonInfoRepository {
     return PointsResponse.fromJson(response.data);
   }
 
-  // Future<CommonResponse> transferAmount(String body) async {
-  //   final response = await apiProvider
-  //       .getInstance()
-  //       .post(RemoteConfig.transferAmount, data: body);
-  //   print("response->${response}");
-  //   return CommonResponse.fromJson(response.data);
-  // }
-  Future<CommonResponse> transferAmounts(String body,String acccountName,accountNum,accountIfsc,context) async {
+  Future<CommonResponse> transferAmounts(String body,String acccountName,accountNum,accountIfsc,int fundid,context) async {
     final response = await apiProvider
         .getInstance()
         .post(RemoteConfig.transferAmount, data: body);
@@ -325,20 +318,20 @@ class CommonInfoRepository {
             }));
 
         if (responseforpayout.data["message"] =="Amount Transffered Successfully"){
-          ElevatedButton(
-            child: Text('You can change the status of Sales Person'),
-            onPressed: () => _onAlertButtonsPressed(
-                context, ),
-          );
-
+          String message=responseforpayout.data["message"];
+          _onAlertButtonsPressed(
+            context, message ,fundid);
         }
-
+        else {
+         Fluttertoast.showToast(msg:"Something Wrong");
+        }
         return CommonResponse.fromJson(responseforpayout.data);
       }
       return CommonResponse.fromJson(responseforfundaccount.data);
     }
     return CommonResponse.fromJson(response.data);
   }
+
 
   Future<CommonResponse> removeSubscription(String body) async {
     final response = await apiProvider
@@ -361,36 +354,31 @@ class CommonInfoRepository {
     return CommonResponse.fromJson(response.data);
   }
 }
-_onAlertButtonsPressed(context,) {
+_onAlertButtonsPressed(context,String message,int id) {
   Alert(
     context: context,
     type: AlertType.warning,
-    title: "Are You Sure",
-    desc: "Change the Status",
+    title: message,
     buttons: [
       DialogButton(
         child: Text(
-          "Active",
+          "Ok",
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
         onPressed: () {
-          //statusRetun.getStataus(id, 1);
+          responseforwithdraw(id);
         },
-        color: Color.fromRGBO(0, 179, 134, 1.0),
+        color:  Color(colorCoderItemTitle),
       ),
-      DialogButton(
-        child: Text(
-          "InActive",
-          style: TextStyle(color: Colors.white, fontSize: 18),
-        ),
-        onPressed: () => {//statusRetun.getStataus(id, 0)
-
-          },
-        gradient: LinearGradient(colors: [
-          Color.fromRGBO(116, 116, 191, 1.0),
-          Color.fromRGBO(52, 138, 199, 1.0),
-        ]),
-      )
     ],
   ).show();
+}
+ApiProvider apiProvider;
+Future<void> responseforwithdraw(int id) async {
+  final responseforwithdraw= await apiProvider.getInstance()
+      .post("https://www.cocoalabs.in/ngo/api/web/v1/fundraiser-scheme/withdraw",
+      data:({
+        "token":LoginModel().authToken,
+        "fundraiser_id":id,
+      }) );
 }

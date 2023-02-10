@@ -22,11 +22,11 @@ class PaymentInputAmountScreen extends StatefulWidget {
 
   const PaymentInputAmountScreen(
       {Key key,
-      @required this.paymentType,
-      @required this.id,
-      this.amount = 0,
-      this.isCampaignRelated = false,
-      this.isForNgoTrust = false})
+        @required this.paymentType,
+        @required this.id,
+        this.amount = 0,
+        this.isCampaignRelated = false,
+        this.isForNgoTrust = false})
       : super(key: key);
 
   @override
@@ -67,8 +67,8 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
     var _blankFocusNode = new FocusNode();
     return SafeArea(
         child: Scaffold(
-      backgroundColor: Color(colorCodeGreyPageBg),
-      resizeToAvoidBottomInset: true,
+          backgroundColor: Color(colorCodeGreyPageBg),
+          resizeToAvoidBottomInset: true,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(60.0), // here the desired height
             child: CommonAppBar(
@@ -76,61 +76,61 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
               buttonHandler: _backPressFunction,
             ),
           ),
-      body: Container(
-        color: Colors.transparent,
-        height: double.infinity,
-        width: double.infinity,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            FocusScope.of(context).requestFocus(_blankFocusNode);
-          },
-          child: SingleChildScrollView(
-            child: Container(
-              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(height: MediaQuery.of(context).size.height * .02),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    alignment: FractionalOffset.center,
-                    child: Text(
-                      "Choose a donation amount",
-                      style: TextStyle(
-                          color: Color(colorCoderBorderWhite),
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15.0),
-                    ),
+          body: Container(
+            color: Colors.transparent,
+            height: double.infinity,
+            width: double.infinity,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                FocusScope.of(context).requestFocus(_blankFocusNode);
+              },
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: MediaQuery.of(context).size.height * .02),
+                      Container(
+                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        alignment: FractionalOffset.center,
+                        child: Text(
+                          "Choose a donation amount",
+                          style: TextStyle(
+                              color: Color(colorCoderBorderWhite),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15.0),
+                        ),
+                      ),
+                      SizedBox(height: MediaQuery.of(context).size.height * .01),
+                      _buildAmountTypingSection(),
+                      SizedBox(height: MediaQuery.of(context).size.height * .01),
+                      Visibility(
+                        child: _buildSubscribeSection(),
+                        visible: widget.isCampaignRelated &&
+                            CommonMethods().isAuthTokenExist(),
+                      ),
+                      SizedBox(height: MediaQuery.of(context).size.height * .04),
+                    ],
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * .01),
-                  _buildAmountTypingSection(),
-                  SizedBox(height: MediaQuery.of(context).size.height * .01),
-                  Visibility(
-                    child: _buildSubscribeSection(),
-                    visible: widget.isCampaignRelated &&
-                        CommonMethods().isAuthTokenExist(),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * .04),
-                ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
-      bottomNavigationBar: Container(
-        height: 50.0,
-        width: double.infinity,
-        margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
-        child: CommonButton(
-            buttonText: "Next",
-            bgColorReceived: Color(colorCoderRedBg),
-            borderColorReceived: Color(colorCoderRedBg),
-            textColorReceived: Color(colorCodeWhite),
-            buttonHandler: _nextBtnClickFunction),
-      ),
-    ));
+          bottomNavigationBar: Container(
+            height: 50.0,
+            width: double.infinity,
+            margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
+            child: CommonButton(
+                buttonText: "Next",
+                bgColorReceived: Color(colorCoderRedBg),
+                borderColorReceived: Color(colorCoderRedBg),
+                textColorReceived: Color(colorCodeWhite),
+                buttonHandler: _nextBtnClickFunction),
+          ),
+        ));
   }
 
   Future<void> _nextBtnClickFunction() async {
@@ -141,7 +141,7 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
           _textEditingController.text = "${widget.amount}";
           Fluttertoast.showToast(
               msg:
-                  'Please note just Rs.${widget.amount} more needed, Thank you');
+              'Please note just Rs.${widget.amount} more needed, Thank you');
           return;
         }
       }
@@ -170,8 +170,8 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
           paymentInfo.mobile =LoginModel().userDetails.phoneNumber?.toString()??'';
           paymentInfo.isAnonymous =
           CommonMethods().isAuthTokenExist() ? _isAnonymous : true;
-    //       opaque: false,
-    // fullscreenDialog: true
+          //       opaque: false,
+          // fullscreenDialog: true
           Get.to(() =>
               PaymentScreen(paymentInfo: paymentInfo));
         }

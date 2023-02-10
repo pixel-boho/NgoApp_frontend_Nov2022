@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:ngo_app/Constants/CommonMethods.dart';
 import 'package:ngo_app/Constants/CommonWidgets.dart';
 import 'package:ngo_app/Constants/CustomColorCodes.dart';
-import 'package:ngo_app/Constants/EnumValues.dart';
 import 'package:ngo_app/CustomLibraries/CustomLoader/RoundedLoader.dart';
 import 'package:ngo_app/CustomLibraries/TextDrawable/TextDrawableWidget.dart';
 import 'package:ngo_app/CustomLibraries/TextDrawable/color_generator.dart';
@@ -16,7 +15,6 @@ import 'package:ngo_app/Screens/Dashboard/Fragments/FundraiserFragment.dart';
 import 'package:ngo_app/Screens/Dashboard/Fragments/HomeFragment.dart';
 import 'package:ngo_app/Screens/Dashboard/Fragments/ProfileFragemnt.dart';
 import 'package:ngo_app/Screens/Lend/LendListingScreen.dart';
-import 'package:ngo_app/Screens/Lend/PaymentInputAmountScreen.dart';
 import 'package:ngo_app/Screens/Sidebar/AboutUsScreen.dart';
 import 'package:ngo_app/Screens/Sidebar/ContactUsScreen.dart';
 import 'package:ngo_app/Screens/Sidebar/FaqScreen.dart';
@@ -28,6 +26,7 @@ import 'package:ngo_app/Utilities/LoginModel.dart';
 import 'AllCategoriesScreen.dart';
 import 'AutocompleteSearch.dart';
 import 'PointsInfoScreen.dart';
+
 
 class Home extends StatelessWidget {
   @override
@@ -674,11 +673,11 @@ class _DashboardScreenState extends State<DashboardScreen>
             },
             child: Badge(
               position: BadgePosition.topEnd(top: 3, end: 3),
-              animationDuration: Duration(milliseconds: 300),
-              animationType: BadgeAnimationType.scale,
-              badgeColor: Colors.white,
-              shape: BadgeShape.circle,
-              //borderRadius: BorderRadius.circular(5),
+
+              badgeStyle: BadgeStyle(badgeColor: Colors.white,shape: BadgeShape.circle),
+              badgeAnimation: BadgeAnimation.scale(
+                disappearanceFadeAnimationDuration: Duration(milliseconds: 300),
+              ),
               badgeContent: Text(
                 "$val",
                 style: TextStyle(color: Colors.red, fontSize: 7),
