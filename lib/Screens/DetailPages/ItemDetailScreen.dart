@@ -490,7 +490,7 @@ String beneficiary_account_name = "";
               ],
             ),
             visible: CommonMethods()
-                .checkIsOwner(data.fundraiserDetails?.createdBy) &&
+                .checkIsOwner(data.fundraiserDetails?.createdBy) == LoginModel().userDetails.id &&
                 data.fundraiserDetails?.isApproved == 1,
           ),
           Visibility(
