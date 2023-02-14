@@ -1555,7 +1555,7 @@ var body =
       Get.back();
       CommonResponse commonResponse = value;
       print("response->${commonResponse}");
-
+      Get.back();
     });
   }
 

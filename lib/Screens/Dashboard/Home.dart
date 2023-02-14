@@ -673,7 +673,6 @@ class _DashboardScreenState extends State<DashboardScreen>
             },
             child: Badge(
               position: BadgePosition.topEnd(top: 3, end: 3),
-
               badgeStyle: BadgeStyle(badgeColor: Colors.white,shape: BadgeShape.circle),
               badgeAnimation: BadgeAnimation.scale(
                 disappearanceFadeAnimationDuration: Duration(milliseconds: 300),

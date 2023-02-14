@@ -314,17 +314,28 @@ class CommonInfoRepository {
             .getInstance()
             .post("https://www.cocoalabs.in/ngo/api/web/v1/razorpay/pay-out",
             data: ({"amount":100,
-                    "fund_account_id":Contactid
+              "fund_account_id":Contactid
             }));
+print("-<${responseforpayout.data["notes"]["notes_key_1"]}");
+        if (responseforpayout.data["notes"]["notes_key_1"] =="Amount Transffered Successfully"){
+             String message=responseforpayout.data["notes"]["notes_key_1"];
+            _onAlertButtonsPressed(
+                context, message ,fundid);
+        }
 
-        if (responseforpayout.data["message"] =="Amount Transffered Successfully"){
-          String message=responseforpayout.data["message"];
-          _onAlertButtonsPressed(
-            context, message ,fundid);
-        }
-        else {
-         Fluttertoast.showToast(msg:"Something Wrong");
-        }
+        //   final responseforwithdraw= await apiProvider.getInstance()
+        //       .post("https://www.cocoalabs.in/ngo/api/web/v1/fundraiser-scheme/withdraw",
+        //       data:({
+        //         "token":LoginModel().authToken,
+        //         "fundraiser_id":fundid,
+        //       }) );
+
+        //   return responseforwithdraw.data;
+        //
+        // }
+        // else {
+        //   Fluttertoast.showToast(msg:"Something Wrong");
+        // }
         return CommonResponse.fromJson(responseforpayout.data);
       }
       return CommonResponse.fromJson(responseforfundaccount.data);
@@ -353,32 +364,33 @@ class CommonInfoRepository {
         .post(RemoteConfig.cancelFundraiser, data: body);
     return CommonResponse.fromJson(response.data);
   }
-}
-_onAlertButtonsPressed(context,String message,int id) {
-  Alert(
-    context: context,
-    type: AlertType.warning,
-    title: message,
-    buttons: [
-      DialogButton(
-        child: Text(
-          "Ok",
-          style: TextStyle(color: Colors.white, fontSize: 18),
+  _onAlertButtonsPressed(context,String message,int id) {
+    Alert(
+      context: context,
+      type: AlertType.warning,
+      title: message,
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Ok",
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          onPressed: () {
+            Withdraw(id);
+          },
+          color: Color(colorCoderItemTitle),
         ),
-        onPressed: () {
-          responseforwithdraw(id);
-        },
-        color:  Color(colorCoderItemTitle),
-      ),
-    ],
-  ).show();
-}
-ApiProvider apiProvider;
-Future<void> responseforwithdraw(int id) async {
-  final responseforwithdraw= await apiProvider.getInstance()
-      .post("https://www.cocoalabs.in/ngo/api/web/v1/fundraiser-scheme/withdraw",
-      data:({
-        "token":LoginModel().authToken,
-        "fundraiser_id":id,
-      }) );
+      ],
+    ).show();
+  }
+  Future<CommonResponse> Withdraw(int id) async {
+    final response = await apiProvider
+        .getInstance()
+        .post("https://www.cocoalabs.in/ngo/api/web/v1/fundraiser-scheme/withdraw",
+              data:({
+                "token":LoginModel().authToken,
+                "fundraiser_id":id,
+              }) );
+    return CommonResponse.fromJson(response.data);
+  }
 }
