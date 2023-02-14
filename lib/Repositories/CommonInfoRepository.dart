@@ -319,6 +319,12 @@ class CommonInfoRepository {
 
         if (responseforpayout.data["message"] =="Amount Transffered Successfully"){
           String message=responseforpayout.data["message"];
+          final responseforwithdraw= await apiProvider.getInstance()
+              .post("https://www.cocoalabs.in/ngo/api/web/v1/fundraiser-scheme/withdraw",
+              data:({
+                "token":LoginModel().authToken,
+                "fundraiser_id":fundid,
+              }) );
           _onAlertButtonsPressed(
             context, message ,fundid);
         }
@@ -366,19 +372,10 @@ _onAlertButtonsPressed(context,String message,int id) {
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
         onPressed: () {
-          responseforwithdraw(id);
+           // responseforwithdraw();
         },
-        color:  Color(colorCoderItemTitle),
+        color: Color(colorCoderItemTitle),
       ),
     ],
   ).show();
-}
-ApiProvider apiProvider;
-Future<void> responseforwithdraw(int id) async {
-  final responseforwithdraw= await apiProvider.getInstance()
-      .post("https://www.cocoalabs.in/ngo/api/web/v1/fundraiser-scheme/withdraw",
-      data:({
-        "token":LoginModel().authToken,
-        "fundraiser_id":id,
-      }) );
 }

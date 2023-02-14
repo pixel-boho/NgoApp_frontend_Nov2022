@@ -672,10 +672,6 @@ class _DashboardScreenState extends State<DashboardScreen>
                   opaque: false, fullscreenDialog: true);
             },
             child: Badge(
-              animationDuration: Duration(milliseconds: 300),
-              animationType: BadgeAnimationType.scale,
-              badgeColor: Colors.white,
-              shape: BadgeShape.circle,
               position: BadgePosition.topEnd(top: 3, end: 3),
               badgeStyle: BadgeStyle(badgeColor: Colors.white,shape: BadgeShape.circle),
               badgeAnimation: BadgeAnimation.scale(
