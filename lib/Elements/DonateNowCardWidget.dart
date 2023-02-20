@@ -43,7 +43,7 @@ class DonateNowCardWidget extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                      fontSize: 10,
+                      fontSize: 12,
                       color: Color(colorCodeGreyPageBg),
                       fontWeight: FontWeight.w600)),
             ),
@@ -83,11 +83,11 @@ class DonateNowCardWidget extends StatelessWidget {
               }*/
             },
             child: Text(
-              "Donate To NGO",
+              "Donate Now",
               textAlign: TextAlign.center,
               style: TextStyle(
                   color: Color(colorCodeWhite),
-                  fontSize: 10,
+                  fontSize: 11,
                   fontWeight: FontWeight.w600),
             ),
           )

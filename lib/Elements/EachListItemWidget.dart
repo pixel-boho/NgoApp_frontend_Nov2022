@@ -154,7 +154,7 @@ class _EachListItemWidgetState extends State<EachListItemWidget> {
                       width: double.infinity,
                       margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: CommonButton(
-                          buttonText: "Donate To NGO",
+                          buttonText: "Donate Now",
                           bgColorReceived: Color(colorCoderRedBg),
                           borderColorReceived: Color(colorCoderRedBg),
                           textColorReceived: Color(colorCodeWhite),
