@@ -83,7 +83,7 @@ class _HowItWorksScreenState extends State<HowItWorksScreen> with SingleTickerPr
           child: tabItem(context, 'How It'),
         ),
         Tab(
-          child: tabItem(context, 'Pricing'),
+          child: tabItem(context, 'Donation'),
         ),
       ],
       labelColor: Color(colorCoderRedBg),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ import 'package:ngo_app/Models/PricingStrategiesResponse.dart';
 import 'package:ngo_app/Models/RelationsResponse.dart';
 import 'package:ngo_app/Models/SearchResponse.dart';
 import 'package:ngo_app/Models/TeamResponse.dart';
+import 'package:ngo_app/Notification/withdraw.dart';
 import 'package:ngo_app/ServiceManager/ApiProvider.dart';
 import 'package:ngo_app/ServiceManager/RemoteConfig.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
@@ -314,23 +316,28 @@ class CommonInfoRepository {
             .getInstance()
             .post("https://www.cocoalabs.in/ngo/api/web/v1/razorpay/pay-out",
             data: ({"amount":100,
-                    "fund_account_id":Contactid
+              "fund_account_id":Contactid
             }));
+print("-<${responseforpayout.data["notes"]["notes_key_1"]}");
+        if (responseforpayout.data["notes"]["notes_key_1"] =="Amount Transffered Successfully"){
+             String message=responseforpayout.data["notes"]["notes_key_1"];
 
-        if (responseforpayout.data["message"] =="Amount Transffered Successfully"){
-          String message=responseforpayout.data["message"];
-          final responseforwithdraw= await apiProvider.getInstance()
-              .post("https://www.cocoalabs.in/ngo/api/web/v1/fundraiser-scheme/withdraw",
-              data:({
-                "token":LoginModel().authToken,
-                "fundraiser_id":fundid,
-              }) );
-          _onAlertButtonsPressed(
-            context, message ,fundid);
+             Withdraw(fundid,context,message);
         }
-        else {
-         Fluttertoast.showToast(msg:"Something Wrong");
-        }
+
+        //   final responseforwithdraw= await apiProvider.getInstance()
+        //       .post("https://www.cocoalabs.in/ngo/api/web/v1/fundraiser-scheme/withdraw",
+        //       data:({
+        //         "token":LoginModel().authToken,
+        //         "fundraiser_id":fundid,
+        //       }) );
+
+        //   return responseforwithdraw.data;
+        //
+        // }
+        // else {
+        //   Fluttertoast.showToast(msg:"Something Wrong");
+        // }
         return CommonResponse.fromJson(responseforpayout.data);
       }
       return CommonResponse.fromJson(responseforfundaccount.data);
@@ -359,23 +366,27 @@ class CommonInfoRepository {
         .post(RemoteConfig.cancelFundraiser, data: body);
     return CommonResponse.fromJson(response.data);
   }
-}
-_onAlertButtonsPressed(context,String message,int id) {
-  Alert(
-    context: context,
-    type: AlertType.warning,
-    title: message,
-    buttons: [
-      DialogButton(
-        child: Text(
-          "Ok",
-          style: TextStyle(color: Colors.white, fontSize: 18),
-        ),
-        onPressed: () {
-           // responseforwithdraw();
-        },
-        color: Color(colorCoderItemTitle),
-      ),
-    ],
-  ).show();
+
+
+  Future<CommonResponse> Withdraw(int id,context,String message) async {
+    final response = await apiProvider
+        .getInstance()
+        .post("https://www.cocoalabs.in/ngo/api/web/v1/fundraiser-scheme/withdraw",
+              data:({
+                "token":LoginModel().authToken,
+                "fundraiser_id":id,
+              }) );
+    if(response.statusCode==200){
+Fluttertoast.showToast(msg:"Fundraiser Scheme Canceled Successfully" );
+Navigator.pop(context);
+
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) =>  WithdrawScreen(message: message,fundid: id,)),
+      // );
+    }else{
+      Fluttertoast.showToast(msg: "Something went wrong");
+    }
+    return CommonResponse.fromJson(response.data);
+  }
 }

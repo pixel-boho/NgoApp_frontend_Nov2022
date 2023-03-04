@@ -203,6 +203,7 @@ String beneficiary_account_name = "";
                 _buildInfoSection(data),
                 _buildAccountDetails(data),
                 _buildPersonDetails(true, data),
+                _buildQrDetails(),
                 _buildPersonDetails(false, data),
                 _buildStorySection(data),
                 _buildDocumentsSection(data),
@@ -352,8 +353,8 @@ String beneficiary_account_name = "";
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                     alignment: FractionalOffset.centerLeft,
                     child: Text(
-                      CommonMethods().getDateDifference(
-                          data.fundraiserDetails.closingDate),
+
+                          data.fundraiserDetails.closingDate,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -394,7 +395,7 @@ String beneficiary_account_name = "";
               width: double.infinity,
               margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: CommonButton(
-                  buttonText: "Donate To NGO",
+                  buttonText: "Donate Now",
                   bgColorReceived: Color(colorCoderRedBg),
                   borderColorReceived: Color(colorCoderRedBg),
                   textColorReceived: Color(colorCodeWhite),
@@ -729,7 +730,7 @@ String beneficiary_account_name = "";
             padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
             alignment: FractionalOffset.centerLeft,
             child: Text(
-              "A/c No.  :  ${data.fundraiserDetails.beneficiaryAccountNumber}",
+              "A/c No.  :  ${data.fundraiserDetails.virtualAccountNumber}",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -742,7 +743,7 @@ String beneficiary_account_name = "";
             padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
             alignment: FractionalOffset.centerLeft,
             child: Text(
-              "A/c Name  :  ${data.fundraiserDetails.beneficiaryAccountName}",
+              "A/c Name  :  ${data.fundraiserDetails.virtualAccountName}",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -768,7 +769,7 @@ String beneficiary_account_name = "";
             padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
             alignment: FractionalOffset.centerLeft,
             child: Text(
-              "IFSC      :  ${data.fundraiserDetails.beneficiaryIfsc}",
+              "IFSC      :  ${data.fundraiserDetails.virtualAccountIfsc}",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -781,7 +782,66 @@ String beneficiary_account_name = "";
       ),
     );
   }
+  _buildQrDetails() {
+    return Container(
+      alignment: FractionalOffset.center,
+      padding: EdgeInsets.fromLTRB(0, 20, 0, 25),
+      margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+      decoration: BoxDecoration(
+          color: Color(colorCodeGreyPageBg),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              topRight: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+              bottomRight: Radius.circular(15)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 3,
+              blurRadius: 4,
+              offset: Offset(0, 2), // changes position of shadow
+            ),
+          ]),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.fromLTRB(80, 0, 10, 10),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ClipRect(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(5),
+                            topRight: Radius.circular(5),
+                            bottomLeft: Radius.circular(5),
+                            bottomRight: Radius.circular(5))),
+                    padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                    child: Image(
+                      image: AssetImage("assets/images/qr.jpg"),
+                      height: 160.0,
+                      width: 160.0,
+                    ),
+                  ),
+                ),
 
+              ],
+            ),
+          ),
+
+
+
+        ],
+      ),
+    );
+  }
   _buildPersonDetails(bool isCampaigner, ItemDetailResponse data) {
     if (!isCampaigner && data.fundraiserDetails.isCampaign == 1) {
       return Container();
@@ -1555,7 +1615,7 @@ var body =
       Get.back();
       CommonResponse commonResponse = value;
       print("response->${commonResponse}");
-
+      Get.back();
     });
   }
 
