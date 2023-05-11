@@ -6,7 +6,7 @@ import 'package:ngo_app/Screens/Sidebar/Fragments/HowWorksScreen.dart';
 import 'package:ngo_app/Screens/Sidebar/Fragments/PricingScreen.dart';
 
 
-class HowItWorksScreen extends StatefulWidget {
+class HowItWorksScreen extends StatefulWidget                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 {
   final int fragmentToShow;
   HowItWorksScreen({Key key, @required this.fragmentToShow}) : super(key: key);
   @override

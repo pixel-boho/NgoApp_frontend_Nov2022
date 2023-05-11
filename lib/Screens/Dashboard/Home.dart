@@ -70,7 +70,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       child: WillPopScope(
         onWillPop: onWillPop,
         child: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.red,
           resizeToAvoidBottomInset: true,
           key: _scaffoldKey,
           appBar: AppBar(

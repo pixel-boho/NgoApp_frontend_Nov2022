@@ -349,7 +349,7 @@ print("-<${responseforpayout.data["notes"]["notes_key_1"]}");
   Future<CommonResponse> removeSubscription(String body) async {
     final response = await apiProvider
         .getInstance()
-        .post(RemoteConfig.removeSubscription, data: body);
+        .post(RemoteConfig.removeSubscription,data: body);
     return CommonResponse.fromJson(response.data);
   }
 

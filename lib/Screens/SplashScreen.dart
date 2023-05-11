@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(colorCodeGreyPageBg),
+      backgroundColor: Colors.purple,
       body: Container(
         constraints: BoxConstraints.expand(),
         decoration: BoxDecoration(
@@ -54,9 +54,7 @@ class _SplashScreenState extends State<SplashScreen>
   void navigateToStartUp() {
     if (LoginModel().authToken != null && LoginModel().authToken != "") {
       Get.offAll(
-          () => DashboardScreen(
-            fragmentToShow: 0,
-          ),
+          () => DashboardScreen(fragmentToShow: 1,),
           transition: Transition.fade);
     } else {
       Get.offAll(() => WelcomeScreen(), transition: Transition.fade);

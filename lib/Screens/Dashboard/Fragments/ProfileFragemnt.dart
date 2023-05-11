@@ -13,6 +13,7 @@ import 'package:ngo_app/Elements/ProfileOption.dart';
 import 'package:ngo_app/Models/ProfileResponse.dart';
 import 'package:ngo_app/Models/UserDetails.dart';
 import 'package:ngo_app/Screens/ProfileRelated/EditProfileScreen.dart';
+import 'package:ngo_app/Screens/ProfileRelated/Fragments/MyPaymentScreen.dart';
 import 'package:ngo_app/Screens/ProfileRelated/MyDocumentsScreen.dart';
 import 'package:ngo_app/Screens/ProfileRelated/MyCommentsScreen.dart';
 import 'package:ngo_app/Screens/ProfileRelated/MyDonationsScreen.dart';
@@ -402,6 +403,8 @@ class _ProfileFragmentState extends State<ProfileFragment> {
               "assets/images/ic_my_loans.png", ProfileOptionsType.MyLoans),
           ProfileOption(_profileOptionSelected, " My Documents ",
               "assets/images/ic_my_documents.png", ProfileOptionsType.MyDocuments),
+          ProfileOption(_profileOptionSelected, " My Transactions ",
+              "assets/images/paymenthistory.png", ProfileOptionsType.MyPayment),
         ],
       ),
     );
@@ -420,6 +423,9 @@ class _ProfileFragmentState extends State<ProfileFragment> {
     }
     else if (optionSelected == ProfileOptionsType.MyDocuments) {
       Get.to(() => MyDocumentsScreen(userid:userids,url:url));
+    }
+    else if (optionSelected == ProfileOptionsType.MyPayment) {
+      Get.to(() => MyPaymentHistory(userid:userids,url:url));
     }
   }
 }

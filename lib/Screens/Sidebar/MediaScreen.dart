@@ -171,8 +171,7 @@ class _MediaScreenState extends State<MediaScreen> with LoadMoreListener {
         title: Text(
           "${mediaItem.heading}",
           style: TextStyle(
-              fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.black),
-        ),
+              fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.black),),
         children: <Widget>[
           Container(
             padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
