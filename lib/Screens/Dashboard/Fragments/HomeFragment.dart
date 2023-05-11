@@ -240,6 +240,7 @@ class _HomeFragmentState extends State<HomeFragment> {
       List<FundraiserItem> fundraiserList, String webBaseUrl) {
     if (fundraiserList != null) {
       if (fundraiserList.length > 0) {
+
         return Container(
           margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
           child: Column(

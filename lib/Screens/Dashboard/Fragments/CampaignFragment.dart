@@ -11,10 +11,10 @@ import 'package:ngo_app/Elements/PainationLoader.dart';
 import 'package:ngo_app/Interfaces/LoadMoreListener.dart';
 import 'package:ngo_app/Models/CommonViewAllResponse.dart';
 import 'package:ngo_app/Models/FundraiserItem.dart';
+import 'package:ngo_app/Screens/Dashboard/FilterScreen.dart';
 import 'package:ngo_app/Screens/DetailPages/ItemDetailScreen.dart';
 import 'package:ngo_app/ServiceManager/ApiResponse.dart';
 
-import '../FilterScreen.dart';
 
 class CampaignFragment extends StatefulWidget {
   @override
@@ -105,7 +105,6 @@ class _CampaignFragmentState extends State<CampaignFragment>
                           } else if (data.containsKey("isFilterReset")) {
                             print("*****isFilterReset");
                           }
-
                           _viewAllItemsBloc.getItems(false, false);
                         }
                       },
@@ -166,7 +165,6 @@ class _CampaignFragmentState extends State<CampaignFragment>
       print(isLoadingMore);
     }
   }
-
   _buildUserWidget(
       String imageBase, List<FundraiserItem> itemsList, String webBaseUrl) {
     if (itemsList != null) {

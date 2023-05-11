@@ -25,7 +25,7 @@ import 'package:ngo_app/ServiceManager/ApiProvider.dart';
 import 'package:ngo_app/ServiceManager/RemoteConfig.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-
+int Campaign_id;
 class CommonInfoRepository {
   ApiProvider apiProvider;
 
@@ -68,7 +68,7 @@ class CommonInfoRepository {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getAllCampaignRelatedItems +
             "?page=" +
-            "${pageNumber + 1}" +
+            "${pageNumber + 1}"
             "&per_page=" +
             "$perPage" +
             "${category != null ? "&category_id=" + "$category" : ""}" +

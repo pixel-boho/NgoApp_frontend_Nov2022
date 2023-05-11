@@ -69,4 +69,11 @@ class AuthorisationRepository {
         .post('${RemoteConfig.fetchpancard}', data: {"user_id": userId});
     return UserPancardResponse.fromJson(response.data);
   }
+
+  Future<UserPancardResponse> fetchUserpaymentdetails(String userId) async {
+    final response = await apiProvider
+        .getInstance()
+        .post('${RemoteConfig.fetchpancard}', data: {"user_id": userId});
+    return UserPancardResponse.fromJson(response.data);
+  }
 }

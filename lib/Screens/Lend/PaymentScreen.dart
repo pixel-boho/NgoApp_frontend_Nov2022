@@ -7,6 +7,7 @@ import 'package:ngo_app/Constants/CommonMethods.dart';
 import 'package:ngo_app/Constants/CommonWidgets.dart';
 import 'package:ngo_app/Constants/EnumValues.dart';
 import 'package:ngo_app/Elements/CommonApiLoader.dart';
+import 'package:ngo_app/Elements/EachListItemWidget.dart';
 import 'package:ngo_app/Models/GatewayKeyResponse.dart';
 import 'package:ngo_app/Models/OrderResponse.dart';
 import 'package:ngo_app/Screens/Dashboard/Home.dart';
@@ -16,7 +17,6 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class PaymentScreen extends StatefulWidget {
   final PaymentInfo paymentInfo;
-
   const PaymentScreen({Key key, this.paymentInfo}) : super(key: key);
 
   @override
@@ -37,7 +37,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   String Amount = "";
   String amountInPaise = '0';
   Map<String, dynamic> notes = {};
-int campaign_id = 0;
+
   @override
   void initState() {
     super.initState();
@@ -50,6 +50,9 @@ int campaign_id = 0;
 
   @override
   Widget build(BuildContext context) {
+    print("nameeee---${paymentInfo.name}");
+    print("hhbj---${paymentInfo.form80G.address}");
+
     return Scaffold(
       backgroundColor: Colors.black12.withOpacity(0.5),
       body: Center(
@@ -65,7 +68,6 @@ int campaign_id = 0;
       return;
     } else {
       bool isSuccess = await getGatewayKey();
-
       if (!isSuccess) {
         Fluttertoast.showToast(
             msg: 'Unable to get payment credentials. Please try again');
@@ -73,13 +75,11 @@ int campaign_id = 0;
         return;
       }
       await _getOrder1(paymentInfo.id);
-
       if (!isSuccess) {
         Fluttertoast.showToast(msg: 'Unable to create order. Please try again');
         Get.back();
         return;
       }
-
       startPayment(onPaymentSuccess, onPaymentErrorFn);
     }
   }
@@ -97,7 +97,7 @@ int campaign_id = 0;
     } else {
       Fluttertoast.showToast(
         msg: 'Payment Error, Try after some time',
-                            );
+      );
     }
     Get.back();
   }
@@ -123,11 +123,8 @@ int campaign_id = 0;
         'cpc': '${paymentInfo.form80G?.pan ?? ''}',
         'd_by': userIdToPass ?? ''
       };
-
       path = 'master/get-api-key?loan_id=${paymentInfo.id}';
-
     } else if (paymentInfo.paymentType == PaymentType.Donation) {
-
       notes = {
         'type': 'donate',
         'amt': '${paymentInfo.amount}',
@@ -152,7 +149,7 @@ int campaign_id = 0;
 
     final response = await apiProvider.getInstance().get(path);
     _gatewayKeyResponse = GatewayKeyResponse.fromJson(response.data);
-
+    print("Response${response.data['message']}");
     return _gatewayKeyResponse.success ?? false;
   }
 
@@ -191,7 +188,6 @@ int campaign_id = 0;
         path =
         'master/get-order-id?amount=${paymentInfo.amount}&fundraiser_id=$id';
       }
-      // path = 'master/get-order-id?amount=${paymentInfo.amount}';
     } else {
       Fluttertoast.showToast(msg: 'Unknown Payment type');
       Get.back();
@@ -207,13 +203,12 @@ int campaign_id = 0;
     return _orderResponse.success ?? false;
   }
 
-
   Future<bool> donationPaymentSuccess() async {
 
     print("donorinfo->${paymentInfo.isAnonymous}?1:0");
 
     final response = await apiProvider.getInstance().post(
-        'fundraiser-schema/donate', data: ({
+        'fundraiser-scheme/donate', data: ({
       'transaction_id': '${_paymentSuccessResponse.paymentId}',
       'amount': '${paymentInfo.amount}',
       'fundraiser_id': '${paymentInfo.id}',
@@ -221,16 +216,16 @@ int campaign_id = 0;
       'email': '${paymentInfo.email}',
       'show_donor_information': '${paymentInfo.isAnonymous?0:1}',
       'certificate_name': '${paymentInfo.form80G?.name ?? ''}',
-      'certificate_address': '',
+      'certificate_address': '${paymentInfo.form80G?.address ?? ''}',
       'certificate_phone': '${paymentInfo.form80G?.mobile ?? ''}',
       'certificate_pan': '${paymentInfo.form80G?.pan ?? ''}'
     })
     );
-
     Map<String, dynamic> map = response.data;
     print("map=>${map}");
     return map['success'] ?? false;
   }
+
   Future<bool> loginDonationPaymentSuccess() async {
 
     print("donorinfo->${paymentInfo.isAnonymous}?1:0");
@@ -244,16 +239,16 @@ int campaign_id = 0;
       'email': '${paymentInfo.email}',
       'show_donor_information': '${paymentInfo.isAnonymous?0:1}',
       'certificate_name': '${paymentInfo.form80G?.name ?? ''}',
-      'certificate_address': '',
+      'certificate_address': '${paymentInfo.form80G?.address ?? ''}',
       'certificate_phone': '${paymentInfo.form80G?.mobile ?? ''}',
       'certificate_pan': '${paymentInfo.form80G?.pan ?? ''}'
     })
     );
-
     Map<String, dynamic> map = response.data;
     print("map=>${map}");
     return map['success'] ?? false;
   }
+
   Future<bool> guestDonationPaymentSuccess() async {
 
     print("donorinfo->${paymentInfo.id}");
@@ -268,7 +263,59 @@ int campaign_id = 0;
       'email': '${paymentInfo.email}',
       'show_donor_information': '${paymentInfo.isAnonymous?0:1}',
       'certificate_name': '${paymentInfo.form80G?.name ?? ''}',
-      'certificate_address': '',
+      'certificate_address': '${paymentInfo.form80G?.address ?? ''}',
+      'certificate_phone': '${paymentInfo.form80G?.mobile ?? ''}',
+      'certificate_pan': '${paymentInfo.form80G?.pan ?? ''}'
+    })
+    );
+    print("response${response.statusMessage}");
+    print("map=>${response.data}");
+    var map = response.data;
+    print("map=>${map}");
+    return map['success'] ?? false;
+  }
+
+  onExternalWalletResponse(ExternalWalletResponse response) {
+    print('_onExternalWallet:${response.walletName}');
+  }
+
+  Future<bool> loginDonationPaymentCampaignSuccess() async {
+
+    print("donorinfo->${paymentInfo.isAnonymous}?1:0");
+
+    final response = await apiProvider.getInstance().post(
+        'campaign/donate', data: ({
+      'transaction_id': '${_paymentSuccessResponse.paymentId}',
+      'amount': '${paymentInfo.amount}',
+      'campaign_id': '${paymentInfo.id}',
+      'user_id': '${LoginModel().userDetails.id}',
+      'name': '${paymentInfo.name}',
+      'email': '${paymentInfo.email}',
+      'show_donor_information': '${paymentInfo.isAnonymous?0:1}',
+      'certificate_name': '${paymentInfo.form80G?.name ?? ''}',
+      'certificate_address': '${paymentInfo.form80G?.address ?? ''}',
+      'certificate_phone': '${paymentInfo.form80G?.mobile ?? ''}',
+      'certificate_pan': '${paymentInfo.form80G?.pan ?? ''}'
+    })
+    );
+
+    Map<String, dynamic> map = response.data;
+    print("map=>${map}");
+    return map['success'] ?? false;
+  }
+
+  Future<bool> guestDonationPaymentCampaignSuccess() async  {
+    final response = await apiProvider.getInstance().post(
+        'campaign/donate', data: ({
+      'transaction_id': '${_paymentSuccessResponse.paymentId}',
+      'amount': '${paymentInfo.amount}',
+      'campaign_id': '${paymentInfo.id}',
+      'donor_type': 'Guest',
+      'name': '${paymentInfo.name}',
+      'email': '${paymentInfo.email}',
+      'show_donor_information': '${paymentInfo.isAnonymous?0:1}',
+      'certificate_name': '${paymentInfo.form80G?.name ?? ''}',
+      'certificate_address': '${paymentInfo.form80G?.address ?? ''}',
       'certificate_phone': '${paymentInfo.form80G?.mobile ?? ''}',
       'certificate_pan': '${paymentInfo.form80G?.pan ?? ''}'
     })
@@ -278,9 +325,6 @@ int campaign_id = 0;
     print("map=>${map}");
     return map['success'] ?? false;
   }
-  onExternalWalletResponse(ExternalWalletResponse response) {
-    print('_onExternalWallet:${response.walletName}');
-  }
 
   bool startPayment(Function onPaymentSuccess, Function onPaymentErrorFn) {
     try {
@@ -288,7 +332,18 @@ int campaign_id = 0;
               (PaymentSuccessResponse paymentSuccessResponse) {
             _paymentSuccessResponse = paymentSuccessResponse;
             onPaymentSuccess(_paymentSuccessResponse);
-            if(paymentInfo.id==null){loginDonationPaymentSuccess();}                                   else{donationPaymentSuccess();}
+            if(paymentInfo.id==null && IsCampaign == 0){
+              loginDonationPaymentSuccess();
+            }
+            else if(paymentInfo.id==null && IsCampaign == 1){
+              loginDonationPaymentCampaignSuccess();
+            }
+            else if(paymentInfo.id != null && IsCampaign == 1){
+              loginDonationPaymentCampaignSuccess();
+            }
+            else {
+              donationPaymentSuccess();
+            }
           });
       _razorPay.on(Razorpay.EVENT_PAYMENT_ERROR,
               (PaymentFailureResponse paymentFailureResponse) {
@@ -308,7 +363,7 @@ int campaign_id = 0;
         'currency': "INR",
         'name': 'NGO',
         'description': 'Payment',
-        'prefill': {
+        'prefill':  {
           'name': '${paymentInfo.name ?? ''}',
           'contact': '${paymentInfo.mobile ?? ''}',
           'email': '${paymentInfo.email ?? ''}'
@@ -335,7 +390,12 @@ int campaign_id = 0;
               (PaymentSuccessResponse paymentSuccessResponse) {
             _paymentSuccessResponse = paymentSuccessResponse;
             onPaymentSuccess(_paymentSuccessResponse);
-            guestDonationPaymentSuccess();
+            if(IsCampaign==0){
+              guestDonationPaymentSuccess();
+            }
+            else {
+              guestDonationPaymentCampaignSuccess();
+            }
           });
       _razorPay.on(Razorpay.EVENT_PAYMENT_ERROR,
               (PaymentFailureResponse paymentFailureResponse) {
@@ -396,12 +456,13 @@ class PaymentInfo {
   String email;
   String countryCode;
   String mobile;
+  String address;
   bool isAnonymous;
   Form80G form80G;
   bool isSubscriptionNeeded;
 
   PaymentInfo(
-      {this.paymentType, this.id, this.amount, this.isSubscriptionNeeded});
+      {this.paymentType, this.id, this.amount, this.isSubscriptionNeeded,this.address,this.form80G});
 }
 
 class Form80G {
@@ -411,5 +472,6 @@ class Form80G {
   String countryCode;
   String mobile;
 
-  Form80G({this.pan, this.name, this.countryCode, this.mobile});
+  Form80G({this.pan, this.name, this.countryCode, this.mobile,this.address});
 }
+

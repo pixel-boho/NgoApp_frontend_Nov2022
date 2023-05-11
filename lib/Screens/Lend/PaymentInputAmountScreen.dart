@@ -9,6 +9,7 @@ import 'package:ngo_app/Constants/CustomColorCodes.dart';
 import 'package:ngo_app/Constants/EnumValues.dart';
 import 'package:ngo_app/Elements/CommonAppBar.dart';
 import 'package:ngo_app/Elements/CommonButton.dart';
+import 'package:ngo_app/Elements/CommonTextFormField.dart';
 import 'package:ngo_app/Screens/MakeDonation/AddDonorInfoScreen.dart';
 import '../../Utilities/LoginModel.dart';
 import 'PaymentScreen.dart';
@@ -43,6 +44,11 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
   TextEditingController _textEditingController = TextEditingController();
   FocusNode _focusNode = FocusNode();
   bool _isSubscriptionAvailable = false;
+  bool _is80gFormRequired = false;
+  String _panCard;
+  String address;
+  TextEditingController _panCardController = new TextEditingController();
+  TextEditingController _addressController = new TextEditingController();
 
   @override
   void initState() {
@@ -60,6 +66,12 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
         FocusScope.of(context).requestFocus(FocusNode());
       });
     }
+  }
+  @override
+  void dispose() {
+    _panCardController.dispose();
+    super.dispose();
+
   }
 
   @override
@@ -107,6 +119,10 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
                       SizedBox(height: MediaQuery.of(context).size.height * .01),
                       _buildAmountTypingSection(),
                       SizedBox(height: MediaQuery.of(context).size.height * .01),
+                      Visibility(
+                        child: _build80gFormCheckBoxSection(),
+                        visible: CommonMethods().isAuthTokenExist(),
+                      ),
                       Visibility(
                         child: _buildSubscribeSection(),
                         visible: widget.isCampaignRelated &&
@@ -168,8 +184,16 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
           paymentInfo.email = LoginModel().userDetails.email??'';
           paymentInfo.countryCode = LoginModel().userDetails.countryCode?.toString()??'';
           paymentInfo.mobile =LoginModel().userDetails.phoneNumber?.toString()??'';
-          paymentInfo.isAnonymous =
-          CommonMethods().isAuthTokenExist() ? _isAnonymous : true;
+          paymentInfo.isAnonymous = CommonMethods().isAuthTokenExist() ? _isAnonymous : true;
+          if (_is80gFormRequired) {
+            paymentInfo.form80G = Form80G(
+                name:  LoginModel().userDetails.name??'',
+                pan: _panCard.trim(),
+                address: address.trim(),
+                countryCode:LoginModel().userDetails.countryCode?.toString()??'',
+                mobile: LoginModel().userDetails.phoneNumber?.toString()??'');
+          }
+
           //       opaque: false,
           // fullscreenDialog: true
           Get.to(() =>
@@ -191,6 +215,83 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
   void _backPressFunction() {
     print("_sendOtpFunction clicked");
     Get.back();
+  }
+  _build80gFormCheckBoxSection() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(height: MediaQuery.of(context).size.height * .01),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Theme(
+              data: ThemeData(unselectedWidgetColor: Colors.white),
+              child: Checkbox(
+                activeColor: Colors.red,
+                value: _is80gFormRequired,
+                onChanged: (val) {
+                  _panCardController.text = "";
+                  _check80gFormRequirement();
+                },
+              ),
+            ),
+            Text(
+              "Do you need 80G Form",
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                  fontSize: 12.0,
+                  color: Color(colorCodeWhite),
+                  fontWeight: FontWeight.w500),
+            )
+          ],
+        ),
+        SizedBox(height: MediaQuery.of(context).size.height * .01),
+        Visibility(
+          child: Padding(
+            child: CommonTextFormField(
+                hintText: "PAN Card number",
+                maxLinesReceived: 1,
+                maxLengthReceived: 10,
+                controller: _panCardController,
+                textColorReceived: Color(colorCodeWhite),
+                fillColorReceived: Color(colorCoderGreyBg),
+                hintColorReceived: Colors.white30,
+                isFullCapsNeeded: true,
+                borderColorReceived: Color(colorCoderBorderWhite),
+                onChanged: (val) => _panCard = val,
+                validator: _is80gFormRequired
+                    ? CommonMethods().isValidPanCardNo
+                    : null),
+            padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+          ),
+          visible: _is80gFormRequired,
+        ),
+        SizedBox(height: MediaQuery.of(context).size.height * .01),
+        Visibility(
+          child: Padding(
+            child: CommonTextFormField(
+                hintText: "Address",
+                maxLinesReceived: 1,
+                maxLengthReceived: 10,
+                controller: _addressController,
+                textColorReceived: Color(colorCodeWhite),
+                fillColorReceived: Color(colorCoderGreyBg),
+                hintColorReceived: Colors.white30,
+                isFullCapsNeeded: true,
+                borderColorReceived: Color(colorCoderBorderWhite),
+                onChanged: (val) => address = val,
+                validator: _is80gFormRequired
+                    ? CommonMethods().addressValidator
+                    : null),
+            padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+          ),
+          visible: _is80gFormRequired,
+        )
+      ],
+    );
   }
 
   _buildAmountTypingSection() {
@@ -243,9 +344,6 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
       },
     );
   }
-
-
-
 
   _buildSubscribeSection() {
     return Column(
@@ -311,6 +409,18 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
     } else if (_isSubscriptionAvailable == true) {
       setState(() {
         _isSubscriptionAvailable = false;
+      });
+    }
+  }
+
+  void _check80gFormRequirement() {
+    if (_is80gFormRequired == false) {
+      setState(() {
+        _is80gFormRequired = true;
+      });
+    } else if (_is80gFormRequired == true) {
+      setState(() {
+        _is80gFormRequired = false;
       });
     }
   }
