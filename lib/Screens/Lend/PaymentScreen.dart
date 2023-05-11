@@ -268,8 +268,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
       'certificate_pan': '${paymentInfo.form80G?.pan ?? ''}'
     })
     );
-    print("response${response.statusMessage}");
-    print("map=>${response.data}");
+    print("response${response}");
+    // print("map=>${response.data['message']}");
     var map = response.data;
     print("map=>${map}");
     return map['success'] ?? false;

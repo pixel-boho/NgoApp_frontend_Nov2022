@@ -150,7 +150,21 @@ class _EachListItemWidgetState extends State<EachListItemWidget> {
               alignment: FractionalOffset.center,
               child: Row(
                 children: [
+                  widget._fundraiserItem.fundRequired - widget._fundraiserItem.fundRaised == 0 ?
                   Expanded(
+                    child: Container(
+                      height: 45.0,
+                      width: double.infinity,
+                      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      child: CommonButton(
+                        buttonText: "Donate Now",
+                        bgColorReceived: Color(colorCoderGreyBg),
+                        borderColorReceived: Color(colorCoderGreyBg),
+                        textColorReceived: Colors.white70,
+                      ),
+                    ),
+                    flex: 1,
+                  ): Expanded(
                     child: Container(
                       height: 45.0,
                       width: double.infinity,
@@ -194,6 +208,7 @@ class _EachListItemWidgetState extends State<EachListItemWidget> {
                     ),
                     flex: 1,
                   ),
+
                   InkWell(
                     child: Container(
                       margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
