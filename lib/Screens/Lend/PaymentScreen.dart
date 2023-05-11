@@ -37,7 +37,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   String Amount = "";
   String amountInPaise = '0';
   Map<String, dynamic> notes = {};
-
+int campaign_id = 0;
   @override
   void initState() {
     super.initState();
@@ -97,7 +97,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     } else {
       Fluttertoast.showToast(
         msg: 'Payment Error, Try after some time',
-      );
+                            );
     }
     Get.back();
   }
@@ -123,8 +123,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
         'cpc': '${paymentInfo.form80G?.pan ?? ''}',
         'd_by': userIdToPass ?? ''
       };
+
       path = 'master/get-api-key?loan_id=${paymentInfo.id}';
+
     } else if (paymentInfo.paymentType == PaymentType.Donation) {
+
       notes = {
         'type': 'donate',
         'amt': '${paymentInfo.amount}',
@@ -204,27 +207,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return _orderResponse.success ?? false;
   }
 
-  // Future<bool> loanPaymentSuccess() async {
-  //   FormData formData = dio.FormData.fromMap({
-  //     'loan_id': '${paymentInfo.id}',
-  //     'amount': '${paymentInfo.amount}',
-  //     'transaction_id': '${_paymentSuccessResponse.paymentId}'
-  //   });
-  //
-  //   final response = await apiProvider.getInstance().post(
-  //       'loan/donate', data: formData);
-  //
-  //   Map<String, dynamic> map = response?.data;
-  //
-  //   return map['success'] ?? false;
-  // }
 
   Future<bool> donationPaymentSuccess() async {
 
     print("donorinfo->${paymentInfo.isAnonymous}?1:0");
 
     final response = await apiProvider.getInstance().post(
-        'fundraiser-scheme/donate', data: ({
+        'fundraiser-schema/donate', data: ({
       'transaction_id': '${_paymentSuccessResponse.paymentId}',
       'amount': '${paymentInfo.amount}',
       'fundraiser_id': '${paymentInfo.id}',
@@ -299,7 +288,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               (PaymentSuccessResponse paymentSuccessResponse) {
             _paymentSuccessResponse = paymentSuccessResponse;
             onPaymentSuccess(_paymentSuccessResponse);
-            if(paymentInfo.id==null){loginDonationPaymentSuccess();}else{donationPaymentSuccess();}
+            if(paymentInfo.id==null){loginDonationPaymentSuccess();}                                   else{donationPaymentSuccess();}
           });
       _razorPay.on(Razorpay.EVENT_PAYMENT_ERROR,
               (PaymentFailureResponse paymentFailureResponse) {

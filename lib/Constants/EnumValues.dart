@@ -1,6 +1,6 @@
 enum ScrollType { Horizontal, Vertical }
 
-enum ProfileOptionsType { MyDonation, MyFundraiser, MyComments, MyLoans ,MyDocuments}
+enum ProfileOptionsType { MyDonation, MyFundraiser, MyComments, MyLoans ,MyDocuments,MyPayment}
 
 enum HistoryType { Loan, Lend }
 
