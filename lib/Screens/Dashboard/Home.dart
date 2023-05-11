@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart'as badge;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -671,10 +671,10 @@ class _DashboardScreenState extends State<DashboardScreen>
               Get.to(() => PointsInfoScreen(),
                   opaque: false, fullscreenDialog: true);
             },
-            child: Badge(
-              position: BadgePosition.topEnd(top: 3, end: 3),
-              badgeStyle: BadgeStyle(badgeColor: Colors.white,shape: BadgeShape.circle),
-              badgeAnimation: BadgeAnimation.scale(
+            child: badge.Badge(
+              position: badge.BadgePosition.topEnd(top: 3, end: 3),
+              badgeStyle: badge.BadgeStyle(badgeColor: Colors.white,shape:badge.BadgeShape.circle),
+              badgeAnimation: badge.BadgeAnimation.scale(
                 disappearanceFadeAnimationDuration: Duration(milliseconds: 300),
               ),
               badgeContent: Text(

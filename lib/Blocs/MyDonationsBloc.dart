@@ -51,7 +51,7 @@ class MyDonationsBloc {
       }
 
       if (isPagination) {
-        if (itemsList.length == 0) {
+          if (itemsList.length == 0) {
           itemsList = commonViewAllResponse.list;
         } else {
           itemsList.addAll(commonViewAllResponse.list);
