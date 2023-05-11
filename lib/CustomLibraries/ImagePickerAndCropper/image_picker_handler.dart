@@ -11,7 +11,6 @@ class ImagePickerHandler {
   ImagePickerDialog imagePicker;
   AnimationController _controller;
   ImagePickerListener _listener;
-
   ImagePickerHandler(this._listener, this._controller);
 
   openCamera() async {

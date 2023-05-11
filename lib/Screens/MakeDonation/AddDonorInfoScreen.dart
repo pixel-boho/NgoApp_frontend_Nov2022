@@ -1,6 +1,7 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:ngo_app/Constants/CommonMethods.dart';
 import 'package:ngo_app/Constants/CommonWidgets.dart';
@@ -26,6 +27,7 @@ class _AddDonorInfoScreenState extends State<AddDonorInfoScreen> {
   String _phone = '';
   String _name = '';
   String _email = '';
+  String _address = '';
   String _countryCode = '+91';
   bool _isAnonymous = false;
   bool _is80gFormRequired = false;
@@ -197,6 +199,22 @@ class _AddDonorInfoScreenState extends State<AddDonorInfoScreen> {
                               validator: CommonMethods().validateMobile),
                           padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
                         ),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * .01),
+                        Padding(
+                          child: CommonTextFormField(
+                              hintText: "Address",
+                              maxLinesReceived: 1,
+                              maxLengthReceived: 150,
+                              isEmail: true,
+                              textColorReceived: Color(colorCodeWhite),
+                              fillColorReceived: Color(colorCoderGreyBg),
+                              hintColorReceived: Colors.white30,
+                              borderColorReceived: Color(colorCoderBorderWhite),
+                              onChanged: (val) => _address = val,
+                              validator:  CommonMethods().addressValidator),
+                          padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                        ),
                         Visibility(
                           child: _build80gFormCheckBoxSection(),
                           visible: true,
@@ -238,12 +256,14 @@ class _AddDonorInfoScreenState extends State<AddDonorInfoScreen> {
       paymentInfo.email = _email.trim();
       paymentInfo.countryCode = _countryCode;
       paymentInfo.mobile = _phone.trim();
+      paymentInfo.address = _address.trim();
       paymentInfo.isAnonymous =
       CommonMethods().isAuthTokenExist() ? _isAnonymous : true;
       if (_is80gFormRequired) {
         paymentInfo.form80G = Form80G(
             name: _name.trim(),
             pan: _panCard.trim(),
+            address: _address.trim(),
             countryCode: _countryCode,
             mobile: _phone.trim());
       }

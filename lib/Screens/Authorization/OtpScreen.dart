@@ -233,7 +233,7 @@ class _OtpScreenState extends State<OtpScreen> {
             PreferenceUtils.prefUserDetails, loginResponse.userDetails);
         OneSignalNotifications().handleSendTags();
         Get.offAll(() => DashboardScreen(
-              fragmentToShow: 0,
+              // fragmentToShow: 0,
             ));
       } else {
         Fluttertoast.showToast(

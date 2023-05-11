@@ -226,6 +226,15 @@ class CommonMethods {
     }
     return null;
   }
+  String addressValidator(String address) {
+    if (address.length == 0) {
+      return "Enter your address";
+    } else if  (!RegExp(r'^[a-zA-Z0-9\.\-\s\,\/]+$').hasMatch(address)) {
+      return "Please provide a valid address";
+    }
+    return null;
+  }
+
 
   String emailValidator(String value) {
     Pattern pattern =

@@ -12,7 +12,7 @@ import 'package:ngo_app/Models/FundraiserItem.dart';
 import 'package:share/share.dart';
 
 import '../Screens/Lend/PaymentInputAmountScreen.dart';
-
+int IsCampaign;
 class EachListItemWidget extends StatefulWidget {
   final Function buttonHandler;
   final int itemPosition;
@@ -31,6 +31,8 @@ class EachListItemWidget extends StatefulWidget {
 class _EachListItemWidgetState extends State<EachListItemWidget> {
   @override
   Widget build(BuildContext context) {
+    IsCampaign =widget._fundraiserItem.isCampaign;
+    print("cammm====${IsCampaign}");
     return InkWell(
       child: Container(
         height: MediaQuery.of(context).size.height * .45,
