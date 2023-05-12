@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
@@ -423,7 +422,6 @@ String beneficiary_account_name = "";
                             CommonMethods().alertLoginOkClickFunction,
                             false,
                             true);*/
-
                         CommonWidgets().showSignUpWarningDialog(
                             "Do you want to sign-in or do the donation without sign-in?",
                             AssetImage(
@@ -458,7 +456,6 @@ String beneficiary_account_name = "";
                         textColorReceived: Color(colorCodeWhite),
                         buttonHandler: () {
                           if (data.fundraiserDetails?.fundRaised != 0) {
-
                             CommonWidgets().showCommonDialog(
                                 "Are you sure you, you want to transfer now?",
                                 AssetImage(
@@ -1585,7 +1582,6 @@ String beneficiary_account_name = "";
                   if (data.success) {
                     LoginModel().isFundraiserEditMode = true;
                     LoginModel().itemDetailResponseInEditMode = data;
-
                     LoginModel().startFundraiserMap["campaignSelected"] =
                         data.campaignDetail;
                     LoginModel().startFundraiserMap["campaign_id"] =
