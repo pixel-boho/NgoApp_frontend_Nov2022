@@ -367,7 +367,6 @@ print("-<${responseforpayout.data["notes"]["notes_key_1"]}");
     return CommonResponse.fromJson(response.data);
   }
 
-
   Future<CommonResponse> Withdraw(int id,context,String message) async {
     final response = await apiProvider
         .getInstance()
