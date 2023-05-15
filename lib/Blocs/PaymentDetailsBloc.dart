@@ -13,9 +13,6 @@ class PaymentInfoBloc {
 
   Stream<ApiResponse<PaymentHistoryResponse>> get paymentinfoStream => _paymentinfoController.stream;
 
-  List<PaymentHist> paymentInfo = [];
-
-  List<Donate> donateInfo = [];
 
 
   PaymentInfoBloc() {
