@@ -25,7 +25,7 @@ import 'package:ngo_app/ServiceManager/ApiProvider.dart';
 import 'package:ngo_app/ServiceManager/RemoteConfig.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-int Campaign_id;
+
 class CommonInfoRepository {
   ApiProvider apiProvider;
 
@@ -366,7 +366,6 @@ print("-<${responseforpayout.data["notes"]["notes_key_1"]}");
         .post(RemoteConfig.cancelFundraiser, data: body);
     return CommonResponse.fromJson(response.data);
   }
-
 
   Future<CommonResponse> Withdraw(int id,context,String message) async {
     final response = await apiProvider

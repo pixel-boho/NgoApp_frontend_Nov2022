@@ -5,6 +5,7 @@ import 'package:ngo_app/Models/OtpResponse.dart';
 import 'package:ngo_app/Models/PancardUploadResponse.dart';
 import 'package:ngo_app/Models/ProfileResponse.dart';
 import 'package:ngo_app/Models/UserPancardResponse.dart';
+import 'package:ngo_app/Models/paymentHistoryResponse.dart';
 import '../Models/LoginResponse.dart';
 import '../ServiceManager/ApiProvider.dart';
 import '../ServiceManager/RemoteConfig.dart';
@@ -70,10 +71,10 @@ class AuthorisationRepository {
     return UserPancardResponse.fromJson(response.data);
   }
 
-  Future<UserPancardResponse> fetchUserpaymentdetails(String userId) async {
+  Future<PaymentHistoryResponse> fetchUserpaymentdetails() async {
     final response = await apiProvider
         .getInstance()
-        .post('${RemoteConfig.fetchpancard}', data: {"user_id": userId});
-    return UserPancardResponse.fromJson(response.data);
+        .post('${RemoteConfig.fetchpaymentdetails}');
+    return PaymentHistoryResponse.fromJson(response.data);
   }
 }

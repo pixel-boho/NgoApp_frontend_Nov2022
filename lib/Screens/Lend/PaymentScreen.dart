@@ -50,8 +50,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("nameeee---${paymentInfo.name}");
-    print("hhbj---${paymentInfo.form80G.address}");
 
     return Scaffold(
       backgroundColor: Colors.black12.withOpacity(0.5),
