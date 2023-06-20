@@ -110,7 +110,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     String path = '';
 
-    if (paymentInfo.paymentType == PaymentType.Lend) {
+    if (paymentInfo?.paymentType == PaymentType.Lend) {
       notes = {
         'type': 'loan',
         'lid': '${paymentInfo.id}',
@@ -235,7 +235,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       'user_id': '${LoginModel().userDetails.id}',
       'name': '${paymentInfo.name}',
       'email': '${paymentInfo.email}',
-      'show_donor_information': '${paymentInfo.isAnonymous?0:1}',
+      'show_donor_information': '${paymentInfo.isAnonymous ?0:1}',
       'certificate_name': '${paymentInfo.form80G?.name ?? ''}',
       'certificate_address': '${paymentInfo.form80G?.address ?? ''}',
       'certificate_phone': '${paymentInfo.form80G?.mobile ?? ''}',
@@ -267,7 +267,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
     })
     );
     print("response${response}");
-    // print("map=>${response.data['message']}");
     var map = response.data;
     print("map=>${map}");
     return map['success'] ?? false;
@@ -302,6 +301,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return map['success'] ?? false;
   }
 
+
   Future<bool> guestDonationPaymentCampaignSuccess() async  {
     final response = await apiProvider.getInstance().post(
         'campaign/donate', data: ({
@@ -324,24 +324,55 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return map['success'] ?? false;
   }
 
+  Future<bool> lendandloanSuccess() async {
+
+    print("donorinfo->${paymentInfo.isAnonymous}?1:0");
+
+    final response = await apiProvider.getInstance().post(
+        'loan/donate', data: ({
+      'transaction_id': '${_paymentSuccessResponse.paymentId}',
+      'loan_id': '${paymentInfo.id}',
+      'amount': '${paymentInfo.amount}',
+    })
+    );
+
+    Map<String, dynamic> map = response.data;
+    print("map=>${map}");
+    return map['success'] ?? false;
+  }
+
   bool startPayment(Function onPaymentSuccess, Function onPaymentErrorFn) {
     try {
       _razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
               (PaymentSuccessResponse paymentSuccessResponse) {
             _paymentSuccessResponse = paymentSuccessResponse;
             onPaymentSuccess(_paymentSuccessResponse);
-            if(paymentInfo.id==null && IsCampaign == 0){
+            if(paymentInfo.id==null  ){
               loginDonationPaymentSuccess();
-            }
-            else if(paymentInfo.id==null && IsCampaign == 1){
-              loginDonationPaymentCampaignSuccess();
             }
             else if(paymentInfo.id != null && IsCampaign == 1){
               loginDonationPaymentCampaignSuccess();
             }
+            else if(paymentInfo.id != null && paymentInfo.paymentType == PaymentType.Lend )
+            {
+              lendandloanSuccess();
+            }
             else {
               donationPaymentSuccess();
             }
+
+            // if(paymentInfo.id==null && IsCampaign == 0 ){
+            //   loginDonationPaymentSuccess();
+            // }
+            // else if(paymentInfo.id==null && IsCampaign == 1){
+            //   loginDonationPaymentCampaignSuccess();
+            // }
+            // else if(paymentInfo.id != null && IsCampaign == 1){
+            //   loginDonationPaymentCampaignSuccess();
+            // }
+            // else {
+            //   donationPaymentSuccess();
+            // }
           });
       _razorPay.on(Razorpay.EVENT_PAYMENT_ERROR,
               (PaymentFailureResponse paymentFailureResponse) {
@@ -388,7 +419,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
               (PaymentSuccessResponse paymentSuccessResponse) {
             _paymentSuccessResponse = paymentSuccessResponse;
             onPaymentSuccess(_paymentSuccessResponse);
-            if(IsCampaign==0){
+            if(paymentInfo.id==null ){
+              guestDonationPaymentSuccess();
+            }
+            else if(paymentInfo.id != null && paymentInfo.paymentType == PaymentType.Lend )
+            {
+              lendandloanSuccess();
+            }
+            else if(paymentInfo.id !=null &&  IsCampaign ==0){
               guestDonationPaymentSuccess();
             }
             else {
@@ -419,7 +457,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
       };
 
       debugPrint(jsonEncode(options));
-
       _razorPay.open(options);
       return true;
     } catch (e, s) {
@@ -472,4 +509,3 @@ class Form80G {
 
   Form80G({this.pan, this.name, this.countryCode, this.mobile,this.address});
 }
-

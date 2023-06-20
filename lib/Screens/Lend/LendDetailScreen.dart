@@ -328,7 +328,7 @@ class _LendDetailScreenState extends State<LendDetailScreen> {
               ],
             ),
           ),
-          /*Row(
+          Row(
             children: [
               Expanded(
                 child: Container(
@@ -368,7 +368,7 @@ class _LendDetailScreenState extends State<LendDetailScreen> {
                 flex: 1,
               ),
             ],
-          )*/
+          )
         ],
       ),
     );
