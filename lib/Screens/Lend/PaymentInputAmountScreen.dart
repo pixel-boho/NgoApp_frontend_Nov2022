@@ -59,12 +59,15 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
         baseOffset: 0,
         extentOffset: 1,
       );
-    } else if (widget.paymentType == PaymentType.Lend) {
-      _textEditingController.selection =
-          TextSelection.fromPosition(TextPosition(offset: _amount.length));
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        FocusScope.of(context).requestFocus(FocusNode());
-      });
+    } else if (widget.paymentType == PaymentType.Lend ) {
+      _textEditingController.selection = TextSelection(
+        baseOffset: 0,
+        extentOffset: 1,
+      );
+      //     TextSelection.fromPosition(TextPosition(offset: _amount.length));
+      // WidgetsBinding.instance.addPostFrameCallback((_) async {
+      //   FocusScope.of(context).requestFocus(FocusNode());
+      // });
     }
   }
   @override
@@ -120,8 +123,21 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
                       _buildAmountTypingSection(),
                       SizedBox(height: MediaQuery.of(context).size.height * .01),
                       Visibility(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(width: MediaQuery.of(context).size.width * .03),
+                              Icon(Icons.warning_amber_rounded,color: Colors.yellow,size: 20,),
+                              SizedBox(width: MediaQuery.of(context).size.width * .03),
+                              Text("₹ ${widget.amount} can be paid to complete your loan",style: TextStyle(color:Colors.white,fontSize: 12,
+                                  fontWeight: FontWeight.w600 ),),
+                            ],
+                          ),
+                          visible: widget.paymentType == PaymentType.Lend && widget.amount!= 0
+                      ),
+                      Visibility(
                         child: _build80gFormCheckBoxSection(),
-                        visible: CommonMethods().isAuthTokenExist(),
+                        visible: CommonMethods().isAuthTokenExist() && widget.paymentType == PaymentType.Donation
                       ),
                       Visibility(
                         child: _buildSubscribeSection(),
@@ -152,7 +168,7 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
   Future<void> _nextBtnClickFunction() async {
     _amount = _textEditingController.text;
     if (_amount.isNotEmpty && int.parse(_amount) > 0) {
-      if (widget.paymentType == PaymentType.Donation && !widget.isForNgoTrust) {
+      if (widget.paymentType == PaymentType.Donation || widget.paymentType == PaymentType.Lend && !widget.isForNgoTrust) {
         if (widget.amount < int.parse(_amount)) {
           _textEditingController.text = "${widget.amount}";
           Fluttertoast.showToast(
@@ -169,8 +185,8 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
           isSubscriptionNeeded: _isSubscriptionAvailable);
 
       if (widget.paymentType == PaymentType.Lend) {
-        CommonWidgets().show80GFormAlertDialog(context, paymentInfo);
-        // Navigator.of(context).push(PageRouteBuilder(opaque: false, pageBuilder: (_, __, ___) => PaymentScreen(paymentInfo: paymentInfo,)));
+        // CommonWidgets().show80GFormAlertDialog(context, paymentInfo);
+        Navigator.of(context).push(PageRouteBuilder(opaque: false, pageBuilder: (_, __, ___) => PaymentScreen(paymentInfo: paymentInfo,)));
       } else if (widget.paymentType == PaymentType.Donation) {
         if(CommonMethods().isAuthTokenExist() ? _isAnonymous : true)
           Get.to(() =>

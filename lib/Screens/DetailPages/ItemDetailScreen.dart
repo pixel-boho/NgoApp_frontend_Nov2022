@@ -434,7 +434,7 @@ String beneficiary_account_name = "";
                   }),
             ),
             visible: !CommonMethods()
-                .checkIsOwner(data.fundraiserDetails?.createdBy) &&
+                .checkIsOwner(data.fundraiserDetails?.createdBy) == LoginModel().userDetails.id &&
                 data.fundraiserDetails?.isApproved == 1 &&
                 data.fundraiserDetails?.isCancelled == 0,
           ),
@@ -489,7 +489,8 @@ String beneficiary_account_name = "";
             ),
             visible: CommonMethods()
                 .checkIsOwner(data.fundraiserDetails?.createdBy) == LoginModel().userDetails.id &&
-                data.fundraiserDetails?.isApproved == 1,
+                data.fundraiserDetails?.isApproved == 1 &&
+                data.fundraiserDetails?.fundRequired == data.fundraiserDetails?.fundRaised
           ),
           Visibility(
             child: Container(

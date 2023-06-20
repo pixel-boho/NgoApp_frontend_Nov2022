@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:ngo_app/Blocs/PaymentDetailsBloc.dart';
-import 'package:ngo_app/Constants/CommonWidgets.dart';
 import 'package:ngo_app/Elements/CommonApiErrorWidget.dart';
 import 'package:ngo_app/Elements/CommonApiLoader.dart';
 import 'package:ngo_app/Elements/CommonApiResultsEmptyWidget.dart';
@@ -58,6 +56,7 @@ class _FundraiserHistoryState extends State<FundraiserHistory> {
                       child: StreamBuilder<ApiResponse<PaymentHistoryResponse>>(
                         stream: _paymentdetailsbloc.paymentinfoStream,
                         builder: (context, snapshot) {
+                          print("List--> ${snapshot.data}");
                           if (snapshot.hasData) {
                             switch (snapshot.data.status) {
                               case Status.LOADING:
