@@ -24,6 +24,7 @@ class PaymentInfoBloc {
     paymentinfoSink.add(ApiResponse.loading('Fetching'));
     try {
       PaymentHistoryResponse response = await _repository.fetchUserpaymentdetails();
+      print("Listtt-->${response.message}");
       if (response != null) {
         paymentinfoSink.add(ApiResponse.completed(response));
         return true;

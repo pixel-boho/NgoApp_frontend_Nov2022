@@ -50,7 +50,7 @@ class PaymentHist {
   String createdAt;
   String modifiedAt;
   String transactionId;
-  Null donatedBy;
+  int donatedBy;
 
   PaymentHist(
       {this.id,
@@ -131,7 +131,7 @@ class Donate {
   String createdAt;
   String modifiedAt;
   String transactionId;
-  Null donatedBy;
+  int donatedBy;
 
   Donate(
       {this.id,

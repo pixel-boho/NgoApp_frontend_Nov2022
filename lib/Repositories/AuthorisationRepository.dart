@@ -75,6 +75,7 @@ class AuthorisationRepository {
     final response = await apiProvider
         .getInstance()
         .post('${RemoteConfig.fetchpaymentdetails}');
+    print("response ${response.data}");
     return PaymentHistoryResponse.fromJson(response.data);
   }
 }
