@@ -100,6 +100,7 @@ class _FundraiserHistoryState extends State<FundraiserHistory> {
           alignment: FractionalOffset.centerLeft,
           child: ListView.builder(
               shrinkWrap: true,
+              reverse: true,
               scrollDirection: Axis.vertical,
               itemCount: paymentList.length ,
               physics: ClampingScrollPhysics(),

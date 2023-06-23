@@ -150,7 +150,9 @@ class _EachListItemWidgetState extends State<EachListItemWidget> {
               alignment: FractionalOffset.center,
               child: Row(
                 children: [
-                  widget._fundraiserItem.fundRequired - widget._fundraiserItem.fundRaised == 0 ?
+                  widget._fundraiserItem.fundRequired - widget._fundraiserItem.fundRaised == 0 ||
+                      widget._fundraiserItem.fundRequired <= widget._fundraiserItem.fundRaised
+              ?
                   Expanded(
                     child: Container(
                       height: 45.0,
