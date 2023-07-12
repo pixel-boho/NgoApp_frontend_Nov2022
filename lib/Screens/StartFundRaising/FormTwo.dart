@@ -16,7 +16,9 @@ import 'package:ngo_app/Elements/CommonButton.dart';
 import 'package:ngo_app/Elements/CommonLabelWidget.dart';
 import 'package:ngo_app/Elements/CommonTextFormField.dart';
 import 'package:ngo_app/Models/CampaignItem.dart';
+import 'package:ngo_app/Screens/ProfileRelated/photoview.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
+import 'package:open_app_file/open_app_file.dart';
 
 import 'FormFour.dart';
 
@@ -422,7 +424,7 @@ class _FormTwoScreenState extends State<FormTwoScreen>
     try {
       FilePickerResult result = await FilePicker.platform.pickFiles(
           type: FileType.custom,
-          allowedExtensions: ['jpg', 'pdf', 'doc', 'png'],
+          allowedExtensions: ['jpg', 'pdf', 'docx', 'png'],
           allowMultiple: true);
       if (result != null) {
         List<File> tempPaths = result.paths.map((path) => File(path)).toList();
@@ -453,7 +455,8 @@ class _FormTwoScreenState extends State<FormTwoScreen>
     final String name = _paths.toList()[index].toString().split('/').last;
     String fileSize =
         CommonMethods().formatBytes(_paths[index].lengthSync(), 2) ?? "";
-
+    print("path-->$_paths");
+    print("name--->$name");
     return Container(
       margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
       padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
@@ -469,7 +472,8 @@ class _FormTwoScreenState extends State<FormTwoScreen>
           SizedBox(
             width: 5,
           ),
-          Expanded(
+          InkWell(
+            onTap: () => OpenAppFile.open(_paths[index].path.toString()),
             child: Text(name,
                 textAlign: TextAlign.left,
                 overflow: TextOverflow.ellipsis,
@@ -478,7 +482,6 @@ class _FormTwoScreenState extends State<FormTwoScreen>
                     fontSize: 12.0,
                     color: Colors.white,
                     fontWeight: FontWeight.w500)),
-            flex: 4,
           ),
           Expanded(
             child: Text(" " + fileSize + " ",

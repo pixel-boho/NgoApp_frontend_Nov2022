@@ -20,7 +20,7 @@ class _HowItWorksScreenState extends State<HowItWorksScreen> with SingleTickerPr
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(vsync: this, length: 3);
+    _tabController = new TabController(vsync: this, length: 2);
     selectedTabPos = widget.fragmentToShow != null ? widget.fragmentToShow : 0;
     _tabController.animateTo(selectedTabPos);
   }
@@ -90,7 +90,7 @@ class _HowItWorksScreenState extends State<HowItWorksScreen> with SingleTickerPr
       unselectedLabelColor: Color(colorCoderItemSubTitle),
       indicatorSize: TabBarIndicatorSize.tab,
       indicatorColor: Colors.red,
-      indicatorWeight: 3,
+      indicatorWeight: 2,
       indicator: UnderlineTabIndicator(
         borderSide: BorderSide(color: Colors.red, width: 2.0),
         insets: getIndicatorPadding(),

@@ -52,8 +52,8 @@ class CommonTextFormField extends StatelessWidget {
       textCapitalization: isPassword
           ? TextCapitalization.none
           : (isFullCapsNeeded
-              ? TextCapitalization.characters
-              : TextCapitalization.words),
+          ? TextCapitalization.characters
+          : TextCapitalization.sentences),
       style: TextStyle(
           fontSize: 13.0,
           height: 1.8,

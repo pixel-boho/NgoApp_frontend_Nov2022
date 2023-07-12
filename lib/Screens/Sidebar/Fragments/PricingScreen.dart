@@ -59,7 +59,27 @@ class _PricingScreenState extends State<PricingScreen> {
                             break;
                           case Status.COMPLETED:
                             PricingStrategiesResponse res = snapshot.data.data;
-                            return _buildUserWidget(res);
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 50,right: 50,bottom: 10,top: 10),
+                                  child: Text(
+                                      "Choose an option that suits your crowdfunding needs the most!",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Color(colorCoderGreyBg),fontWeight: FontWeight.w500
+                                      )),
+                                ),
+                                Divider(
+                                  color: Colors.red,
+                                  thickness: 2,
+                                  indent:120,
+                                  endIndent: 120,
+                                ),
+                                _buildUserWidget(res),
+                              ],
+                            );
                             break;
                           case Status.ERROR:
                             return CommonApiErrorWidget(

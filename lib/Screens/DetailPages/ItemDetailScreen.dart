@@ -848,6 +848,7 @@ String beneficiary_account_name = "";
     );
   }
   _buildPersonDetails(bool isCampaigner, ItemDetailResponse data) {
+    print("camp---->${data.fundraiserDetails.isCampaign}");
     if (!isCampaigner && data.fundraiserDetails.isCampaign == 1) {
       return Container();
     } else {
@@ -964,6 +965,36 @@ String beneficiary_account_name = "";
                                 fontSize: 13.0),
                           ),
                         ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Container(
+                          padding: EdgeInsets.fromLTRB(15, 0, 5, 0),
+                          alignment: FractionalOffset.centerLeft,
+                          child: Text(
+                            isCampaigner
+                                ? "${data.campaignerDetails?.phoneNumber}"
+                                : "${data.fundraiserDetails?.phoneNumber}",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 13.0),
+                          ),
+                        ),
+                        // Visibility(
+                        //   child: Container(
+                        //   padding: EdgeInsets.fromLTRB(15, 0, 5, 0),
+                        //   alignment: FractionalOffset.centerLeft,
+                        //   child: Text(
+                        //     "${data.campaignerDetails?.phoneNumber}",
+                        //     style: TextStyle(
+                        //         color: Colors.white,
+                        //         fontWeight: FontWeight.w400,
+                        //         fontSize: 13.0),
+                        //   ),
+                        // ),
+                        //   visible: data.fundraiserDetails.isCampaign == 1,
+                        // )
                       ],
                     ),
                     flex: 1,

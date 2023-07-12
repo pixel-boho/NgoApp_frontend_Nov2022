@@ -297,7 +297,7 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
                 textColorReceived: Color(colorCodeWhite),
                 fillColorReceived: Color(colorCoderGreyBg),
                 hintColorReceived: Colors.white30,
-                isFullCapsNeeded: true,
+                isFullCapsNeeded: false,
                 borderColorReceived: Color(colorCoderBorderWhite),
                 onChanged: (val) => address = val,
                 validator: _is80gFormRequired
