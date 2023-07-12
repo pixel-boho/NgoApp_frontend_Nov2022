@@ -198,7 +198,6 @@ class _FundraiserFragmentState extends State<FundraiserFragment>
             scrollDirection: Axis.vertical,
             itemCount: itemsList.length,
             itemBuilder: (context, index) {
-
               return EachListItemWidget(_passedFunction, index,
                   ScrollType.Vertical, itemsList[index], imageBase, webBaseUrl);
             },

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -155,8 +154,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                               textColorReceived: Color(colorCodeWhite),
                               buttonHandler: _validateUser),
                         ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * .02),
+                        SizedBox(height: MediaQuery.of(context).size.height * .02),
                       ],
                     ),
                   ),

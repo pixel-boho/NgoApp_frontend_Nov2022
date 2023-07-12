@@ -98,6 +98,7 @@ class _DonationHistoryState extends State<DonationHistory> {
           alignment: FractionalOffset.centerLeft,
           child: ListView.builder(
               shrinkWrap: true,
+              reverse: true,
               scrollDirection: Axis.vertical,
               itemCount: donateList.length ,
               physics: ClampingScrollPhysics(),

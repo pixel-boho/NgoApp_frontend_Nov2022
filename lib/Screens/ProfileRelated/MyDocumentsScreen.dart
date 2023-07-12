@@ -165,6 +165,7 @@ class _MyDocumentsScreenState extends State<MyDocumentsScreen>
   }
 
   Widget _buildUserRecords(UserPancardResponse userdetails) {
+    print("${userdetails.baseurl + userdetails.userDetails.pancard_image}");
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: SizedBox(

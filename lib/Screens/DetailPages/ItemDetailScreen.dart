@@ -67,6 +67,7 @@ String beneficiary_account_name = "";
   String beneficiary_account_number = "";
 
   String beneficiary_ifsc ="";
+  int amount=0;
   @override
   void initState() {
     LoginModel().isFundraiserEditMode = false;
@@ -185,9 +186,12 @@ String beneficiary_account_name = "";
   }
 
   _buildUserWidget(ItemDetailResponse data) {
+    // print("id2${data.fundraiserDetails?.fundRequired}");
+    // print("id1${data.fundraiserDetails?.fundRaised}");
     beneficiary_account_name = data.fundraiserDetails.name;
     beneficiary_account_number = data.fundraiserDetails.beneficiaryAccountNumber;
     beneficiary_ifsc = data.fundraiserDetails.beneficiaryIfsc;
+    amount = data.fundraiserDetails.fundRequired;
     return CustomScrollView(slivers: <Widget>[
       SliverPadding(
         padding: EdgeInsets.fromLTRB(0.0, 0, 0, 70),
@@ -352,8 +356,8 @@ String beneficiary_account_name = "";
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                     alignment: FractionalOffset.centerLeft,
                     child: Text(
-
-                          data.fundraiserDetails.closingDate,
+                      // CommonMethods().getDateDifference(data.fundraiserDetails.closingDate),
+                      "closing date : ${data.fundraiserDetails.closingDate}",
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -365,7 +369,7 @@ String beneficiary_account_name = "";
                   flex: 1,
                 ),
                 SizedBox(
-                  width: 10,
+                  width: 20,
                 ),
                 Expanded(
                   child: Container(
@@ -434,7 +438,9 @@ String beneficiary_account_name = "";
                   }),
             ),
             visible: !CommonMethods()
-                .checkIsOwner(data.fundraiserDetails?.createdBy) == LoginModel().userDetails.id &&
+                .checkIsOwner(data.fundraiserDetails?.createdBy) &&
+                data.fundraiserDetails.fundRequired != data.fundraiserDetails.fundRaised ||
+                data.fundraiserDetails.fundRequired > data.fundraiserDetails.fundRaised &&
                 data.fundraiserDetails?.isApproved == 1 &&
                 data.fundraiserDetails?.isCancelled == 0,
           ),
@@ -488,9 +494,10 @@ String beneficiary_account_name = "";
               ],
             ),
             visible: CommonMethods()
-                .checkIsOwner(data.fundraiserDetails?.createdBy) == LoginModel().userDetails.id &&
-                data.fundraiserDetails?.isApproved == 1 &&
-                data.fundraiserDetails?.fundRequired == data.fundraiserDetails?.fundRaised
+                .checkIsOwner(data.fundraiserDetails?.createdBy)  &&
+              data.fundraiserDetails?.isApproved == 1 &&
+                data.fundraiserDetails?.fundRequired == data.fundraiserDetails?.fundRaised ||
+                 data.fundraiserDetails?.fundRequired < data.fundraiserDetails?.fundRaised
           ),
           Visibility(
             child: Container(
@@ -741,7 +748,7 @@ String beneficiary_account_name = "";
             padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
             alignment: FractionalOffset.centerLeft,
             child: Text(
-              "A/c Name  :  ${data.fundraiserDetails.virtualAccountName}",
+              "A/c Name  :  ${data.fundraiserDetails.beneficiaryAccountName}",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -841,6 +848,7 @@ String beneficiary_account_name = "";
     );
   }
   _buildPersonDetails(bool isCampaigner, ItemDetailResponse data) {
+    print("camp---->${data.fundraiserDetails.isCampaign}");
     if (!isCampaigner && data.fundraiserDetails.isCampaign == 1) {
       return Container();
     } else {
@@ -957,6 +965,36 @@ String beneficiary_account_name = "";
                                 fontSize: 13.0),
                           ),
                         ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Container(
+                          padding: EdgeInsets.fromLTRB(15, 0, 5, 0),
+                          alignment: FractionalOffset.centerLeft,
+                          child: Text(
+                            isCampaigner
+                                ? "${data.campaignerDetails?.phoneNumber}"
+                                : "${data.fundraiserDetails?.phoneNumber}",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 13.0),
+                          ),
+                        ),
+                        // Visibility(
+                        //   child: Container(
+                        //   padding: EdgeInsets.fromLTRB(15, 0, 5, 0),
+                        //   alignment: FractionalOffset.centerLeft,
+                        //   child: Text(
+                        //     "${data.campaignerDetails?.phoneNumber}",
+                        //     style: TextStyle(
+                        //         color: Colors.white,
+                        //         fontWeight: FontWeight.w400,
+                        //         fontSize: 13.0),
+                        //   ),
+                        // ),
+                        //   visible: data.fundraiserDetails.isCampaign == 1,
+                        // )
                       ],
                     ),
                     flex: 1,
@@ -1608,7 +1646,7 @@ var body =
     bodyParams["id"] = widget.fundraiserIdReceived;
         ItemDetailResponse data;
     CommonWidgets().showNetworkProcessingDialog();
-    _commonBloc.transferAmount(json.encode(bodyParams),beneficiary_account_name,beneficiary_account_number,beneficiary_ifsc,widget.fundraiserIdReceived,context).then((value) {
+    _commonBloc.transferAmount(json.encode(bodyParams),beneficiary_account_name,beneficiary_account_number,beneficiary_ifsc,widget.fundraiserIdReceived,amount,context).then((value) {
       Get.back();
       CommonResponse commonResponse = value;
       print("response->${commonResponse}");

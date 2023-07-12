@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ngo_app/Constants/CommonMethods.dart';
 import 'package:ngo_app/Models/CampaignTypesResponse.dart';
 import 'package:ngo_app/Models/CommonResponse.dart';
@@ -159,12 +160,13 @@ class CommonBloc {
     }
   }
 
-  Future<CommonResponse> transferAmount(String body,accountName,accountNum,accountIfsc,int fundid,context) async {
+  Future<CommonResponse> transferAmount(String body,accountName,accountNum,accountIfsc,int fundid,int amount,context) async {
     try {
       CommonResponse commonResponse =
-          await _commonInfoRepository.transferAmounts(body,accountName,accountNum,accountIfsc,fundid,context);
+          await _commonInfoRepository.transferAmounts(body,accountName,accountNum,accountIfsc,fundid,amount,context);
       return commonResponse;
     } catch (error) {
+      Fluttertoast.showToast(msg: "ksmklcmldm");
       throw CommonMethods().getNetworkError(error);
     }
   }

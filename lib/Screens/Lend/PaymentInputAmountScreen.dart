@@ -168,7 +168,8 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
   Future<void> _nextBtnClickFunction() async {
     _amount = _textEditingController.text;
     if (_amount.isNotEmpty && int.parse(_amount) > 0) {
-      if (widget.paymentType == PaymentType.Donation || widget.paymentType == PaymentType.Lend && !widget.isForNgoTrust) {
+      if (widget.paymentType == PaymentType.Donation && widget.paymentType == PaymentType.Lend
+          && !widget.isForNgoTrust) {
         if (widget.amount < int.parse(_amount)) {
           _textEditingController.text = "${widget.amount}";
           Fluttertoast.showToast(
@@ -296,7 +297,7 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
                 textColorReceived: Color(colorCodeWhite),
                 fillColorReceived: Color(colorCoderGreyBg),
                 hintColorReceived: Colors.white30,
-                isFullCapsNeeded: true,
+                isFullCapsNeeded: false,
                 borderColorReceived: Color(colorCoderBorderWhite),
                 onChanged: (val) => address = val,
                 validator: _is80gFormRequired
