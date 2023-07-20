@@ -54,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen>
   void navigateToStartUp() {
     if (LoginModel().authToken != null && LoginModel().authToken != "") {
       Get.offAll(
-          () => DashboardScreen(fragmentToShow: 1,),
+          () => DashboardScreen(fragmentToShow: 0,),
           transition: Transition.fade);
     } else {
       Get.offAll(() => WelcomeScreen(), transition: Transition.fade);

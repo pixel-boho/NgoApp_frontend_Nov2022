@@ -24,7 +24,6 @@ import 'package:ngo_app/Screens/Sidebar/PartnerRequestScreen.dart';
 import 'package:ngo_app/Screens/Sidebar/VolunteerRequestScreen.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
 import 'AllCategoriesScreen.dart';
-import 'AutocompleteSearch.dart';
 import 'PointsInfoScreen.dart';
 
 
@@ -74,6 +73,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           resizeToAvoidBottomInset: true,
           key: _scaffoldKey,
           appBar: AppBar(
+            toolbarHeight: 80,
             elevation: 0,
             backgroundColor: Color(colorCoderRedBg),
             centerTitle: true,
@@ -101,66 +101,66 @@ class _DashboardScreenState extends State<DashboardScreen>
                 width: 5,
               )
             ],
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(60.0),
-              child: Theme(
-                data:
-                Theme.of(context).copyWith(accentColor: Colors.transparent),
-                child: Container(
-                  height: 65.0,
-                  alignment: Alignment.center,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(
-                        width: 30,
-                      ),
-                      Expanded(
-                        child: Card(
-                          elevation: 0,
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          child: InkWell(
-                            child: Container(
-                              padding: EdgeInsets.all(12.0),
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Text(
-                                      'Search',
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 13.0,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    flex: 1,
-                                  ),
-                                  Image(
-                                    image: AssetImage(
-                                        'assets/images/ic_search.png'),
-                                    height: 16.0,
-                                    width: 16.0,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            onTap: () {
-                              Get.to(() => AutocompleteSearch());
-                            },
-                          ),
-                        ),
-                        flex: 1,
-                      ),
-                      SizedBox(
-                        width: 30,
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            // bottom: PreferredSize(
+            //   preferredSize: const Size.fromHeight(60.0),
+            //   child: Theme(
+            //     data:
+            //     Theme.of(context).copyWith(accentColor: Colors.transparent),
+            //     child: Container(
+            //       height: 65.0,
+            //       alignment: Alignment.center,
+            //       child: Row(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         crossAxisAlignment: CrossAxisAlignment.center,
+            //         children: <Widget>[
+            //           SizedBox(
+            //             width: 30,
+            //           ),
+            //           Expanded(
+            //             child: Card(
+            //               elevation: 0,
+            //               color: Colors.white,
+            //               shape: RoundedRectangleBorder(
+            //                   borderRadius: BorderRadius.circular(10.0)),
+            //               child: InkWell(
+            //                 child: Container(
+            //                   padding: EdgeInsets.all(12.0),
+            //                   child: Row(
+            //                     children: <Widget>[
+            //                       Expanded(
+            //                         child: Text(
+            //                           'Search',
+            //                           style: TextStyle(
+            //                               color: Colors.grey,
+            //                               fontSize: 13.0,
+            //                               fontWeight: FontWeight.bold),
+            //                         ),
+            //                         flex: 1,
+            //                       ),
+            //                       Image(
+            //                         image: AssetImage(
+            //                             'assets/images/ic_search.png'),
+            //                         height: 16.0,
+            //                         width: 16.0,
+            //                       ),
+            //                     ],
+            //                   ),
+            //                 ),
+            //                 onTap: () {
+            //                   Get.to(() => AutocompleteSearch());
+            //                 },
+            //               ),
+            //             ),
+            //             flex: 1,
+            //           ),
+            //           SizedBox(
+            //             width: 30,
+            //           )
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ),
           drawer: sideNav(context),
           body: Column(
@@ -666,25 +666,28 @@ class _DashboardScreenState extends State<DashboardScreen>
           String val = LoginModel().userDetails.points > 100
               ? "99+"
               : "${LoginModel().userDetails.points}";
-          return InkWell(
-            onTap: () {
-              Get.to(() => PointsInfoScreen(),
-                  opaque: false, fullscreenDialog: true);
-            },
-            child: badge.Badge(
-              position: badge.BadgePosition.topEnd(top: 3, end: 3),
-              badgeStyle: badge.BadgeStyle(badgeColor: Colors.white,shape:badge.BadgeShape.circle),
-              badgeAnimation: badge.BadgeAnimation.scale(
-                disappearanceFadeAnimationDuration: Duration(milliseconds: 300),
-              ),
-              badgeContent: Text(
-                "$val",
-                style: TextStyle(color: Colors.red, fontSize: 7),
-              ),
-              child: Image(
-                image: AssetImage('assets/images/ic_coin.png'),
-                height: 35,
-                width: 35,
+          return Padding(
+            padding: const EdgeInsets.only(top: 18,right: 8),
+            child: InkWell(
+              onTap: () {
+                Get.to(() => PointsInfoScreen(),
+                    opaque: false, fullscreenDialog: true);
+              },
+              child: badge.Badge(
+                position: badge.BadgePosition.topEnd(top: 3, end: 3),
+                badgeStyle: badge.BadgeStyle(badgeColor: Colors.white,shape:badge.BadgeShape.circle),
+                badgeAnimation: badge.BadgeAnimation.scale(
+                  disappearanceFadeAnimationDuration: Duration(milliseconds: 300),
+                ),
+                badgeContent: Text(
+                  "$val",
+                  style: TextStyle(color: Colors.red, fontSize: 7),
+                ),
+                child: Image(
+                  image: AssetImage('assets/images/ic_coin.png'),
+                  height: 35,
+                  width: 35,
+                ),
               ),
             ),
           );

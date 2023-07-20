@@ -828,15 +828,14 @@ String beneficiary_account_name = "";
                             topRight: Radius.circular(5),
                             bottomLeft: Radius.circular(5),
                             bottomRight: Radius.circular(5))),
-                    padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                    padding: EdgeInsets.fromLTRB(10, 5, 5, 5),
                     child: Image(
                       image: AssetImage("assets/images/qr.jpg"),
-                      height: 160.0,
-                      width: 160.0,
+                      height: 200.0,
+                      width: 200.0,
                     ),
                   ),
                 ),
-
               ],
             ),
           ),
