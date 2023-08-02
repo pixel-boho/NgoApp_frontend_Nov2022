@@ -39,7 +39,7 @@ class StartNowCardWidget extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-              child: Text("Start new\nFundraising",
+              child: Text("Start new Fundraising",
                   textAlign: TextAlign.left,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,

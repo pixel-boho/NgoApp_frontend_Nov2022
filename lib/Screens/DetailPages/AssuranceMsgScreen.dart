@@ -11,7 +11,7 @@ class _AssuranceMsgScreenState extends State<AssuranceMsgScreen> {
   String msg1 =
       "Our promise that this NGO can be trusted with your donations and utilize the funds raised to provide benefits to the right people";
 
-  String msg2 = "Our Due Deligence process includes the following: ";
+  String msg2 = "Our Due Diligence process includes the following: ";
 
   String title1 = "Legal";
   String subTitle1 = "NGO is verified as valid Tax exempted organisation";

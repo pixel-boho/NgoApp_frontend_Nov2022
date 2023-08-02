@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ngo_app/Constants/StringConstants.dart';
 
 class LegalInfoScreen extends StatefulWidget {
   @override
@@ -39,7 +40,7 @@ class _LegalInfoScreenState extends State<LegalInfoScreen> {
                 padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                 alignment: FractionalOffset.centerLeft,
                 child: Text(
-                  "Legal & Financial",
+                  "VISION",
                   style: TextStyle(
                       fontWeight: FontWeight.w600, fontSize: 13.0, height: 1.8),
                 ),
@@ -48,7 +49,26 @@ class _LegalInfoScreenState extends State<LegalInfoScreen> {
                 padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                 alignment: FractionalOffset.centerLeft,
                 child: Text(
-                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ",
+                  "${StringConstants.visionInfo}",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400, fontSize: 13.0, height: 1.8),
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * .01),
+              Container(
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                alignment: FractionalOffset.centerLeft,
+                child: Text(
+                  "MISSION",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600, fontSize: 13.0, height: 1.8),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                alignment: FractionalOffset.centerLeft,
+                child: Text(
+                  "${StringConstants.missionInfo}",
                   style: TextStyle(
                       fontWeight: FontWeight.w400, fontSize: 13.0, height: 1.8),
                 ),

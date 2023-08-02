@@ -85,7 +85,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>
           child: tabItem(context, 'About Us'),
         ),
         Tab(
-          child: tabItem(context, 'Legal'),
+          child: tabItem(context, 'Vision'),
         ),
         Tab(
           child: tabItem(context, 'Our Team'),

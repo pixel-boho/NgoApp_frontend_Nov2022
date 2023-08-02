@@ -55,43 +55,7 @@ class _VisionInfoScreenState extends State<VisionInfoScreen> {
                 ),
               ),
               SizedBox(height: MediaQuery.of(context).size.height * .01),
-              Container(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                alignment: FractionalOffset.centerLeft,
-                child: Text(
-                  "VISION",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 13.0, height: 1.8),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                alignment: FractionalOffset.centerLeft,
-                child: Text(
-                  "${StringConstants.visionInfo}",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400, fontSize: 13.0, height: 1.8),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * .01),
-              Container(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                alignment: FractionalOffset.centerLeft,
-                child: Text(
-                  "MISSION",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 13.0, height: 1.8),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                alignment: FractionalOffset.centerLeft,
-                child: Text(
-                  "${StringConstants.missionInfo}",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400, fontSize: 13.0, height: 1.8),
-                ),
-              ),
+
             ],
           ),
         ),

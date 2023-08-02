@@ -139,11 +139,11 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
                         child: _build80gFormCheckBoxSection(),
                         visible: CommonMethods().isAuthTokenExist() && widget.paymentType == PaymentType.Donation
                       ),
-                      Visibility(
-                        child: _buildSubscribeSection(),
-                        visible: widget.isCampaignRelated &&
-                            CommonMethods().isAuthTokenExist(),
-                      ),
+                      // Visibility(
+                      //   child: _buildSubscribeSection(),
+                      //   visible: widget.isCampaignRelated &&
+                      //       CommonMethods().isAuthTokenExist(),
+                      // ),
                       SizedBox(height: MediaQuery.of(context).size.height * .04),
                     ],
                   ),
@@ -292,7 +292,7 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
             child: CommonTextFormField(
                 hintText: "Address",
                 maxLinesReceived: 1,
-                maxLengthReceived: 10,
+                maxLengthReceived: 100,
                 controller: _addressController,
                 textColorReceived: Color(colorCodeWhite),
                 fillColorReceived: Color(colorCoderGreyBg),
@@ -362,61 +362,61 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
     );
   }
 
-  _buildSubscribeSection() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Theme(
-              data: ThemeData(unselectedWidgetColor: Colors.white),
-              child: Checkbox(
-                activeColor: Colors.red,
-                value: _isSubscriptionAvailable,
-                onChanged: (val) {
-                  _setSubscription();
-                },
-              ),
-            ),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Do you want to subscribe?",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontSize: 12.0,
-                        color: Color(colorCodeWhite),
-                        fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(
-                    height: 3,
-                  ),
-                  Text(
-                    "Subscribe will auto deduct the amount monthly!!!",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontSize: 11.0,
-                        color: Color(colorCodeWhite),
-                        fontWeight: FontWeight.w500),
-                  )
-                ],
-              ),
-              flex: 1,
-            )
-          ],
-        ),
-        SizedBox(height: MediaQuery.of(context).size.height * .02),
-      ],
-    );
-  }
+  // _buildSubscribeSection() {
+  //   return Column(
+  //     mainAxisSize: MainAxisSize.min,
+  //     mainAxisAlignment: MainAxisAlignment.start,
+  //     crossAxisAlignment: CrossAxisAlignment.center,
+  //     children: [
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.start,
+  //         crossAxisAlignment: CrossAxisAlignment.center,
+  //         children: <Widget>[
+  //           Theme(
+  //             data: ThemeData(unselectedWidgetColor: Colors.white),
+  //             child: Checkbox(
+  //               activeColor: Colors.red,
+  //               value: _isSubscriptionAvailable,
+  //               onChanged: (val) {
+  //                 _setSubscription();
+  //               },
+  //             ),
+  //           ),
+  //           Expanded(
+  //             child: Column(
+  //               mainAxisSize: MainAxisSize.min,
+  //               mainAxisAlignment: MainAxisAlignment.start,
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text(
+  //                   "Do you want to subscribe?",
+  //                   textAlign: TextAlign.left,
+  //                   style: TextStyle(
+  //                       fontSize: 12.0,
+  //                       color: Color(colorCodeWhite),
+  //                       fontWeight: FontWeight.w500),
+  //                 ),
+  //                 SizedBox(
+  //                   height: 3,
+  //                 ),
+  //                 Text(
+  //                   "Subscribe will auto deduct the amount monthly!!!",
+  //                   textAlign: TextAlign.left,
+  //                   style: TextStyle(
+  //                       fontSize: 11.0,
+  //                       color: Color(colorCodeWhite),
+  //                       fontWeight: FontWeight.w500),
+  //                 )
+  //               ],
+  //             ),
+  //             flex: 1,
+  //           )
+  //         ],
+  //       ),
+  //       SizedBox(height: MediaQuery.of(context).size.height * .02),
+  //     ],
+  //   );
+  // }
 
   void _setSubscription() {
     if (_isSubscriptionAvailable == false) {

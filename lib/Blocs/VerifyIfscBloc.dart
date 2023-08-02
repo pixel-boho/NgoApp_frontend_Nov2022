@@ -30,7 +30,9 @@ class VerifyIfscBloc {
         verifySink.add(ApiResponse.completed(response));
         return true;
       } else {
+
         verifySink.add(ApiResponse.error("Something went wrong"));
+
         return false;
       }
     } catch (error) {

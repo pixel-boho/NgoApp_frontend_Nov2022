@@ -152,72 +152,93 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         SizedBox(
                             height: MediaQuery.of(context).size.height * .02),
                         Padding(
-                          child: Container(
-                            padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                            width: double.infinity,
-                            height: 50,
-                            alignment: FractionalOffset.centerLeft,
-                            child: SizedBox.expand(
-                              child: CountryCodePicker(
-                                onChanged: (e) {
-                                  _countryCode = e.dialCode;
-                                  print(e.dialCode);
-                                },
-                                // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
-                                initialSelection: '+91',
-                                favorite: ['+91', 'INDIA'],
-                                // optional. Shows only country name and flag
-                                showCountryOnly: false,
-                                // optional. Shows only country name and flag when popup is closed.
-                                showOnlyCountryWhenClosed: false,
-                                // optional. aligns the flag and the Text left
-                                alignLeft: true,
-                                showFlagDialog: true,
-                                showFlagMain: true,
-                                flagWidth: 25,
-                                padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                                textStyle: TextStyle(
-                                    fontSize: 13.0,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white),
-                                dialogTextStyle: TextStyle(
-                                    fontSize: 13.0, color: Colors.black),
-                                searchStyle: TextStyle(
-                                    fontSize: 13.0, color: Colors.black),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.fromLTRB(0, 1, 0, 1),
+                                child: CountryCodePicker(
+                                  onChanged: (e) {
+                                    _countryCode = e.dialCode;
+                                    print(e.dialCode);
+                                  },
+                                  // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
+                                  initialSelection: 'IN',
+                                  favorite: ['+91', 'INDIA'],
+                                  // optional. Shows only country name and flag
+                                  showCountryOnly: false,
+                                  // optional. Shows only country name and flag when popup is closed.
+                                  showOnlyCountryWhenClosed: false,
+                                  // optional. aligns the flag and the Text left
+                                  alignLeft: false,
+                                  showFlagDialog: true,
+                                  showFlagMain: false,
+                                  flagWidth: 20,
+                                  padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                                  textStyle: TextStyle(
+                                      fontSize: 12.0,
+                                      height: 1.8,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white),
+                                  dialogTextStyle: TextStyle(
+                                      fontSize: 13.0,
+                                      height: 1.8,
+                                      color: Colors.black),
+                                  searchStyle: TextStyle(
+                                      fontSize: 13.0,
+                                      height: 1.8,
+                                      color: Colors.black),
+                                ),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  border: Border.all(
+                                      color: Color(colorCoderBorderWhite),
+                                      width: 1.0),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10),
+                                    bottomRight: Radius.circular(10),
+                                  ),
+                                  color: Color(colorCoderGreyBg),
+                                ),
                               ),
-                            ),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.rectangle,
-                              border: Border.all(
-                                  color: Color(colorCoderBorderWhite),
-                                  width: 1.0),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10),
-                                bottomLeft: Radius.circular(10),
-                                bottomRight: Radius.circular(10),
+                              Expanded(
+                                child: Padding(
+                                  child: CommonTextFormField(
+                                      hintText: "Mobile",
+                                      maxLinesReceived: 1,
+                                      isDigitsOnly: true,
+                                      maxLengthReceived: 15,
+                                      textColorReceived: Color(colorCodeWhite),
+                                      fillColorReceived: Color(colorCoderGreyBg),
+                                      hintColorReceived: Colors.white30,
+                                      borderColorReceived: Color(colorCoderBorderWhite),
+                                      onChanged: (val) => _phone = val,
+                                      validator: CommonMethods().validateMobile),
+                                  padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                ),
+                                flex: 1,
                               ),
-                              color: Color(colorCoderGreyBg),
-                            ),
+                            ],
                           ),
                           padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                         ),
                         SizedBox(
                             height: MediaQuery.of(context).size.height * .02),
-                        Padding(
-                          child: CommonTextFormField(
-                              hintText: "Mobile",
-                              maxLinesReceived: 1,
-                              isDigitsOnly: true,
-                              maxLengthReceived: 15,
-                              textColorReceived: Color(colorCodeWhite),
-                              fillColorReceived: Color(colorCoderGreyBg),
-                              hintColorReceived: Colors.white30,
-                              borderColorReceived: Color(colorCoderBorderWhite),
-                              onChanged: (val) => _phone = val,
-                              validator: CommonMethods().validateMobile),
-                          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                        ),
+                        // Padding(
+                        //   child: CommonTextFormField(
+                        //       hintText: "Mobile",
+                        //       maxLinesReceived: 1,
+                        //       isDigitsOnly: true,
+                        //       maxLengthReceived: 15,
+                        //       textColorReceived: Color(colorCodeWhite),
+                        //       fillColorReceived: Color(colorCoderGreyBg),
+                        //       hintColorReceived: Colors.white30,
+                        //       borderColorReceived: Color(colorCoderBorderWhite),
+                        //       onChanged: (val) => _phone = val,
+                        //       validator: CommonMethods().validateMobile),
+                        //   padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        // ),
                         SizedBox(
                             height: MediaQuery.of(context).size.height * .02),
                         _buildDateSection(),
@@ -383,7 +404,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         Get.offAll(() => LoginScreen());
       } else {
         Fluttertoast.showToast(
-            msg: commonResponse.message ?? StringConstants.apiFailureMsg);
+            msg:"${commonResponse.message} so login as same phone number " ?? StringConstants.apiFailureMsg);
       }
     }).catchError((err) {
       Get.back();
@@ -437,7 +458,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () async {
-                          var url = "";
+                          var url = "https://crowdworksindia.org/#/terms-and-conditions";
                           if (await canLaunch(url)) {
                             await launch(url);
                           } else {

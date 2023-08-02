@@ -63,6 +63,7 @@ class _FundraiserHistoryState extends State<FundraiserHistory> {
                                 return CommonApiLoader();
                                 break;
                               case Status.COMPLETED:
+                                print("List--> ${snapshot.data.data}");
                                 PaymentHistoryResponse response =snapshot.data.data;
                                 return _buildUserWidget(response.paymentHist);
                                 break;

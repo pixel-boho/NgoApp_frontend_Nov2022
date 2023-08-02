@@ -71,11 +71,12 @@ class AuthorisationRepository {
     return UserPancardResponse.fromJson(response.data);
   }
 
-  Future<PaymentHistoryResponse> fetchUserpaymentdetails() async {
+  Future<PaymentHistoryResponse> fetchUserpaymentdetails( ) async {
     final response = await apiProvider
         .getInstance()
         .post('${RemoteConfig.fetchpaymentdetails}');
-    print("response ${response.data}");
+
+    print("response==> ${response.data}");
     return PaymentHistoryResponse.fromJson(response.data);
   }
 }

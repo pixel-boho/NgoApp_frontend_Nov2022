@@ -31,6 +31,7 @@ import 'package:ngo_app/Interfaces/RefreshPageListener.dart';
 import 'package:ngo_app/Models/CommonResponse.dart';
 import 'package:ngo_app/Models/DocumentItem.dart';
 import 'package:ngo_app/Models/ItemDetailResponse.dart';
+import 'package:ngo_app/Repositories/CommonInfoRepository.dart';
 import 'package:ngo_app/Screens/Dashboard/Home.dart';
 import 'package:ngo_app/Screens/Lend/PaymentInputAmountScreen.dart';
 import 'package:ngo_app/Screens/StartFundRaising/FormOne.dart';
@@ -376,9 +377,9 @@ String beneficiary_account_name = "";
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                     alignment: FractionalOffset.centerLeft,
                     child: Text(
-                      data.supporters.length != 1
-                          ? "${data.supporters.length} Supporters"
-                          : "${data.supporters.length} Supporter",
+                      data.supportersCount != 1
+                          ? "${data.supportersCount} Supporters"
+                          : "${data.supportersCount} Supporter",
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -748,7 +749,7 @@ String beneficiary_account_name = "";
             padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
             alignment: FractionalOffset.centerLeft,
             child: Text(
-              "A/c Name  :  ${data.fundraiserDetails.beneficiaryAccountName}",
+              "A/c Name  :  ${data.fundraiserDetails.virtualAccountName}",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -828,21 +829,17 @@ String beneficiary_account_name = "";
                             topRight: Radius.circular(5),
                             bottomLeft: Radius.circular(5),
                             bottomRight: Radius.circular(5))),
-                    padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                    padding: EdgeInsets.fromLTRB(10, 5, 5, 5),
                     child: Image(
                       image: AssetImage("assets/images/qr.jpg"),
-                      height: 160.0,
-                      width: 160.0,
+                      height: 200.0,
+                      width: 200.0,
                     ),
                   ),
                 ),
-
               ],
             ),
           ),
-
-
-
         ],
       ),
     );
@@ -968,19 +965,6 @@ String beneficiary_account_name = "";
                         SizedBox(
                           height: 5,
                         ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(15, 0, 5, 0),
-                          alignment: FractionalOffset.centerLeft,
-                          child: Text(
-                            isCampaigner
-                                ? "${data.campaignerDetails?.phoneNumber}"
-                                : "${data.fundraiserDetails?.phoneNumber}",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 13.0),
-                          ),
-                        ),
                         // Visibility(
                         //   child: Container(
                         //   padding: EdgeInsets.fromLTRB(15, 0, 5, 0),
@@ -1014,8 +998,9 @@ String beneficiary_account_name = "";
       elevation: 10,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: ExpansionTile(
-        title: Text(
-          "Story",
+        title:
+        Text(
+          "${contentTitle==null?"Story":contentTitle}",
           style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
         ),
         children: <Widget>[

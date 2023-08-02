@@ -75,27 +75,27 @@ class _HowWorksScreenState extends State<HowWorksScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: ExpansionTile(
         title: Text(
-          "How to start a fundraiser!",
+          "What is Crowdfunding?",
           style: TextStyle(
               fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.black),
         ),
         children: <Widget>[
+          // Container(
+          //   padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+          //   alignment: FractionalOffset.centerLeft,
+          //   child: Text(
+          //     "How crowd funding works..",
+          //     style: TextStyle(
+          //         fontWeight: FontWeight.w600,
+          //         fontSize: 13.0,
+          //         color: Color(colorCoderItemTitle)),
+          //   ),
+          // ),
           Container(
             padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
             alignment: FractionalOffset.centerLeft,
             child: Text(
-              "How crowd funding works..",
-              style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 13.0,
-                  color: Color(colorCoderItemTitle)),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-            alignment: FractionalOffset.centerLeft,
-            child: Text(
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+              "In its simplest form, Crowdfunding is a practice of giving monetary funds to overcome specific social, cultural, or economic hurdles individuals face in their daily lives.",
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 12.0,
@@ -134,18 +134,18 @@ class _HowWorksScreenState extends State<HowWorksScreen> {
               color: Color(colorCoderItemTitle)),
         ),
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-            alignment: FractionalOffset.centerLeft,
-            child: Text(
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12.0,
-                  height: 1.8,
-                  color: Color(colorCoderItemSubTitle)),
-            ),
-          ),
+          // Container(
+          //   padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+          //   alignment: FractionalOffset.centerLeft,
+          //   child: Text(
+          //     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+          //     style: TextStyle(
+          //         fontWeight: FontWeight.w500,
+          //         fontSize: 12.0,
+          //         height: 1.8,
+          //         color: Color(colorCoderItemSubTitle)),
+          //   ),
+          // ),
           _buildInfo("01", "Sign up or login if you wish, then follow steps else skip step 2", AssetImage('assets/images/ic_login_step.png')),
           _buildInfo("02", "Enter OTP", AssetImage('assets/images/ic_otp_step.png')),
           _buildInfo("03", "Click Donate Now Button", AssetImage('assets/images/ic_choose_purpose.png')),

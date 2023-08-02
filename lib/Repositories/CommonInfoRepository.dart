@@ -25,7 +25,7 @@ import 'package:ngo_app/ServiceManager/ApiProvider.dart';
 import 'package:ngo_app/ServiceManager/RemoteConfig.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-
+String contentTitle = "";
 class CommonInfoRepository {
   ApiProvider apiProvider;
 
@@ -114,6 +114,8 @@ class CommonInfoRepository {
   Future<ItemDetailResponse> getFundraiserDetail(int fundraiserId) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getFundraiserDetail + "?fundraiser_id=" + "$fundraiserId");
+    print("response=>${response.data["fundraiserDetails"]["content_title"]}");
+    contentTitle = response.data["fundraiserDetails"]["content_title"];
     return ItemDetailResponse.fromJson(response.data);
   }
 

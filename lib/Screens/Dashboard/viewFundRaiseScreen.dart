@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ngo_app/Blocs/ViewAllItemsBloc.dart';
@@ -20,16 +21,16 @@ import 'package:ngo_app/Utilities/LoginModel.dart';
 import 'AutocompleteSearch.dart';
 import 'FilterScreen.dart';
 
-class ViewAllScreen extends StatefulWidget {
+class ViewFundRaiseScreen extends StatefulWidget {
   final bool isCampaignRelated;
 
-  ViewAllScreen({this.isCampaignRelated = true});
+  ViewFundRaiseScreen({this.isCampaignRelated = false});
 
   @override
-  _ViewAllScreenState createState() => _ViewAllScreenState();
+  _ViewFundRaiseScreenState createState() => _ViewFundRaiseScreenState();
 }
 
-class _ViewAllScreenState extends State<ViewAllScreen> with LoadMoreListener {
+class _ViewFundRaiseScreenState extends State<ViewFundRaiseScreen> with LoadMoreListener {
   ScrollController _itemsScrollController;
   bool isLoadingMore = false;
   ViewAllItemsBloc _viewAllItemsBloc;
@@ -45,7 +46,7 @@ class _ViewAllScreenState extends State<ViewAllScreen> with LoadMoreListener {
 
   void _scrollListener() {
     if (_itemsScrollController.offset >=
-            _itemsScrollController.position.maxScrollExtent &&
+        _itemsScrollController.position.maxScrollExtent &&
         !_itemsScrollController.position.outOfRange) {
       print("reach the bottom");
       if (_viewAllItemsBloc.hasNextPage) {
@@ -54,7 +55,7 @@ class _ViewAllScreenState extends State<ViewAllScreen> with LoadMoreListener {
       }
     }
     if (_itemsScrollController.offset <=
-            _itemsScrollController.position.minScrollExtent &&
+        _itemsScrollController.position.minScrollExtent &&
         !_itemsScrollController.position.outOfRange) {
       print("reach the top");
     }
@@ -109,7 +110,7 @@ class _ViewAllScreenState extends State<ViewAllScreen> with LoadMoreListener {
                     ),
                     onPressed: () async {
                       Map<String, bool> data = await Get.to(
-                          () => FilterScreen(),
+                              () => FilterScreen(),
                           opaque: false,
                           fullscreenDialog: true);
                       print("*****");
