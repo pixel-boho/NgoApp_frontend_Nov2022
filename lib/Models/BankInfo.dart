@@ -1,3 +1,5 @@
+
+
 class BankInfo {
   String _aDDRESS;
   String _bANK;
@@ -121,6 +123,79 @@ class BankInfo {
     data['STATE'] = this._sTATE;
     data['SWIFT'] = this._sWIFT;
     data['UPI'] = this._uPI;
+    return data;
+  }
+}
+
+class BankInfoTest {
+  bool nEFT;
+  bool uPI;
+  String sWIFT;
+  String bANKCODE;
+  String bANK;
+  String iFSC;
+  int mICR;
+  String bRANCH;
+  String aDDRESS;
+  String cITY;
+  String cENTRE;
+  String dISTRICT;
+  String sTATE;
+  int sTDCODE;
+  int cONTACT;
+
+  BankInfoTest(
+      {this.nEFT,
+        this.uPI,
+        this.sWIFT,
+        this.bANKCODE,
+        this.bANK,
+        this.iFSC,
+        this.mICR,
+        this.bRANCH,
+        this.aDDRESS,
+        this.cITY,
+        this.cENTRE,
+        this.dISTRICT,
+        this.sTATE,
+        this.sTDCODE,
+        this.cONTACT});
+
+  BankInfoTest.fromJson(Map<String, dynamic> json) {
+    nEFT = json['NEFT'];
+    uPI = json['UPI'];
+    sWIFT = json['SWIFT'];
+    bANKCODE = json['BANKCODE'];
+    bANK = json['BANK'];
+    iFSC = json['IFSC'];
+    mICR = json['MICR'];
+    bRANCH = json['BRANCH'];
+    aDDRESS = json['ADDRESS'];
+    cITY = json['CITY'];
+    cENTRE = json['CENTRE'];
+    dISTRICT = json['DISTRICT'];
+    sTATE = json['STATE'];
+    sTDCODE = json['STDCODE'];
+    cONTACT = json['CONTACT'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['NEFT'] = this.nEFT;
+    data['UPI'] = this.uPI;
+    data['SWIFT'] = this.sWIFT;
+    data['BANKCODE'] = this.bANKCODE;
+    data['BANK'] = this.bANK;
+    data['IFSC'] = this.iFSC;
+    data['MICR'] = this.mICR;
+    data['BRANCH'] = this.bRANCH;
+    data['ADDRESS'] = this.aDDRESS;
+    data['CITY'] = this.cITY;
+    data['CENTRE'] = this.cENTRE;
+    data['DISTRICT'] = this.dISTRICT;
+    data['STATE'] = this.sTATE;
+    data['STDCODE'] = this.sTDCODE;
+    data['CONTACT'] = this.cONTACT;
     return data;
   }
 }

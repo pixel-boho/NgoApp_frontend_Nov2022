@@ -25,6 +25,7 @@ class _ReviewItemScreenState extends State<ReviewItemScreen> {
   String _userTypedRemark = "";
   bool isReviewSubmitted = false;
   CommonBloc _commonBloc;
+  TextEditingController _remark=TextEditingController();
 
   @override
   void initState() {
@@ -154,7 +155,9 @@ class _ReviewItemScreenState extends State<ReviewItemScreen> {
           Padding(
             padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                _remark.clear();
+              },
               child: Container(
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -212,6 +215,7 @@ class _ReviewItemScreenState extends State<ReviewItemScreen> {
   Widget _buildRemarks() {
     return Padding(
       child: TextFormField(
+        controller: _remark,
           maxLines: 5,
           minLines: 4,
           keyboardType: TextInputType.multiline,

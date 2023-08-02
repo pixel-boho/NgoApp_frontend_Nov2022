@@ -168,6 +168,7 @@ class _MyCommentsScreenState extends State<MyCommentsScreen>
       child: ListView.separated(
         scrollDirection: Axis.vertical,
         itemCount: commentsList.length,
+        reverse: true,
         separatorBuilder: (BuildContext context, int index) => const Divider(),
         itemBuilder: (context, index) {
           return _buildCommentItem(imageBase, commentsList[index]);

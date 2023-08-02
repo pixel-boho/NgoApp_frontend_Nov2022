@@ -39,7 +39,7 @@ class DonateNowCardWidget extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-              child: Text("Make a\nDifference",
+              child: Text("Make a Difference",
                   textAlign: TextAlign.left,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,

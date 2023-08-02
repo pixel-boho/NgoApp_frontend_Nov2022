@@ -14,6 +14,7 @@ import 'package:ngo_app/Elements/StartNowCardWidget.dart';
 import 'package:ngo_app/Models/CampaignItem.dart';
 import 'package:ngo_app/Models/FundraiserItem.dart';
 import 'package:ngo_app/Models/HomeResponse.dart';
+import 'package:ngo_app/Screens/Dashboard/viewFundRaiseScreen.dart';
 import 'package:ngo_app/Screens/DetailPages/ItemDetailScreen.dart';
 import 'package:ngo_app/ServiceManager/ApiResponse.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
@@ -281,7 +282,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       ),
                       onPressed: () {
-                        Get.to(() => ViewAllScreen());
+                        Get.to(() => ViewFundRaiseScreen());
                       },
                       child: Text("View All",
                           textAlign: TextAlign.center,

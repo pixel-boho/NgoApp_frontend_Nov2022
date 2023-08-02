@@ -292,7 +292,7 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
             child: CommonTextFormField(
                 hintText: "Address",
                 maxLinesReceived: 1,
-                maxLengthReceived: 10,
+                maxLengthReceived: 100,
                 controller: _addressController,
                 textColorReceived: Color(colorCodeWhite),
                 fillColorReceived: Color(colorCoderGreyBg),

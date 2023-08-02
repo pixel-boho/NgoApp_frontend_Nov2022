@@ -9,6 +9,7 @@ class MyLendHistoryListResponse {
   String _message;
   bool _success;
 
+
   MyLendListHistoryResponse(
       {int statusCode,
         String baseUrl,
@@ -92,6 +93,8 @@ class MyLendListItem {
   String _purpose;
   String _loanAmount;
   String _imageUrl;
+
+
 
   MyLendListItem(
       {int id,

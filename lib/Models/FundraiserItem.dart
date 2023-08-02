@@ -6,6 +6,7 @@ class FundraiserItem {
   int _fundRequired;
   String _closingDate;
   String _story;
+  String _content_title;
   int _status;
   String _createdAt;
   String _modifiedAt;
@@ -74,7 +75,8 @@ class FundraiserItem {
       int isCampaign,
       int isApproved,
       int isCancelled,
-      String cancelReason}) {
+      String cancelReason,
+      String content_title}) {
     this._id = id;
     this._campaignId = campaignId;
     this._imageUrl = imageUrl;
@@ -82,6 +84,7 @@ class FundraiserItem {
     this._fundRequired = fundRequired;
     this._closingDate = closingDate;
     this._story = story;
+    this._content_title = content_title;
     this._status = status;
     this._createdAt = createdAt;
     this._modifiedAt = modifiedAt;
@@ -99,6 +102,7 @@ class FundraiserItem {
     this._beneficiaryBank = beneficiaryBank;
     this._beneficiaryIfsc = beneficiaryIfsc;
     this._beneficiaryImage = beneficiaryImage;
+    this._content_title = content_title;
     this._createdBy = createdBy;
     this._isAmountCollected = isAmountCollected;
     this._fundRaised = fundRaised;
@@ -210,6 +214,7 @@ class FundraiserItem {
     _city = value;
   }
 
+
   String get hospital => _hospital;
 
   set hospital(String value) {
@@ -280,6 +285,10 @@ class FundraiserItem {
 
   set story(String value) {
     _story = value;
+  }
+  String get content_title=>_content_title;
+  set content_title(String value){
+    _content_title=value;
   }
 
   String get closingDate => _closingDate;

@@ -97,6 +97,16 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                         SizedBox(
                             height: MediaQuery.of(context).size.height * .02),
                         Padding(
+                          padding: const EdgeInsets.only(right: 230.0),
+                          child: Column(mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text("Fill up the form",style: TextStyle(fontWeight: FontWeight.bold),),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * .02),
+                        Padding(
                           child: CommonTextFormField(
                               hintText: "Name",
                               maxLinesReceived: 1,

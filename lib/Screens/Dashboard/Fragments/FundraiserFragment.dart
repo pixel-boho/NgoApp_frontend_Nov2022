@@ -209,7 +209,7 @@ class _FundraiserFragmentState extends State<FundraiserFragment>
         }
 
       } else {
-        return CommonApiResultsEmptyWidget("Results Empty",
+        return CommonApiResultsEmptyWidget("Results Empty \n Go to Menu to start a fundraiser",
             textColorReceived: Colors.black);
       }
     } else {
