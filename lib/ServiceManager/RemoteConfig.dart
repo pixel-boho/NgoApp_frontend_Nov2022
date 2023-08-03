@@ -35,7 +35,9 @@ class RemoteConfig {
   static const cancelFundraiser = "report-issue/cancel-fundraiser";
   static const pancardupload="user/pancardupload";
   static const fetchpancard="user/user-profile-details";
-  static const fetchpaymentdetails="user/payment-history";
+  // static const fetchpaymentdetails="user/payment-history";
+  static const fetchdonationhistory="user/donation-history";
+  static const fetchfundraisehistory="user/fundraiser-payment-history";
 
   // Loan & Lend related
   static const createLend = "loan/create-loan";

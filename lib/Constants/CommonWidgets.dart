@@ -477,6 +477,78 @@ class CommonWidgets {
     );
   }
 
+  showBacktoSure() {
+    return  Get.dialog(
+      WillPopScope(
+        onWillPop: () async => false,
+        child: AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                height: 15,
+              ),
+              Text(
+                "Are you sure to cancel your payment?",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                    fontSize: 14.0),
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 45.0,
+                      width: double.infinity,
+                      margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      child: CommonButton(
+                          buttonText: "Yes",
+                          bgColorReceived: Color(colorCoderRedBg),
+                          borderColorReceived: Color(colorCoderRedBg),
+                          textColorReceived: Color(colorCodeWhite),
+                          buttonHandler: () {
+                            Get.back();
+                            Get.to(() => DashboardScreen(fragmentToShow: 0,));
+                          }),
+                    ),
+                    flex: 1,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 45.0,
+                      width: double.infinity,
+                      margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      child: CommonButton(
+                          buttonText: "No",
+                          bgColorReceived: Color(colorCoderRedBg),
+                          borderColorReceived: Color(colorCoderRedBg),
+                          textColorReceived: Color(colorCodeWhite),
+                          buttonHandler: () {
+                            Get.back();
+                          }),
+                    ),
+                    flex: 1,
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   showSignUpWarningDialog(String msg, var assetImage, Function _buttonHandlerWithSignUp,
       Function _buttonHandlerWithOutSignUp,
       bool isBarrierDismissible) {

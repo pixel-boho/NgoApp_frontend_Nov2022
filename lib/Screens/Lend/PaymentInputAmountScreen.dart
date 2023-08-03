@@ -7,6 +7,7 @@ import 'package:ngo_app/Constants/CommonMethods.dart';
 import 'package:ngo_app/Constants/CommonWidgets.dart';
 import 'package:ngo_app/Constants/CustomColorCodes.dart';
 import 'package:ngo_app/Constants/EnumValues.dart';
+import 'package:ngo_app/CustomLibraries/CustomLoader/RoundedLoader.dart';
 import 'package:ngo_app/Elements/CommonAppBar.dart';
 import 'package:ngo_app/Elements/CommonButton.dart';
 import 'package:ngo_app/Elements/CommonTextFormField.dart';
@@ -229,9 +230,41 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
     return Future.value(false);
   }
 
+  showAlertDialog(BuildContext context) {
+    Widget cancelButton = TextButton(
+      child: Text("No"),
+      onPressed:  () {},
+    );
+    Widget OkButton = TextButton(
+      child: Text("Yes"),
+      onPressed:  () {
+        Get.back();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Alert"),
+      content: Text("Are you sure to cancel your payment?"),
+      actions: [
+        OkButton,
+        cancelButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
   void _backPressFunction() {
     print("_sendOtpFunction clicked");
-    Get.back();
+    CommonWidgets().showBacktoSure();
+
+
   }
   _build80gFormCheckBoxSection() {
     return Column(

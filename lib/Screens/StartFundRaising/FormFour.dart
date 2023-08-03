@@ -115,14 +115,14 @@ class _FormFourScreenState extends State<FormFourScreen>
                         _buildImageSection(),
                         Visibility(
                           child: CommonLabelWidget(
-                            label: "Total amount to raise",
+                            label: "Total Amount to raise (Rs:20,000)",
                           ),
                           visible: LoginModel().isFundraiserEditMode,
                         ),
                         Padding(
                           child: CommonTextFormField(
                               controller: _amountController,
-                              hintText: "Total Amount to raise",
+                              hintText: "Total Amount to raise (Rs:20,000)",
                               maxLinesReceived: 1,
                               maxLengthReceived: 8,
                               textColorReceived: Color(colorCodeWhite),
@@ -235,22 +235,22 @@ class _FormFourScreenState extends State<FormFourScreen>
               ),
             ),
           ),
-          Positioned(
-            right: 0.0,
-            bottom: 0.0,
-            child: Container(
-              child: InkWell(
-                child: Image.asset(
-                  ('assets/images/ic_camera.png'),
-                  height: 45,
-                  width: 45,
-                ),
-                onTap: () {
-                  imagePicker.showDialog(context);
-                },
-              ),
-            ),
-          )
+          // Positioned(
+          //   right: 0.0,
+          //   bottom: 0.0,
+          //   child: Container(
+          //     child: InkWell(
+          //       child: Image.asset(
+          //         ('assets/images/ic_camera.png'),
+          //         height: 45,
+          //         width: 45,
+          //       ),
+          //       onTap: () {
+          //         imagePicker.showDialog(context);
+          //       },
+          //     ),
+          //   ),
+          // )
         ]),
       ),
     );
@@ -312,11 +312,22 @@ class _FormFourScreenState extends State<FormFourScreen>
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: Image(
-                        image: AssetImage('assets/images/no_image.png'),
-                        height: double.infinity,
-                        width: double.infinity,
+                      child:
+                      InkWell(
+                        child: Image.asset(
+                          ('assets/images/ic_camera.png'),
+                          height: double.infinity,
+                          width: double.infinity,
+                        ),
+                        onTap: () {
+                          imagePicker.showDialog(context);
+                        },
                       ),
+                      // Image(
+                      //   image: AssetImage('assets/images/no_image.png'),
+                      //   height: double.infinity,
+                      //   width: double.infinity,
+                      // ),
                       flex: 1,
                     ),
                     Padding(
