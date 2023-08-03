@@ -64,7 +64,6 @@ class LendBloc{
     }
   }
 
-  getPayment (){}
   
   dispose() {
     itemsSink?.close();

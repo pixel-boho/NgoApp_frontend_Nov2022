@@ -1,10 +1,12 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:ngo_app/Blocs/PaymentDetailsBloc.dart';
+import 'package:ngo_app/Blocs/DonationHistoryBloc.dart';
+import 'package:ngo_app/Constants/CommonMethods.dart';
 import 'package:ngo_app/Elements/CommonApiErrorWidget.dart';
 import 'package:ngo_app/Elements/CommonApiLoader.dart';
 import 'package:ngo_app/Elements/CommonApiResultsEmptyWidget.dart';
-import 'package:ngo_app/Models/paymentHistoryResponse.dart';
+import 'package:ngo_app/Interfaces/LoadMoreListener.dart';
+import 'package:ngo_app/Interfaces/RefreshPageListener.dart';
+import 'package:ngo_app/Models/DonationHistory.dart';
 import 'package:ngo_app/ServiceManager/ApiResponse.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
 
@@ -13,19 +15,45 @@ class DonationHistory extends StatefulWidget {
   _DonationHistoryState createState() => _DonationHistoryState();
 }
 
-class _DonationHistoryState extends State<DonationHistory> {
-  PaymentInfoBloc _paymentdetailsbloc;
+class _DonationHistoryState extends State<DonationHistory>
+  with LoadMoreListener, RefreshPageListener {
+  ScrollController _itemsScrollController;
+  bool isLoadingMore = false;
+  DonationHistoryBloc _bloc;
 
   @override
   void initState() {
+    LoginModel().relatedItemsList.clear();
     super.initState();
-    _paymentdetailsbloc = new PaymentInfoBloc();
-    _paymentdetailsbloc.getPaymentInfo();
+    CommonMethods().setRefreshFilterPageListener(this);
+    _itemsScrollController = ScrollController();
+    _itemsScrollController.addListener(_scrollListener);
+    _bloc = new DonationHistoryBloc(this);
+    _bloc.getPaymentHistoryList(false, null);
+  }
+
+  void _scrollListener() {
+    if (_itemsScrollController.offset >=
+        _itemsScrollController.position.maxScrollExtent &&
+        !_itemsScrollController.position.outOfRange) {
+      print("reach the bottom");
+      if (_bloc.hasNextPage) {
+        Future.delayed(const Duration(milliseconds: 1000), () {
+          _bloc.getPaymentHistoryList(true, null);
+        });
+      }
+    }
+    if (_itemsScrollController.offset <=
+        _itemsScrollController.position.minScrollExtent &&
+        !_itemsScrollController.position.outOfRange) {
+      print("reach the top");
+    }
   }
 
   @override
   void dispose() {
-    _paymentdetailsbloc.dispose();
+    _itemsScrollController.dispose();
+    _bloc.dispose();
     super.dispose();
   }
 
@@ -41,7 +69,7 @@ class _DonationHistoryState extends State<DonationHistory> {
             color: Colors.white,
             backgroundColor: Colors.green,
             onRefresh: () {
-              return _paymentdetailsbloc.getPaymentInfo();
+              return _bloc.getPaymentHistoryList(false, null);
             },
             child: Container(
                 color: Colors.transparent,
@@ -53,8 +81,8 @@ class _DonationHistoryState extends State<DonationHistory> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Expanded(
-                      child: StreamBuilder<ApiResponse<PaymentHistoryResponse>>(
-                        stream: _paymentdetailsbloc.paymentinfoStream,
+                      child: StreamBuilder<ApiResponse<DonationHistoryResponse>>(
+                        stream: _bloc.paymentinfoStream,
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             switch (snapshot.data.status) {
@@ -62,7 +90,7 @@ class _DonationHistoryState extends State<DonationHistory> {
                                 return CommonApiLoader();
                                 break;
                               case Status.COMPLETED:
-                                PaymentHistoryResponse response =snapshot.data.data;
+                                DonationHistoryResponse response =snapshot.data.data;
                                 return _buildUserWidget(response.donate);
                                 break;
                               case Status.ERROR:
@@ -86,7 +114,7 @@ class _DonationHistoryState extends State<DonationHistory> {
   }
 
   void _errorWidgetFunction() {
-    if (_paymentdetailsbloc != null) _paymentdetailsbloc.getPaymentInfo();
+       if (_bloc != null) _bloc.getPaymentHistoryList(false, null);
   }
   Widget _buildUserWidget(List<Donate> donateList) {
     if (donateList != null) {
@@ -164,6 +192,16 @@ class _DonationHistoryState extends State<DonationHistory> {
         print("${LoginModel().relatedItemsList.length}");
         print("PageRefreshed");
       });
+    }
+  }
+
+  @override
+  refresh(bool isLoading) {
+    if (mounted) {
+      setState(() {
+        isLoadingMore = isLoading;
+      });
+      print(isLoadingMore);
     }
   }
 }
