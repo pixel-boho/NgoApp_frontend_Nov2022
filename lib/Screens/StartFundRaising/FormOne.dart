@@ -29,13 +29,14 @@ class _FormOneScreenState extends State<FormOneScreen>
   String _phone;
   String _name;
   String _email;
+  String _other;
   RelationInfo _selectedRelationIfo;
   String _countryCode = "+91";
-
+  String titile="";
   TextEditingController _phoneController = new TextEditingController();
   TextEditingController _nameController = new TextEditingController();
   TextEditingController _emailController = new TextEditingController();
-
+  // TextEditingController _otherRelationController = new TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -274,6 +275,7 @@ class _FormOneScreenState extends State<FormOneScreen>
         LoginModel().startFundraiserMap["email"] = _email.trim();
         LoginModel().startFundraiserMap["phone_number"] = _phone.trim();
         LoginModel().startFundraiserMap["country_code"] = _countryCode;
+        // titile=="other" ?LoginModel().startFundraiserMap["relation_master_id"]=_other.trim():
         LoginModel().startFundraiserMap["relation_master_id"] =
             _selectedRelationIfo.id;
 
@@ -316,64 +318,86 @@ class _FormOneScreenState extends State<FormOneScreen>
   _buildRelationSection() {
     if (LoginModel().relationsList != null) {
       if (LoginModel().relationsList.length > 0) {
-        return Container(
-            padding: EdgeInsets.fromLTRB(10, 5, 5, 5),
-            margin: EdgeInsets.fromLTRB(10, 5, 10, 0),
-            height: 50,
-            decoration: BoxDecoration(
-                color: Color(colorCoderGreyBg),
-                border:
-                    Border.all(color: Color(colorCoderBorderWhite), width: 1),
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10))),
-            width: double.infinity,
-            child: DropdownButtonHideUnderline(
-              child: ButtonTheme(
-                child: DropdownButton(
-                  dropdownColor: Color(colorCoderGreyBg),
-                  isExpanded: true,
-                  icon: Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Colors.white,
-                  ),
-                  hint: Text(getRelationInfo(),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 13,
-                          color: Color(colorCodeWhite))),
-                  value: _selectedRelationIfo,
-                  onChanged: (val) {
-                    for (var data in LoginModel().relationsList) {
-                      if (data.id == val.id) {
-                        data.isSelected = true;
-                      } else {
-                        data.isSelected = false;
-                      }
-                    }
-                    setState(() {
-                      _selectedRelationIfo = val;
-                    });
-                  },
-                  items: LoginModel().relationsList.map((option) {
-                    return DropdownMenuItem(
-                      child: Text(
-                        "${option.title}",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 13,
-                            color: Color(colorCodeWhite)),
+        return Column(
+          children: [
+            Container(
+                padding: EdgeInsets.fromLTRB(10, 5, 5, 5),
+                margin: EdgeInsets.fromLTRB(10, 5, 10, 0),
+                height: 50,
+                decoration: BoxDecoration(
+                    color: Color(colorCoderGreyBg),
+                    border:
+                        Border.all(color: Color(colorCoderBorderWhite), width: 1),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10))),
+                width: double.infinity,
+                child: DropdownButtonHideUnderline(
+                  child: ButtonTheme(
+                    child: DropdownButton(
+                      dropdownColor: Color(colorCoderGreyBg),
+                      isExpanded: true,
+                      icon: Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.white,
                       ),
-                      value: option,
-                    );
-                  }).toList(),
-                ),
-              ),
-            ));
+                      hint: Text(getRelationInfo(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 13,
+                              color: Color(colorCodeWhite))),
+                      value: _selectedRelationIfo,
+                      onChanged: (val) {
+                        for (var data in LoginModel().relationsList) {
+                          if (data.id == val.id) {
+                            data.isSelected = true;
+                          } else {
+                            data.isSelected = false;
+                          }
+                        }
+                        setState(() {
+                          _selectedRelationIfo = val;
+                          titile = _selectedRelationIfo.title;
+                          print("titile1-->${titile}");
+                        });
+                      },
+                      items: LoginModel().relationsList.map((option) {
+
+                        return DropdownMenuItem(
+                          child: Text(
+                            "${option.title}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 13,
+                                color: Color(colorCodeWhite)),
+                          ),
+                          value: option,
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                )),
+            // titile=="other" ?Padding(
+            //   child: CommonTextFormField(
+            //       controller: _otherRelationController,
+            //       hintText: "Please mention relation",
+            //       maxLinesReceived: 1,
+            //       maxLengthReceived: 150,
+            //       textColorReceived: Color(colorCodeWhite),
+            //       fillColorReceived: Color(colorCoderGreyBg),
+            //       hintColorReceived: Colors.white30,
+            //       borderColorReceived: Color(colorCoderBorderWhite),
+            //       onChanged: (val) => _other = val,
+            //       validator: CommonMethods().nameValidator),
+            //   padding: EdgeInsets.fromLTRB(10, 20, 10, 5),
+            // ) : SizedBox(height: 0,),
+
+          ],
+        );
       } else {
         return Container();
       }

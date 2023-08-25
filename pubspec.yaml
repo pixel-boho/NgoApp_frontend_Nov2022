@@ -56,6 +56,9 @@ dependencies:
   rflutter_alert: ^2.0.4
   modal_bottom_sheet: ^3.0.0-pre
   open_app_file: ^3.2.2
+  flutter_share_me: ^1.4.0
+  package_info_plus: ^3.0.1
+
 
 
 dev_dependencies:

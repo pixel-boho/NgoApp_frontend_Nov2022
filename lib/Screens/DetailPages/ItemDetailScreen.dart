@@ -6,9 +6,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_share_me/flutter_share_me.dart' as shares;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/route_manager.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:intl/intl.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:ngo_app/Blocs/CommonBloc.dart';
 import 'package:ngo_app/Blocs/DetailBloc.dart';
@@ -38,7 +40,7 @@ import 'package:ngo_app/Screens/StartFundRaising/FormOne.dart';
 import 'package:ngo_app/ServiceManager/ApiResponse.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
 import 'package:share/share.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'AssuranceMsgScreen.dart';
 import 'ReportIssueScreen.dart';
 import 'ReviewItemScreen.dart';
@@ -64,11 +66,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
   CommonBloc _commonBloc;
   var documentToRemove;
   ItemDetailResponse itemInfoFetched;
-String beneficiary_account_name = "";
+  String beneficiary_account_name = "";
   String beneficiary_account_number = "";
 
-  String beneficiary_ifsc ="";
-  int amount=0;
+  String beneficiary_ifsc = "";
+  int amount = 0;
   @override
   void initState() {
     LoginModel().isFundraiserEditMode = false;
@@ -94,12 +96,12 @@ String beneficiary_account_name = "";
     if (widget.fromPage != null) {
       if (widget.fromPage == FromPage.EditFundraiserPage) {
         Get.offAll(() => DashboardScreen(
-          fragmentToShow: 3,
-        ));
+              fragmentToShow: 3,
+            ));
       } else if (widget.fromPage == FromPage.FromPushNotification) {
         Get.offAll(() => DashboardScreen(
-          fragmentToShow: 0,
-        ));
+              fragmentToShow: 0,
+            ));
       } else {
         Get.back();
       }
@@ -190,7 +192,8 @@ String beneficiary_account_name = "";
     // print("id2${data.fundraiserDetails?.fundRequired}");
     // print("id1${data.fundraiserDetails?.fundRaised}");
     beneficiary_account_name = data.fundraiserDetails.name;
-    beneficiary_account_number = data.fundraiserDetails.beneficiaryAccountNumber;
+    beneficiary_account_number =
+        data.fundraiserDetails.beneficiaryAccountNumber;
     beneficiary_ifsc = data.fundraiserDetails.beneficiaryIfsc;
     amount = data.fundraiserDetails.fundRequired;
     return CustomScrollView(slivers: <Widget>[
@@ -225,6 +228,9 @@ String beneficiary_account_name = "";
   }
 
   _buildInfoSection(ItemDetailResponse data) {
+    String originalDateStr = "${data.fundraiserDetails.closingDate}";
+    DateTime originalDate = DateTime.parse(originalDateStr);
+    String formattedDate = DateFormat("dd-MM-yyyy").format(originalDate);
     return Container(
       width: double.infinity,
       alignment: FractionalOffset.center,
@@ -264,7 +270,7 @@ String beneficiary_account_name = "";
                   child: CachedNetworkImage(
                     fit: BoxFit.fill,
                     imageUrl:
-                    getImage(data.baseUrl, data.fundraiserDetails.imageUrl),
+                        getImage(data.baseUrl, data.fundraiserDetails.imageUrl),
                     placeholder: (context, url) => Center(
                       child: RoundedLoader(),
                     ),
@@ -290,7 +296,7 @@ String beneficiary_account_name = "";
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Image(
-                          image: AssetImage('assets/images/ic_group.png'),
+                          image: AssetImage('assets/images/ic_group1.png'),
                           height: 40,
                           width: 100,
                         ),
@@ -358,7 +364,7 @@ String beneficiary_account_name = "";
                     alignment: FractionalOffset.centerLeft,
                     child: Text(
                       // CommonMethods().getDateDifference(data.fundraiserDetails.closingDate),
-                      "closing date : ${data.fundraiserDetails.closingDate}",
+                      "closing date : ${formattedDate}",
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -407,7 +413,7 @@ String beneficiary_account_name = "";
                     if (data.fundraiserDetails.isAmountCollected == 1) {
                       Fluttertoast.showToast(
                           msg:
-                          "Successfully collected the required amount, thank you");
+                              "Successfully collected the required amount, thank you");
                     } else {
                       if (CommonMethods().isAuthTokenExist()) {
                         Get.to(() => PaymentInputAmountScreen(
@@ -416,9 +422,9 @@ String beneficiary_account_name = "";
                             amount: data.fundraiserDetails.fundRequired -
                                 data.fundraiserDetails.fundRaised,
                             isCampaignRelated:
-                            data.fundraiserDetails.isCampaign == 1
-                                ? true
-                                : false));
+                                data.fundraiserDetails.isCampaign == 1
+                                    ? true
+                                    : false));
                       } else {
                         /*CommonWidgets().showCommonDialog(
                             "You need to login before use this feature!!",
@@ -439,46 +445,49 @@ String beneficiary_account_name = "";
                   }),
             ),
             visible: !CommonMethods()
-                .checkIsOwner(data.fundraiserDetails?.createdBy) &&
-                data.fundraiserDetails.fundRequired != data.fundraiserDetails.fundRaised ||
-                data.fundraiserDetails.fundRequired > data.fundraiserDetails.fundRaised &&
-                data.fundraiserDetails?.isApproved == 1 &&
-                data.fundraiserDetails?.isCancelled == 0,
+                        .checkIsOwner(data.fundraiserDetails?.createdBy) &&
+                    data.fundraiserDetails.fundRequired !=
+                        data.fundraiserDetails.fundRaised ||
+                data.fundraiserDetails.fundRequired >
+                        data.fundraiserDetails.fundRaised &&
+                    data.fundraiserDetails?.isApproved == 1 &&
+                    data.fundraiserDetails?.isCancelled == 0,
           ),
           Visibility(
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Container(
-                    height: 45.0,
-                    width: double.infinity,
-                    margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                    child: CommonButton(
-                        buttonText: "Transfer Amount",
-                        bgColorReceived: Color(colorCoderRedBg),
-                        borderColorReceived: Color(colorCoderRedBg),
-                        textColorReceived: Color(colorCodeWhite),
-                        buttonHandler: () {
-                          if (data.fundraiserDetails?.fundRaised != 0) {
-                            CommonWidgets().showCommonDialog(
-                                "Are you sure you, you want to transfer now?",
-                                AssetImage(
-                                    'assets/images/ic_notification_message.png'),
-                                _transferFundraiserAmount,
-                                false,
-                                true);
-                          } else {
-                            Fluttertoast.showToast(
-                                msg: "Raised amount must be greater than zero");
-                          }
-                        }),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 45.0,
+                      width: double.infinity,
+                      margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      child: CommonButton(
+                          buttonText: "Transfer Amount",
+                          bgColorReceived: Color(colorCoderRedBg),
+                          borderColorReceived: Color(colorCoderRedBg),
+                          textColorReceived: Color(colorCodeWhite),
+                          buttonHandler: () {
+                            if (data.fundraiserDetails?.fundRaised != 0) {
+                              CommonWidgets().showCommonDialog(
+                                  "Are you sure you, you want to transfer now?",
+                                  AssetImage(
+                                      'assets/images/ic_notification_message.png'),
+                                  _transferFundraiserAmount,
+                                  false,
+                                  true);
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg:
+                                      "Raised amount must be greater than zero");
+                            }
+                          }),
+                    ),
+                    flex: 1,
                   ),
-                  flex: 1,
-                ),
-                /*Expanded(
+                  /*Expanded(
                   child: Container(
                     height: 45.0,
                     width: double.infinity,
@@ -492,14 +501,15 @@ String beneficiary_account_name = "";
                   ),
                   flex: 1,
                 )*/
-              ],
-            ),
-            visible: CommonMethods()
-                .checkIsOwner(data.fundraiserDetails?.createdBy)  &&
-              data.fundraiserDetails?.isApproved == 1 &&
-                data.fundraiserDetails?.fundRequired == data.fundraiserDetails?.fundRaised ||
-                 data.fundraiserDetails?.fundRequired < data.fundraiserDetails?.fundRaised
-          ),
+                ],
+              ),
+              visible: CommonMethods()
+                          .checkIsOwner(data.fundraiserDetails?.createdBy) &&
+                      data.fundraiserDetails?.isApproved == 1 &&
+                      data.fundraiserDetails?.fundRequired ==
+                          data.fundraiserDetails?.fundRaised ||
+                  data.fundraiserDetails?.fundRequired <
+                      data.fundraiserDetails?.fundRaised),
           Visibility(
             child: Container(
               height: 45.0,
@@ -512,7 +522,7 @@ String beneficiary_account_name = "";
                   textColorReceived: Color(colorCodeWhite),
                   buttonHandler: () async {
                     final isCancelOptionAdded = await Get.to(
-                            () => CancelRequestScreen(widget.fundraiserIdReceived),
+                        () => CancelRequestScreen(widget.fundraiserIdReceived),
                         opaque: false,
                         fullscreenDialog: true);
                     print("*****");
@@ -525,7 +535,7 @@ String beneficiary_account_name = "";
                   }),
             ),
             visible: CommonMethods()
-                .checkIsOwner(data.fundraiserDetails?.createdBy) &&
+                    .checkIsOwner(data.fundraiserDetails?.createdBy) &&
                 data.fundraiserDetails?.isApproved == 1 &&
                 data.fundraiserDetails?.isCancelled == 0,
           ),
@@ -609,56 +619,88 @@ String beneficiary_account_name = "";
               _shareYourInfo(data);
             },
           ),
-          InkWell(
-            child: Image(
-              image: AssetImage("assets/images/ic_whatsapp.png"),
-              height: 40.0,
-              width: 40.0,
+          SizedBox(
+            width: 260,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary:  Color(colorCoderRedBg), // Background color
+                onPrimary: Colors.white, // Text color
+              ),
+              onPressed: () {
+                _shareYourInfo(data);
+              },
+              child: Row(
+                children: [
+                  Text('Share '),
+                  SizedBox(width: 10,),
+                  Image(image: AssetImage("assets/images/ic_whatsapp.png"), height: 25.0, width: 25.0,),
+                  SizedBox(width: 6,),
+                  Image(image: AssetImage("assets/images/ic_facebook.png"),height: 25.0, width: 25.0,),
+                  SizedBox(width: 6,),
+                  Image(image: AssetImage("assets/images/ic_instagram.png"),height: 25.0, width: 25.0,),
+                  SizedBox(width: 6,),
+                  Image(image: AssetImage("assets/images/ic_linkedin.png"),height: 25.0, width: 25.0,),
+                  SizedBox(width: 6,),
+                  Image(image: AssetImage("assets/images/ic_twitter.png"),height: 25.0, width: 25.0,),
+                ],
+              ), // Replace with your button text
             ),
-            onTap: () {
-              _shareYourInfo(data);
-            },
           ),
-          InkWell(
-            child: Image(
-              image: AssetImage("assets/images/ic_facebook.png"),
-              height: 40.0,
-              width: 40.0,
-            ),
-            onTap: () {
-              _shareYourInfo(data);
-            },
-          ),
-          InkWell(
-            child: Image(
-              image: AssetImage("assets/images/ic_instagram.png"),
-              height: 40.0,
-              width: 40.0,
-            ),
-            onTap: () {
-              _shareYourInfo(data);
-            },
-          ),
-          InkWell(
-            child: Image(
-              image: AssetImage("assets/images/ic_linkedin.png"),
-              height: 40.0,
-              width: 40.0,
-            ),
-            onTap: () {
-              _shareYourInfo(data);
-            },
-          ),
-          InkWell(
-            child: Image(
-              image: AssetImage("assets/images/ic_twitter.png"),
-              height: 40.0,
-              width: 40.0,
-            ),
-            onTap: () {
-              _shareYourInfo(data);
-            },
-          ),
+
+          // InkWell(
+          //   child: Image(
+          //     image: AssetImage("assets/images/ic_whatsapp.png"),
+          //     height: 40.0,
+          //     width: 40.0,
+          //   ),
+          //   onTap: () {
+          //     _shareToWhatsapp(data);
+          //     // _shareYourInfo(data);
+          //   },
+          // ),
+          // InkWell(
+          //   child: Image(
+          //     image: AssetImage("assets/images/ic_facebook.png"),
+          //     height: 40.0,
+          //     width: 40.0,
+          //   ),
+          //   onTap: () {
+          //     _shareToFacebook(data);
+          //     // _shareYourInfo(data);
+          //   },
+          // ),
+          // InkWell(
+          //   child: Image(
+          //     image: AssetImage("assets/images/ic_instagram.png"),
+          //     height: 40.0,
+          //     width: 40.0,
+          //   ),
+          //   onTap: () {
+          //     _shareToInstgram(data);
+          //     // _shareYourInfo(data);
+          //   },
+          // ),
+          // InkWell(
+          //   child: Image(
+          //     image: AssetImage("assets/images/ic_linkedin.png"),
+          //     height: 40.0,
+          //     width: 40.0,
+          //   ),
+          //   onTap: () {
+          //     shareToLinkedIn(data);
+          //   },
+          // ),
+          // InkWell(
+          //   child: Image(
+          //     image: AssetImage("assets/images/ic_twitter.png"),
+          //     height: 40.0,
+          //     width: 40.0,
+          //   ),
+          //   onTap: () {
+          //     _shareToTwitter(data);
+          //     // _shareYourInfo(data);
+          //   },
+          // ),
         ],
       ),
     );
@@ -788,6 +830,7 @@ String beneficiary_account_name = "";
       ),
     );
   }
+
   _buildQrDetails() {
     return Container(
       alignment: FractionalOffset.center,
@@ -844,6 +887,7 @@ String beneficiary_account_name = "";
       ),
     );
   }
+
   _buildPersonDetails(bool isCampaigner, ItemDetailResponse data) {
     print("camp---->${data.fundraiserDetails.isCampaign}");
     if (!isCampaigner && data.fundraiserDetails.isCampaign == 1) {
@@ -916,10 +960,10 @@ String beneficiary_account_name = "";
                                       ? "${data.campaignerDetails?.name}"
                                       : "${data.fundraiserDetails?.patientName}",
                                   ColorGenerator.materialColors,
-                                      (bool selected) {
-                                    // on tap callback
-                                    print("on tap callback");
-                                  },
+                                  (bool selected) {
+                            // on tap callback
+                            print("on tap callback");
+                          },
                                   false,
                                   60.0,
                                   60.0,
@@ -998,9 +1042,8 @@ String beneficiary_account_name = "";
       elevation: 10,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: ExpansionTile(
-        title:
-        Text(
-          "${contentTitle==null?"Story":contentTitle}",
+        title: Text(
+          "${contentTitle == null ? "Story" : contentTitle}",
           style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
         ),
         children: <Widget>[
@@ -1025,7 +1068,7 @@ String beneficiary_account_name = "";
           margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
           elevation: 8,
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           child: ExpansionTile(
             title: Text(
               "Top Donors",
@@ -1055,7 +1098,7 @@ String beneficiary_account_name = "";
                 ),
                 onPressed: () {
                   Get.to(
-                          () => ViewAllDonorsScreen(widget.fundraiserIdReceived));
+                      () => ViewAllDonorsScreen(widget.fundraiserIdReceived));
                 },
                 child: Text(
                   "View All",
@@ -1087,7 +1130,7 @@ String beneficiary_account_name = "";
           margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
           elevation: 8,
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           child: ExpansionTile(
             title: Text(
               "Supporters (${data.supportersCount})",
@@ -1149,7 +1192,7 @@ String beneficiary_account_name = "";
           margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
           elevation: 8,
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           child: ExpansionTile(
             title: Text(
               "Comments",
@@ -1303,7 +1346,7 @@ String beneficiary_account_name = "";
               ],
             ),
             visible:
-            CommonMethods().checkIsOwner(data.fundraiserDetails?.createdBy),
+                CommonMethods().checkIsOwner(data.fundraiserDetails?.createdBy),
           ),
           SizedBox(
             height: 5,
@@ -1356,7 +1399,7 @@ String beneficiary_account_name = "";
               ],
             ),
             visible:
-            CommonMethods().checkIsOwner(data.fundraiserDetails?.createdBy),
+                CommonMethods().checkIsOwner(data.fundraiserDetails?.createdBy),
           ),
           SizedBox(
             height: 5,
@@ -1377,8 +1420,8 @@ String beneficiary_account_name = "";
             Stack(
               children: [
                 Container(
-                  width: 90,
-                  height: 90,
+                  width: 100,
+                  height: 100,
                   decoration: new BoxDecoration(
                       border: Border.all(
                           width: 0.3, color: Color(colorCoderBorderWhite)),
@@ -1406,13 +1449,20 @@ String beneficiary_account_name = "";
                           width: double.infinity,
                         ),
                         Center(
-                          child: IconButton(
-                            iconSize: 18,
-                            icon: Icon(
-                              Icons.remove_red_eye_outlined,
-                              color: Colors.green,
-                            ),
+                          child: Text(
+                            "Click here",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
+                                color: Colors.white),
                           ),
+                          // IconButton(
+                          //   iconSize: 18,
+                          //   icon: Icon(
+                          //     Icons.remove_red_eye_outlined,
+                          //     color: Colors.green,
+                          //   ),
+                          // ),
                         ),
                       ],
                     ),
@@ -1482,7 +1532,7 @@ String beneficiary_account_name = "";
           foregroundColor: Colors.white,
           onPressed: () async {
             final isReviewAdded = await Get.to(
-                    () => ReviewItemScreen(widget.fundraiserIdReceived),
+                () => ReviewItemScreen(widget.fundraiserIdReceived),
                 opaque: false,
                 fullscreenDialog: true);
             print("*****");
@@ -1614,7 +1664,7 @@ String beneficiary_account_name = "";
                   }
                 }),
             visible:
-            CommonMethods().checkIsOwner(data.fundraiserDetails?.createdBy),
+                CommonMethods().checkIsOwner(data.fundraiserDetails?.createdBy),
           ),
           SizedBox(
             width: 5,
@@ -1627,11 +1677,19 @@ String beneficiary_account_name = "";
   _transferFundraiserAmount() {
     Get.back();
     var bodyParams = {};
-var body =
-    bodyParams["id"] = widget.fundraiserIdReceived;
-        ItemDetailResponse data;
+    var body = bodyParams["id"] = widget.fundraiserIdReceived;
+    ItemDetailResponse data;
     CommonWidgets().showNetworkProcessingDialog();
-    _commonBloc.transferAmount(json.encode(bodyParams),beneficiary_account_name,beneficiary_account_number,beneficiary_ifsc,widget.fundraiserIdReceived,amount,context).then((value) {
+    _commonBloc
+        .transferAmount(
+            json.encode(bodyParams),
+            beneficiary_account_name,
+            beneficiary_account_number,
+            beneficiary_ifsc,
+            widget.fundraiserIdReceived,
+            amount,
+            context)
+        .then((value) {
       Get.back();
       CommonResponse commonResponse = value;
       print("response->${commonResponse}");
@@ -1643,9 +1701,97 @@ var body =
     if (data.webBaseUrl != null) {
       if (data.webBaseUrl != "") {
         if (data.fundraiserDetails != null) {
-          String url = data.webBaseUrl + "${data.fundraiserDetails.id}";
+          String url = data.webBaseUrl;
           Share.share('check out this on our website $url',
               subject: 'Look what what we have!');
+        }
+      }
+    }
+  }
+
+  void shareToLinkedIn(ItemDetailResponse data) async {
+    if (data.webBaseUrl != null) {
+      if (data.webBaseUrl != "") {
+        if (data.fundraiserDetails != null) {
+          String url = data.webBaseUrl + "${data.fundraiserDetails.id}";
+          if (await canLaunch(url)) {
+            await launch(
+                "https://www.linkedin.com/sharing/share-offsite/?url=$url");
+          } else {
+            throw 'Could not launch $url';
+          }
+        }
+      }
+    }
+  }
+
+  void _shareToWhatsapp(ItemDetailResponse data) {
+    if (data.webBaseUrl != null) {
+      if (data.webBaseUrl != "") {
+        if (data.fundraiserDetails != null) {
+          String url = data.webBaseUrl + "${data.fundraiserDetails.id}";
+          shares.FlutterShareMe().shareToWhatsApp(
+              msg: 'check out this on our website,Look what what we have!$url');
+        }
+      }
+    }
+  }
+
+  Future<void> _shareToFacebook(ItemDetailResponse data) async {
+    // if (data.webBaseUrl != null) {
+    //   if (data.webBaseUrl != "") {
+    //     if (data.fundraiserDetails != null) {
+    //       String url = data.webBaseUrl + "${data.fundraiserDetails.id}";
+    //       shares.FlutterShareMe().shareToFacebook(msg: "check out this on our website,Look what what we have!$url");
+    //       // shareToTwitter(msg: "check out this on our website,Look what what we have!$url");
+    //     }
+    //   }
+    // }
+    if (data.webBaseUrl != null) {
+      if (data.webBaseUrl != "") {
+        if (data.fundraiserDetails != null) {
+          String url = data.webBaseUrl + "${data.fundraiserDetails.id}";
+          if (await canLaunch(url)) {
+            await launch("https://www.facebook.com/dialog/send?$url");
+          } else {
+            throw 'Could not launch $url';
+          }
+        }
+      }
+    }
+  }
+
+  Future<void> _shareToInstgram(ItemDetailResponse data) async {
+    // if (data.webBaseUrl != null) {
+    //   if (data.webBaseUrl != "") {
+    //     if (data.fundraiserDetails != null) {
+    //       String url = data.webBaseUrl + "${data.fundraiserDetails.id}";
+    //       shares.FlutterShareMe().shareToInstagram(:"check out this on our website,Look what what we have!$url",);
+    //     }
+    //   }
+    // }
+    if (data.webBaseUrl != null) {
+      if (data.webBaseUrl != "") {
+        if (data.fundraiserDetails != null) {
+          String url = data.webBaseUrl + "${data.fundraiserDetails.id}";
+          if (await canLaunch(url)) {
+            String text = "Check out this amazing text!";
+            await launch("https://www.instagram.com/direct/inbox/");
+          } else {
+            throw 'Could not launch $url';
+          }
+        }
+      }
+    }
+  }
+
+  void _shareToTwitter(ItemDetailResponse data) {
+    if (data.webBaseUrl != null) {
+      if (data.webBaseUrl != "") {
+        if (data.fundraiserDetails != null) {
+          String url = data.webBaseUrl + "${data.fundraiserDetails.id}";
+          shares.FlutterShareMe().shareToTwitter(
+              msg: "check out this on our website,Look what what we have!$url");
         }
       }
     }
@@ -1769,7 +1915,7 @@ var body =
             text: TextSpan(children: [
               TextSpan(
                 text:
-                "Note: If you feel anything suspicious regarding this!, feel free to  ",
+                    "Note: If you feel anything suspicious regarding this feel free to  ",
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.black,
@@ -1844,7 +1990,7 @@ var body =
               )
             ],
           )
-        /*child: RichText(
+          /*child: RichText(
             textAlign: TextAlign.left,
             text: TextSpan(children: [
               TextSpan(
@@ -1857,7 +2003,7 @@ var body =
                 ),
               ),
             ])),*/
-      );
+          );
     } else {
       return Container();
     }
