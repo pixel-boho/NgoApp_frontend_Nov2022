@@ -151,9 +151,81 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         SizedBox(
                             height: MediaQuery.of(context).size.height * .02),
+                        // Padding(
+                        //   child: Row(
+                        //     children: [
+                        //       Container(
+                        //         padding: EdgeInsets.fromLTRB(0, 1, 0, 1),
+                        //         child: CountryCodePicker(
+                        //           onChanged: (e) {
+                        //             _countryCode = e.dialCode;
+                        //             print(e.dialCode);
+                        //           },
+                        //           // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
+                        //           initialSelection: 'IN',
+                        //           favorite: ['+91', 'INDIA'],
+                        //           // optional. Shows only country name and flag
+                        //           showCountryOnly: false,
+                        //           // optional. Shows only country name and flag when popup is closed.
+                        //           showOnlyCountryWhenClosed: false,
+                        //           // optional. aligns the flag and the Text left
+                        //           alignLeft: false,
+                        //           showFlagDialog: true,
+                        //           showFlagMain: false,
+                        //           flagWidth: 20,
+                        //           padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                        //           textStyle: TextStyle(
+                        //               fontSize: 12.0,
+                        //               height: 1.8,
+                        //               fontWeight: FontWeight.w700,
+                        //               color: Colors.white),
+                        //           dialogTextStyle: TextStyle(
+                        //               fontSize: 13.0,
+                        //               height: 1.8,
+                        //               color: Colors.black),
+                        //           searchStyle: TextStyle(
+                        //               fontSize: 13.0,
+                        //               height: 1.8,
+                        //               color: Colors.black),
+                        //         ),
+                        //         decoration: BoxDecoration(
+                        //           shape: BoxShape.rectangle,
+                        //           border: Border.all(
+                        //               color: Color(colorCoderBorderWhite),
+                        //               width: 1.0),
+                        //           borderRadius: BorderRadius.only(
+                        //             topLeft: Radius.circular(10),
+                        //             topRight: Radius.circular(10),
+                        //             bottomLeft: Radius.circular(10),
+                        //             bottomRight: Radius.circular(10),
+                        //           ),
+                        //           color: Color(colorCoderGreyBg),
+                        //         ),
+                        //       ),
+                        //       Expanded(
+                        //         child: Padding(
+                        //           child: CommonTextFormField(
+                        //               hintText: "Mobile",
+                        //               maxLinesReceived: 1,
+                        //               isDigitsOnly: true,
+                        //               maxLengthReceived: 15,
+                        //               textColorReceived: Color(colorCodeWhite),
+                        //               fillColorReceived: Color(colorCoderGreyBg),
+                        //               hintColorReceived: Colors.white30,
+                        //               borderColorReceived: Color(colorCoderBorderWhite),
+                        //               onChanged: (val) => _phone = val,
+                        //               validator: CommonMethods().validateMobile),
+                        //           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                        //         ),
+                        //         flex: 1,
+                        //       ),
+                        //     ],
+                        //   ),
+                        //   padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        // ),
                         Padding(
                           child: Row(
-                            children: [
+                            children: <Widget>[
                               Container(
                                 padding: EdgeInsets.fromLTRB(0, 1, 0, 1),
                                 child: CountryCodePicker(
@@ -212,7 +284,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       textColorReceived: Color(colorCodeWhite),
                                       fillColorReceived: Color(colorCoderGreyBg),
                                       hintColorReceived: Colors.white30,
-                                      borderColorReceived: Color(colorCoderBorderWhite),
+                                      borderColorReceived:
+                                      Color(colorCoderBorderWhite),
                                       onChanged: (val) => _phone = val,
                                       validator: CommonMethods().validateMobile),
                                   padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
@@ -223,22 +296,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                         ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * .02),
-                        // Padding(
-                        //   child: CommonTextFormField(
-                        //       hintText: "Mobile",
-                        //       maxLinesReceived: 1,
-                        //       isDigitsOnly: true,
-                        //       maxLengthReceived: 15,
-                        //       textColorReceived: Color(colorCodeWhite),
-                        //       fillColorReceived: Color(colorCoderGreyBg),
-                        //       hintColorReceived: Colors.white30,
-                        //       borderColorReceived: Color(colorCoderBorderWhite),
-                        //       onChanged: (val) => _phone = val,
-                        //       validator: CommonMethods().validateMobile),
-                        //   padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                        // ),
                         SizedBox(
                             height: MediaQuery.of(context).size.height * .02),
                         _buildDateSection(),

@@ -72,7 +72,7 @@ class _AssuranceMsgScreenState extends State<AssuranceMsgScreen> {
                               alignment: FractionalOffset.topLeft,
                               padding: EdgeInsets.fromLTRB(5, 5, 2, 15),
                               child: Image(
-                                image: AssetImage('assets/images/ic_group.png'),
+                                image: AssetImage('assets/images/ic_group1.png'),
                                 height: 50,
                                 width: 150,
                               ),

@@ -394,7 +394,14 @@ class _MyDonationsScreenState extends State<MyDonationsScreen>
         );
       }
     } else {
-      return CommonApiErrorWidget("No results found", _errorWidgetFunction);
+      return Column(
+        children: [
+          SizedBox(height: 120,),
+          Center(
+              child: CommonApiResultsEmptyWidget("No results found")),
+        ],
+      );
+        // CommonApiErrorWidget("No results found", _errorWidgetFunction);
     }
   }
 

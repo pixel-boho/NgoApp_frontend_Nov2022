@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ngo_app/Notification/OneSignalNotifications.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Constants/CustomColorCodes.dart';
@@ -40,7 +41,31 @@ class _SplashScreenState extends State<SplashScreen>
             image: DecorationImage(
                 image: AssetImage('assets/images/splash_logo.gif'),
                 fit: BoxFit.fill)),
-        child: Container(),
+        child: Column(
+          children: [
+            SizedBox(height: MediaQuery.of(context).size.height * 0.9),
+            FutureBuilder<String>(
+                future: _getAppVersion(),
+                builder:
+                    (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  String version = '';
+                  if (snapshot.connectionState == ConnectionState.done &&
+                      snapshot.hasData)
+                    version = snapshot.data == null
+                        ? ''
+                        : 'Version : ${snapshot.data}';
+                  return Text(
+                    '$version',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600, color: Colors.grey),
+                  );
+                }),
+            SizedBox(
+              height: 18,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -101,5 +126,10 @@ class _SplashScreenState extends State<SplashScreen>
     } catch (Exception) {
       startTime();
     }
+  }
+
+  Future<String> _getAppVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    return packageInfo.version;
   }
 }

@@ -175,7 +175,13 @@ class _DonationHistoryState extends State<DonationHistory>
         );
       }
     } else {
-      return CommonApiErrorWidget("No results found", _errorWidgetFunction);
+      return Column(
+        children: [
+          SizedBox(height: 120,),
+          Center(
+              child: CommonApiResultsEmptyWidget("No results found")),
+        ],
+      );
     }
   }
 

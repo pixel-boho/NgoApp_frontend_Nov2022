@@ -285,7 +285,7 @@ class CommonInfoRepository {
   Future<BankInfo> getBankDetails(String ifsc) async {
     final response = await apiProvider
         .getInstanceForExternalApi()
-        .get("https://bank-apis.justinclicks.com/API/V1/IFSC/$ifsc/");
+        .get("https://ifsc.razorpay.com/$ifsc");
     Map<String, dynamic> map = jsonDecode(response?.toString());
     return map != null ? BankInfo.fromJson(map) : null;
   }
@@ -318,7 +318,8 @@ class CommonInfoRepository {
             .getInstance()
             .post("https://www.cocoalabs.in/ngo/api/web/v1/razorpay/pay-out",
             data: ({"amount":amount,
-              "fund_account_id":Contactid
+              "fund_account_id":Contactid,
+              "account_no":accountNum
             }));
 print("-<${responseforpayout.data["notes"]["notes_key_1"]}");
         if (responseforpayout.data["notes"]["notes_key_1"] =="Amount Transffered Successfully"){

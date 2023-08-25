@@ -125,8 +125,9 @@ class _FundraiserHistoryState extends State<FundraiserHistory>
                               );
                             } else {
                               if (snapshot.hasError) {
-                                return Container(
-                                  child: Text("nknsk"),
+                                return Expanded(
+                                  child: CommonApiResultsEmptyWidget("Results Empty"),
+                                  flex: 1,
                                 );
                               } else {
                                 return _buildUserWidget(listFundraise);
@@ -240,7 +241,13 @@ class _FundraiserHistoryState extends State<FundraiserHistory>
         );
       }
     } else {
-      //return CommonApiErrorWidget("No results found", _errorWidgetFunction);
+      return Column(
+        children: [
+          SizedBox(height: 120,),
+          Center(
+              child: CommonApiResultsEmptyWidget("No results found")),
+        ],
+      );
     }
   }
 

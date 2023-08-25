@@ -256,8 +256,8 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
       ),
     );
   }
-
   _validateUser() {
+    // String validator = CommonMethods().validateMobile(_phone);
     if (widget.isAuthTokenExist) {
       if (_formKey.currentState.validate()) {
         print("Submit report");
@@ -266,8 +266,9 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
         Fluttertoast.showToast(msg: StringConstants.formValidationMsg);
         return;
       }
-    } else {
-      if (_comment != null && _comment.length != 0) {
+    }
+    else {
+      if (_comment != null && _comment.length !=0) {
         print("Submit report");
         _submitFunction();
       } else {
