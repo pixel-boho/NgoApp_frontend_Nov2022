@@ -457,56 +457,88 @@ class _LendDetailScreenState extends State<LendDetailScreen> {
               _shareYourInfo(data);
             },
           ),
-          InkWell(
-            child: Image(
-              image: AssetImage("assets/images/ic_whatsapp.png"),
-              height: 40.0,
-              width: 40.0,
+          SizedBox(
+            width: 260,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary:  Color(colorCoderRedBg), // Background color
+                onPrimary: Colors.white, // Text color
+              ),
+              onPressed: () {
+                _shareYourInfo(data);
+              },
+              child: Row(
+                children: [
+                  Text('Share '),
+                  SizedBox(width: 10,),
+                  Image(image: AssetImage("assets/images/ic_whatsapp.png"), height: 25.0, width: 25.0,),
+                  SizedBox(width: 6,),
+                  Image(image: AssetImage("assets/images/ic_facebook.png"),height: 25.0, width: 25.0,),
+                  SizedBox(width: 6,),
+                  Image(image: AssetImage("assets/images/ic_instagram.png"),height: 25.0, width: 25.0,),
+                  SizedBox(width: 6,),
+                  Image(image: AssetImage("assets/images/ic_linkedin.png"),height: 25.0, width: 25.0,),
+                  SizedBox(width: 6,),
+                  Image(image: AssetImage("assets/images/ic_twitter.png"),height: 25.0, width: 25.0,),
+                ],
+              ), // Replace with your button text
             ),
-            onTap: () async {
-              _shareYourInfo(data);
-            },
           ),
-          InkWell(
-            child: Image(
-              image: AssetImage("assets/images/ic_facebook.png"),
-              height: 40.0,
-              width: 40.0,
-            ),
-            onTap: () {
-              _shareYourInfo(data);
-            },
-          ),
-          InkWell(
-            child: Image(
-              image: AssetImage("assets/images/ic_instagram.png"),
-              height: 40.0,
-              width: 40.0,
-            ),
-            onTap: () {
-              _shareYourInfo(data);
-            },
-          ),
-          InkWell(
-            child: Image(
-              image: AssetImage("assets/images/ic_linkedin.png"),
-              height: 40.0,
-              width: 40.0,
-            ),
-            onTap: () {
-              _shareYourInfo(data);
-            },
-          ),
-          InkWell(
-            child: Image(
-              image: AssetImage("assets/images/ic_twitter.png"),
-              height: 40.0,
-              width: 40.0,
-            ),
-            onTap: () async {
-              _shareYourInfo(data);
-            },
-          ),
+
+          // InkWell(
+          //   child: Image(
+          //     image: AssetImage("assets/images/ic_whatsapp.png"),
+          //     height: 40.0,
+          //     width: 40.0,
+          //   ),
+          //   onTap: () {
+          //     _shareToWhatsapp(data);
+          //     // _shareYourInfo(data);
+          //   },
+          // ),
+          // InkWell(
+          //   child: Image(
+          //     image: AssetImage("assets/images/ic_facebook.png"),
+          //     height: 40.0,
+          //     width: 40.0,
+          //   ),
+          //   onTap: () {
+          //     _shareToFacebook(data);
+          //     // _shareYourInfo(data);
+          //   },
+          // ),
+          // InkWell(
+          //   child: Image(
+          //     image: AssetImage("assets/images/ic_instagram.png"),
+          //     height: 40.0,
+          //     width: 40.0,
+          //   ),
+          //   onTap: () {
+          //     _shareToInstgram(data);
+          //     // _shareYourInfo(data);
+          //   },
+          // ),
+          // InkWell(
+          //   child: Image(
+          //     image: AssetImage("assets/images/ic_linkedin.png"),
+          //     height: 40.0,
+          //     width: 40.0,
+          //   ),
+          //   onTap: () {
+          //     shareToLinkedIn(data);
+          //   },
+          // ),
+          // InkWell(
+          //   child: Image(
+          //     image: AssetImage("assets/images/ic_twitter.png"),
+          //     height: 40.0,
+          //     width: 40.0,
+          //   ),
+          //   onTap: () {
+          //     _shareToTwitter(data);
+          //     // _shareYourInfo(data);
+          //   },
+          // ),
         ],
       ),
     );

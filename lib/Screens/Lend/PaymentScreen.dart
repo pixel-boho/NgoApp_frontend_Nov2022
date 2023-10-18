@@ -226,7 +226,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   Future<bool> loginDonationPaymentSuccess() async {
 
-    print("donorinfo->${paymentInfo.isAnonymous}?1:0");
 
     final response = await apiProvider.getInstance().post(
         'fundraiser-scheme/donate-ngo', data: ({
@@ -243,7 +242,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     })
     );
     Map<String, dynamic> map = response.data;
-    print("map=>${map}");
+    print("map=>${response.statusCode}");
     return map['success'] ?? false;
   }
 
@@ -337,7 +336,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
 
     Map<String, dynamic> map = response.data;
-    print("map=>${map}");
+    return map['success'] ?? false;
+  }
+
+  Future<bool> fetchpayment() async {
+    print("paymentId--> ${_paymentSuccessResponse.paymentId}");
+    final response = await apiProvider.getInstance().post(
+        'razorpay/fetch-payment', data: ({
+      'payment_id': '${_paymentSuccessResponse.paymentId}',
+    })
+    );
+
+    Map<String, dynamic> map = response.data;
+    print("Response-->$map");
     return map['success'] ?? false;
   }
 
@@ -349,16 +360,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
             onPaymentSuccess(_paymentSuccessResponse);
             if(paymentInfo.id==null  ){
               loginDonationPaymentSuccess();
+              fetchpayment();
             }
             else if(paymentInfo.id != null && IsCampaign == 1){
               loginDonationPaymentCampaignSuccess();
+              fetchpayment();
             }
             else if(paymentInfo.id != null && paymentInfo.paymentType == PaymentType.Lend )
             {
               lendandloanSuccess();
+              fetchpayment();
             }
             else {
               donationPaymentSuccess();
+              fetchpayment();
             }
 
             // if(paymentInfo.id==null && IsCampaign == 0 ){
@@ -421,16 +436,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
             onPaymentSuccess(_paymentSuccessResponse);
             if(paymentInfo.id==null ){
               guestDonationPaymentSuccess();
+              fetchpayment();
             }
             else if(paymentInfo.id != null && paymentInfo.paymentType == PaymentType.Lend )
             {
               lendandloanSuccess();
+              fetchpayment();
             }
             else if(paymentInfo.id !=null &&  IsCampaign ==0){
               guestDonationPaymentSuccess();
+              fetchpayment();
             }
             else {
               guestDonationPaymentCampaignSuccess();
+              fetchpayment();
             }
           });
       _razorPay.on(Razorpay.EVENT_PAYMENT_ERROR,

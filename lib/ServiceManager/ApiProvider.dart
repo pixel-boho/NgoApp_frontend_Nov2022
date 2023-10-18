@@ -8,8 +8,9 @@ class ApiProvider {
   ApiProvider() {
     BaseOptions options;
     options = new BaseOptions(
-      //baseUrl: "http://45.79.120.216/ngo/api/web/v1/",
-      baseUrl: "https://www.cocoalabs.in/ngo/api/web/v1/",
+      baseUrl: "https://crowdworksindia.org/test/api/web/v1/",
+      // baseUrl:"https://crowdworksindia.org/Ngo/api/web/v1/",
+      //  baseUrl: "https://www.cocoalabs.in/ngo/api/web/v1/",
 
       receiveTimeout: 30000, //30s
       connectTimeout: 30000,

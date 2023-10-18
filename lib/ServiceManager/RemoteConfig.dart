@@ -33,6 +33,7 @@ class RemoteConfig {
   static const getOurTeam = "master/our-team";
   static const reportIssue = "report-issue/add";
   static const cancelFundraiser = "report-issue/cancel-fundraiser";
+  static const downloadReceipt="";
   static const pancardupload="user/pancardupload";
   static const fetchpancard="user/user-profile-details";
   // static const fetchpaymentdetails="user/payment-history";

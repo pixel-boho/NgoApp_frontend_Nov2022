@@ -13,7 +13,7 @@ import 'package:ngo_app/Elements/ProfileOption.dart';
 import 'package:ngo_app/Models/ProfileResponse.dart';
 import 'package:ngo_app/Models/UserDetails.dart';
 import 'package:ngo_app/Screens/ProfileRelated/EditProfileScreen.dart';
-import 'package:ngo_app/Screens/ProfileRelated/MyPaymentScreen.dart';
+import 'package:ngo_app/Screens/ProfileRelated/MyTransactionScreen.dart';
 import 'package:ngo_app/Screens/ProfileRelated/MyDocumentsScreen.dart';
 import 'package:ngo_app/Screens/ProfileRelated/MyCommentsScreen.dart';
 import 'package:ngo_app/Screens/ProfileRelated/MyDonationsScreen.dart';
@@ -425,7 +425,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
       Get.to(() => MyDocumentsScreen(userid:userids,url:url));
     }
     else if (optionSelected == ProfileOptionsType.MyPayment) {
-      Get.to(() => MyPaymentHistory(userid:userids,url:url));
+      Get.to(() => MyTransactionScreen(userid:userids,url:url));
     }
   }
 }
