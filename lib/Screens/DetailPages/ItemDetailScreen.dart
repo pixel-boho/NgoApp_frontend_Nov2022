@@ -39,6 +39,7 @@ import 'package:ngo_app/Screens/Lend/PaymentInputAmountScreen.dart';
 import 'package:ngo_app/Screens/StartFundRaising/FormOne.dart';
 import 'package:ngo_app/ServiceManager/ApiResponse.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
+import 'package:open_app_file/open_app_file.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'AssuranceMsgScreen.dart';
@@ -49,6 +50,7 @@ import 'ViewAllDonorsScreen.dart';
 import 'ViewAllSupportersScreen.dart';
 import 'WebViewContainer.dart';
 import 'cancelRequestScreen.dart';
+
 
 class ItemDetailScreen extends StatefulWidget {
   var fundraiserIdReceived;
@@ -398,6 +400,12 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
                 ),
               ],
             ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 10, 15, 5),
+            child: Text("Note : Nominal charges will be applied",style: TextStyle(
+              fontWeight: FontWeight.w500,color: Colors.grey[700]
+            ),),
           ),
           Visibility(
             child: Container(
@@ -1435,9 +1443,12 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
                     onTap: () {
                       print(urlBase + documentItem.docUrl);
                       String downloadUrl = urlBase + documentItem.docUrl;
+                      print("${downloadUrl}");
                       if (urlBase != null && documentItem.docUrl != null) {
                         if (urlBase != "" && documentItem.docUrl != "") {
-                          Get.to(() => WebViewContainer(downloadUrl));
+                           Get.to(() => WebViewContainer(downloadUrl));
+                          // OpenAppFile.open(documentItem.docUrl);
+
                         }
                       }
                     },
@@ -1784,6 +1795,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
       }
     }
   }
+
 
   void _shareToTwitter(ItemDetailResponse data) {
     if (data.webBaseUrl != null) {

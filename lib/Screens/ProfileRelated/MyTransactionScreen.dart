@@ -7,14 +7,14 @@ import 'package:ngo_app/Screens/ProfileRelated/Fragments/DonationHistory.dart';
 import 'package:ngo_app/Screens/ProfileRelated/Fragments/FundraiserHistory.dart';
 import 'package:ngo_app/Screens/Sidebar/Fragments/StepsScreen.dart';
 
-class MyPaymentHistory extends StatefulWidget {
-  MyPaymentHistory({Key key, this.userid, this.url}) : super(key: key);
+class MyTransactionScreen extends StatefulWidget {
+  MyTransactionScreen({Key key, this.userid, this.url}) : super(key: key);
   final userid;
   final url;
-  _MyPaymentHistoryState createState() => _MyPaymentHistoryState();
+  _MyTransactionScreenState createState() => _MyTransactionScreenState();
 }
 
-class _MyPaymentHistoryState extends State<MyPaymentHistory>
+class _MyTransactionScreenState extends State<MyTransactionScreen>
     with SingleTickerProviderStateMixin {
   var selectedTabPos = 0;
   TabController _tabController;
@@ -130,9 +130,7 @@ class _MyPaymentHistoryState extends State<MyPaymentHistory>
         ]);
   }
 
-  /*
-    While clicking a tab item
-   */
+
   void tabItemClicked(int index) {
     if (mounted) {
       setState(() {

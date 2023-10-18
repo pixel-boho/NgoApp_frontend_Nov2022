@@ -166,7 +166,7 @@ class CommonBloc {
           await _commonInfoRepository.transferAmounts(body,accountName,accountNum,accountIfsc,fundid,amount,context);
       return commonResponse;
     } catch (error) {
-      Fluttertoast.showToast(msg: "ksmklcmldm");
+      // Fluttertoast.showToast(msg: "ksmklcmldm");
       throw CommonMethods().getNetworkError(error);
     }
   }

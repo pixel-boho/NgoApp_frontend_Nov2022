@@ -16,7 +16,7 @@ import 'package:ngo_app/ServiceManager/ApiResponse.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
 
 import 'FormSetPricing.dart';
- TextEditingController _bankController = TextEditingController();
+
 class FormAccountDetails extends StatefulWidget {
   @override
   _FormAccountDetailsState createState() => _FormAccountDetailsState();
@@ -36,6 +36,7 @@ class _FormAccountDetailsState extends State<FormAccountDetails> {
   TextEditingController _codeController = new TextEditingController();
   TextEditingController _accNameController = new TextEditingController();
   TextEditingController _accNumberController = new TextEditingController();
+  TextEditingController _bankController = TextEditingController();
 
   BankInfo _bankInfoReceived;
  // BankInfoTest __bankInfoReceived1;

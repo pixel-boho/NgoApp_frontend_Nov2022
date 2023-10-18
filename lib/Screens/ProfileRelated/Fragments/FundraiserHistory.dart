@@ -1,16 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:ngo_app/Blocs/FundraiseHistoryBloc.dart';
 import 'package:ngo_app/Constants/CommonMethods.dart';
-import 'package:ngo_app/Elements/CommonApiErrorWidget.dart';
-import 'package:ngo_app/Elements/CommonApiLoader.dart';
 import 'package:ngo_app/Elements/CommonApiResultsEmptyWidget.dart';
 import 'package:ngo_app/Interfaces/LoadMoreListener.dart';
 import 'package:ngo_app/Interfaces/RefreshPageListener.dart';
-import 'package:ngo_app/Models/FundraiseHistory.dart';
-import 'package:ngo_app/Models/PancardUploadResponse.dart';
-import 'package:ngo_app/ServiceManager/ApiResponse.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
 import 'package:http/http.dart' as http;
 
@@ -31,9 +25,9 @@ class _FundraiserHistoryState extends State<FundraiserHistory>
 
   Future getFundraise() async {
     print("Get order");
-    final response = await http.get(Uri.parse(
-        'https://www.cocoalabs.in/ngo/api/web/v1/user/fundraiser-payment-history'),
 
+    final response = await http.get(Uri.parse(
+        'https://crowdworksindia.org/test/api/web/v1/user/fundraiser-payment-history'),
         headers:{
       "Authorization":"Bearer ${LoginModel().authToken}"
         });
@@ -191,7 +185,6 @@ class _FundraiserHistoryState extends State<FundraiserHistory>
               physics: ClampingScrollPhysics(),
               padding: EdgeInsets.fromLTRB(0, 5, 5, 5),
               itemBuilder: (BuildContext ctx, int index) {
-                print("lenghth${paymentList.length}");
                 return Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Container(
@@ -201,11 +194,12 @@ class _FundraiserHistoryState extends State<FundraiserHistory>
                       width: MediaQuery
                           .of(context)
                           .size
-                          .width * 0.4,
+                          .width * 0.5,
                       child: Card(
                         child: new Column(
                           children: <Widget>[
-                            new ListTile(
+                             ListTile(
+                           isThreeLine:true,
                               leading: CircleAvatar(
                                 child: Icon(Icons.account_circle_outlined),
                               ),
@@ -213,8 +207,21 @@ class _FundraiserHistoryState extends State<FundraiserHistory>
                                 "Donate to ${paymentList[index]["fundraiser_id"]["title"]}", style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 16),
                               ),
-                              subtitle: new Text(
-                                  "${paymentList[index]["created_at"]}"
+                              subtitle:  Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      "${paymentList[index]["created_at"]}"
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                     ElevatedButton(onPressed: (){}, child:Text("80G")),
+                                      SizedBox(width: 10,),
+                                      ElevatedButton(onPressed: (){}, child:Text("Receipt"))
+                                    ],
+                                  ),
+                                ],
                               ),
                               trailing: Text("${paymentList[index]["amount"]}",
                                 style: TextStyle(color: Colors.green),),

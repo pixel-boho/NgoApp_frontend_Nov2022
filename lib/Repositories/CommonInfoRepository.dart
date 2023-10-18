@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:ngo_app/Constants/CustomColorCodes.dart';
+import 'package:get/get_core/get_core.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:ngo_app/Models/BankInfo.dart';
 import 'package:ngo_app/Models/CampaignTypesResponse.dart';
 import 'package:ngo_app/Models/CommentsListResponse.dart';
@@ -24,8 +24,10 @@ import 'package:ngo_app/Notification/withdraw.dart';
 import 'package:ngo_app/ServiceManager/ApiProvider.dart';
 import 'package:ngo_app/ServiceManager/RemoteConfig.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+
+
 String contentTitle = "";
+
 class CommonInfoRepository {
   ApiProvider apiProvider;
 
@@ -35,12 +37,12 @@ class CommonInfoRepository {
 
   Future<HomeResponse> getHomeItems() async {
     final response =
-    await apiProvider.getInstance().get(RemoteConfig.getHomeItems);
+        await apiProvider.getInstance().get(RemoteConfig.getHomeItems);
     return HomeResponse.fromJson(response.data);
   }
 
-  Future<CampaignTypesResponse> getCampaignTypes(int pageNumber,
-      int perPage) async {
+  Future<CampaignTypesResponse> getCampaignTypes(
+      int pageNumber, int perPage) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getCategories +
             "?page=" +
@@ -50,8 +52,8 @@ class CommonInfoRepository {
     return CampaignTypesResponse.fromJson(response.data);
   }
 
-  Future<CommonViewAllResponse> getAllFundraiserItems(int pageNumber,
-      int perPage, int category, String sortOption) async {
+  Future<CommonViewAllResponse> getAllFundraiserItems(
+      int pageNumber, int perPage, int category, String sortOption) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getAllFundraiserItems +
             "?page=" +
@@ -63,13 +65,14 @@ class CommonInfoRepository {
     return CommonViewAllResponse.fromJson(response.data);
   }
 
-  Future<CommonViewAllResponse> getAllCampaignRelatedItems(int pageNumber,
-      int perPage, int category, String sortOption) async {
-    final response = await apiProvider.getInstance().get(
-        RemoteConfig.getAllCampaignRelatedItems +
+  Future<CommonViewAllResponse> getAllCampaignRelatedItems(
+      int pageNumber, int perPage, int category, String sortOption) async {
+    final response = await apiProvider
+        .getInstance()
+        .get(RemoteConfig.getAllCampaignRelatedItems +
             "?page=" +
             "${pageNumber + 1}"
-            "&per_page=" +
+                "&per_page=" +
             "$perPage" +
             "${category != null ? "&category_id=" + "$category" : ""}" +
             "${sortOption != null ? "&amount=" + "$sortOption" : ""}");
@@ -119,8 +122,8 @@ class CommonInfoRepository {
     return ItemDetailResponse.fromJson(response.data);
   }
 
-  Future<CommentsListResponse> getAllComments(int pageNumber, int perPage,
-      int fundraiserId) async {
+  Future<CommentsListResponse> getAllComments(
+      int pageNumber, int perPage, int fundraiserId) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getAllComments +
             "?fundraiser_id=" +
@@ -132,8 +135,8 @@ class CommonInfoRepository {
     return CommentsListResponse.fromJson(response.data);
   }
 
-  Future<ParticipantsListResponse> getAllDonors(int pageNumber, int perPage,
-      int fundraiserId) async {
+  Future<ParticipantsListResponse> getAllDonors(
+      int pageNumber, int perPage, int fundraiserId) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getAllDonors +
             "?fundraiser_id=" +
@@ -145,8 +148,8 @@ class CommonInfoRepository {
     return ParticipantsListResponse.fromJson(response.data);
   }
 
-  Future<ParticipantsListResponse> getAllSupporters(int pageNumber, int perPage,
-      int fundraiserId) async {
+  Future<ParticipantsListResponse> getAllSupporters(
+      int pageNumber, int perPage, int fundraiserId) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getAllSupporters +
             "?fundraiser_id=" +
@@ -165,8 +168,8 @@ class CommonInfoRepository {
     return CommonResponse.fromJson(response.data);
   }
 
-  Future<CommentsListResponse> getMyComments(int pageNumber,
-      int perPage) async {
+  Future<CommentsListResponse> getMyComments(
+      int pageNumber, int perPage) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getMyComments +
             "?page=" +
@@ -176,8 +179,8 @@ class CommonInfoRepository {
     return CommentsListResponse.fromJson(response.data);
   }
 
-  Future<CommonViewAllResponse> getMyOwnFundraiserItems(int pageNumber,
-      int perPage) async {
+  Future<CommonViewAllResponse> getMyOwnFundraiserItems(
+      int pageNumber, int perPage) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getMyFundraisers +
             "?page=" +
@@ -187,8 +190,8 @@ class CommonInfoRepository {
     return CommonViewAllResponse.fromJson(response.data);
   }
 
-  Future<MyDonationsResponse> getMyDonations(int pageNumber,
-      int perPage) async {
+  Future<MyDonationsResponse> getMyDonations(
+      int pageNumber, int perPage) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getMyDonations +
             "?page=" +
@@ -214,7 +217,7 @@ class CommonInfoRepository {
 
   Future<RelationsResponse> getRelations() async {
     final response =
-    await apiProvider.getInstance().get(RemoteConfig.getRelations);
+        await apiProvider.getInstance().get(RemoteConfig.getRelations);
     return RelationsResponse.fromJson(response.data);
   }
 
@@ -227,7 +230,7 @@ class CommonInfoRepository {
 
   Future<PricingStrategiesResponse> getPricingInfo() async {
     final response =
-    await apiProvider.getInstance().post(RemoteConfig.getPricingStrategies);
+        await apiProvider.getInstance().post(RemoteConfig.getPricingStrategies);
     return PricingStrategiesResponse.fromJson(response.data);
   }
 
@@ -292,11 +295,12 @@ class CommonInfoRepository {
 
   Future<PointsResponse> getPointsInfo() async {
     final response =
-    await apiProvider.getInstance().post(RemoteConfig.getPointsInfo);
+        await apiProvider.getInstance().post(RemoteConfig.getPointsInfo);
     return PointsResponse.fromJson(response.data);
   }
 
-  Future<CommonResponse> transferAmounts(String body,String acccountName,accountNum,accountIfsc,int fundid,int amount,context) async {
+  Future<CommonResponse> transferAmounts(String body, String acccountName,
+      accountNum, accountIfsc, int fundid, int amount, context) async {
     final response = await apiProvider
         .getInstance()
         .post(RemoteConfig.transferAmount, data: body);
@@ -304,28 +308,28 @@ class CommonInfoRepository {
     if (response.data["entity"] == "contact") {
       final responseforfundaccount = await apiProvider
           .getInstance()
-          .post("https://www.cocoalabs.in/ngo/api/web/v1/razorpay/fund-account",
-          data: ({"contact_id":response.data["id"],
-            "name":acccountName,
-            "ifsc":accountIfsc,
-            "account_number":accountNum
-
-          }));
+          .post("https://crowdworksindia.org/test/api/web/v1/razorpay/fund-account",
+              data: ({
+                "contact_id": response.data["id"],
+                "name": acccountName,
+                "ifsc": accountIfsc,
+                "account_number": accountNum
+              }));
       String Contactid = responseforfundaccount.data["id"];
       print("response->${responseforfundaccount.data["id"]}");
-      if(response.statusCode==200){
-        final responseforpayout = await apiProvider
-            .getInstance()
-            .post("https://www.cocoalabs.in/ngo/api/web/v1/razorpay/pay-out",
-            data: ({"amount":amount,
-              "fund_account_id":Contactid,
-              "account_no":accountNum
+      if (response.statusCode == 200) {
+        final responseforpayout = await apiProvider.getInstance().post(
+            "https://crowdworksindia.org/test/api/web/v1/razorpay/pay-out",
+            data: ({
+              "amount": amount,
+              "fund_account_id": Contactid,
+              "account_no": accountNum
             }));
-print("-<${responseforpayout.data["notes"]["notes_key_1"]}");
-        if (responseforpayout.data["notes"]["notes_key_1"] =="Amount Transffered Successfully"){
-             String message=responseforpayout.data["notes"]["notes_key_1"];
-
-             Withdraw(fundid,context,message);
+        if (responseforpayout.data["notes"]["notes_key_1"] ==
+            "Amount Transffered Successfully.") {
+          String message = responseforpayout.data["notes"]["notes_key_1"];
+          print("Suceess");
+          Withdraw(fundid, context, message);
         }
 
         //   final responseforwithdraw= await apiProvider.getInstance()
@@ -348,11 +352,10 @@ print("-<${responseforpayout.data["notes"]["notes_key_1"]}");
     return CommonResponse.fromJson(response.data);
   }
 
-
   Future<CommonResponse> removeSubscription(String body) async {
     final response = await apiProvider
         .getInstance()
-        .post(RemoteConfig.removeSubscription,data: body);
+        .post(RemoteConfig.removeSubscription, data: body);
     return CommonResponse.fromJson(response.data);
   }
 
@@ -370,23 +373,21 @@ print("-<${responseforpayout.data["notes"]["notes_key_1"]}");
     return CommonResponse.fromJson(response.data);
   }
 
-  Future<CommonResponse> Withdraw(int id,context,String message) async {
-    final response = await apiProvider
-        .getInstance()
-        .post("https://www.cocoalabs.in/ngo/api/web/v1/fundraiser-scheme/withdraw",
-              data:({
-                "token":LoginModel().authToken,
-                "fundraiser_id":id,
-              }) );
-    if(response.statusCode==200){
-Fluttertoast.showToast(msg:"Amount Transferred Successfully" );
-Navigator.pop(context);
+  Future<CommonResponse> Withdraw(int id, context, String message) async {
+    final response = await apiProvider.getInstance().post(
+        "https://crowdworksindia.org/NGO/api/web/v1/fundraiser-scheme/withdraw",
+        data: ({
+          "token": LoginModel().authToken,
+          "fundraiser_id": id,
+        }));
+    print("Response-->${response}");
+    if (response.statusCode == 200) {
+      Fluttertoast.showToast(msg: "Amount Transferred Successfully");
+      Get.to(() => WithdrawScreen(message: message, fundid: id));
 
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) =>  WithdrawScreen(message: message,fundid: id,)),
-      // );
-    }else{
+      // Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+      //     WithdrawScreen(message: message,fundid: id,)));
+    } else {
       Fluttertoast.showToast(msg: "Something went wrong");
     }
     return CommonResponse.fromJson(response.data);

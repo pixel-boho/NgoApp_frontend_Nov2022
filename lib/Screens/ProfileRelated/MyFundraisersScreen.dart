@@ -376,6 +376,7 @@ class _MyFundraisersScreenState extends State<MyFundraisersScreen>
   }
 
   _buildUserWidget(String imageBase, List<FundraiserItem> itemsList) {
+    print("length--->${itemsList.length}");
     if (itemsList != null) {
       if (itemsList.length > 0) {
         return SingleChildScrollView(
@@ -552,6 +553,8 @@ class _MyFundraisersScreenState extends State<MyFundraisersScreen>
   String getApprovalStatus(FundraiserItem fundraiserItem) {
     if (fundraiserItem.isApproved == 1) {
       return "Approved";
+    }  else if (fundraiserItem.isApproved == 2) {
+      return "Transferred";
     } else if (fundraiserItem.isApproved == 0) {
       return "Pending Approval";
     } else {

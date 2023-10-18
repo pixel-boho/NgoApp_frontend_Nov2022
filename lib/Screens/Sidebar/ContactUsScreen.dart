@@ -22,7 +22,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   // String number = "7560911122";
   String number = "9946031111";
-  String mail = "info@crowdworksindia.org";
+  String mail = "noreply@crowdworksindia.org";
   String _comment;
   String _name;
   String _email;
@@ -303,7 +303,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     child: InkWell(
                       onTap: () => launch("tel:+91 $number"),
                       child: Text(
-                        number,
+                        "+91 $number",
                         textAlign: TextAlign.justify,
                         style: TextStyle(
                             color: Colors.white,

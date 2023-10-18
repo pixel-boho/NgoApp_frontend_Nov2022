@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:ngo_app/Elements/app_error_widget.dart';
 import 'package:ngo_app/Notification/OneSignalNotifications.dart';
+import 'package:ngo_app/Screens/SplashScreen.dart';
 
-import 'Elements/app_error_widget.dart';
-import 'Screens/SplashScreen.dart';
+
 
 void main() async {
   bool isDev = false;
