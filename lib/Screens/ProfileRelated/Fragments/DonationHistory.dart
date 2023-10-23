@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ngo_app/Blocs/DonationHistoryBloc.dart';
 import 'package:ngo_app/Constants/CommonMethods.dart';
+import 'package:ngo_app/Constants/CustomColorCodes.dart';
 import 'package:ngo_app/Elements/CommonApiErrorWidget.dart';
 import 'package:ngo_app/Elements/CommonApiLoader.dart';
 import 'package:ngo_app/Elements/CommonApiResultsEmptyWidget.dart';
@@ -9,6 +14,9 @@ import 'package:ngo_app/Interfaces/RefreshPageListener.dart';
 import 'package:ngo_app/Models/DonationHistory.dart';
 import 'package:ngo_app/ServiceManager/ApiResponse.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:http/http.dart' as http;
 
 class DonationHistory extends StatefulWidget {
   @override
@@ -20,6 +28,71 @@ class _DonationHistoryState extends State<DonationHistory>
   ScrollController _itemsScrollController;
   bool isLoadingMore = false;
   DonationHistoryBloc _bloc;
+
+  Map respo = {};
+  String pdf = "";
+  String baseUrl_pdf = "";
+  String dontaion_id = "";
+
+
+  Future get80GPdf(String donationId) async {
+    print("Get pdf");
+    final response = await http.post(
+      Uri.parse(
+          'https://crowdworksindia.org/test/api/web/v1/user/generate-pdf'),
+      body: {"user_id": LoginModel().userDetails.id.toString(), "donation_id": donationId},
+      headers: {
+        'Accept': 'application/json',
+      },
+    );
+    print("Response${response.body}");
+    var res = json.decode(response.body);
+    respo = res;
+    pdf = respo["pdf_path"];
+    baseUrl_pdf = respo["file_path"];
+    if (response.statusCode == 200) {
+      downloadPDF();
+    } else {
+      throw Exception('Failed to load');
+    }
+    return response;
+  }
+
+  Future<void> downloadPDF() async {
+    String filePath =pdf;
+    String desiredPath = filePath.split('public_html/')[1];
+    String desiredPath1 = filePath.split('pdf/')[1];
+    print("${baseUrl_pdf}/${desiredPath}");
+    print("gh=>${desiredPath1}");
+    final status = await Permission.storage.request();
+
+    if (status.isGranted) {
+      final response =
+      await http.get(Uri.parse("${baseUrl_pdf}/${desiredPath}"));
+
+      if (response.statusCode == 200) {
+        final savePath = Platform.isAndroid
+            ? (await getExternalStorageDirectory())?.path
+            : (await getApplicationDocumentsDirectory()).path;
+        print(savePath.toString());
+        String emulted0 = savePath.split('Android').first;
+        print(emulted0);
+        Fluttertoast.showToast(msg: "Download Started");
+        final uniqueFilename = '80GForm_$desiredPath1';
+        final filePath = '$emulted0/Download/$uniqueFilename';
+        final pdfFile = File(filePath);
+        await pdfFile.writeAsBytes(response.bodyBytes, flush: true);
+        print('PDF downloaded to: $filePath');
+        Fluttertoast.showToast(
+            msg: "Download Completed, check download folder");
+      } else {
+        print('Failed to download PDF. Status code: ${response.statusCode}');
+      }
+    } else {
+      print('Permission to access storage denied');
+    }
+  }
+
 
   @override
   void initState() {
@@ -142,16 +215,48 @@ class _DonationHistoryState extends State<DonationHistory>
                       child:Card(
                         child: new Column(
                           children: <Widget>[
-                            new ListTile(
-                              leading: CircleAvatar(child: Icon(Icons.account_circle_outlined),
-                              ),
-                              title: new Text(
+                             ListTile(
+                               isThreeLine: true,
+                              // leading: CircleAvatar(child: Icon(Icons.account_circle_outlined),
+                              // ),
+                              title:  Text(
                                 "${donateList[index].showDonorInformation}",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
                               ),
-                              subtitle: new Text(
-                                  "${donateList[index].createdAt}"
+                              subtitle:  Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("₹ ${donateList[index].amount}",style: TextStyle(color: Colors.green,fontWeight: FontWeight.w500),),
+                                  Text(
+                                      "${donateList[index].createdAt}"
+                                  ),
+                                ],
                               ),
-                              trailing: Text("${donateList[index].amount}",style: TextStyle(color: Colors.green),),
+                          trailing: donateList[index].status ==
+                              "Certificate Exists"
+                              ? SizedBox(
+                            height: 25,
+                            width: 80,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Color(
+                                      colorCoderRedBg), // Set the background color to blue
+                                ),
+                                onPressed: () {
+                                  dontaion_id =
+                                  donateList[index].id.toString();
+                                  get80GPdf(dontaion_id);
+                                },
+                                child: Row(
+                                  children: [
+                                    Text("80G"),
+                                    Icon(
+                                      Icons.download_outlined,
+                                      size: 17,
+                                    ),
+                                  ],
+                                )),
+                          )
+                              : Text("")
                             ),
 
                           ],

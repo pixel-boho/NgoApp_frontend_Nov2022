@@ -1,12 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ngo_app/Constants/CommonMethods.dart';
+import 'package:ngo_app/Constants/CustomColorCodes.dart';
 import 'package:ngo_app/Elements/CommonApiResultsEmptyWidget.dart';
 import 'package:ngo_app/Interfaces/LoadMoreListener.dart';
 import 'package:ngo_app/Interfaces/RefreshPageListener.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class FundraiserHistory extends StatefulWidget {
   @override
@@ -18,19 +23,19 @@ class _FundraiserHistoryState extends State<FundraiserHistory>
   ScrollController _itemsScrollController;
   String authToken;
   bool isLoadingMore = false;
-  //FundraiseHistoryBloc _bloc;
   List stationList = [];
   Map respo = {};
   List<dynamic> listFundraise = [];
+  Map respon = {};
+  String pdf = "";
+  String baseUrl_pdf = "";
+  String dontaion_id = "";
 
   Future getFundraise() async {
-    print("Get order");
-
-    final response = await http.get(Uri.parse(
-        'https://crowdworksindia.org/test/api/web/v1/user/fundraiser-payment-history'),
-        headers:{
-      "Authorization":"Bearer ${LoginModel().authToken}"
-        });
+    final response = await http.get(
+        Uri.parse(
+            'https://crowdworksindia.org/test/api/web/v1/user/fundraiser-payment-history'),
+        headers: {"Authorization": "Bearer ${LoginModel().authToken}"});
     print("Response${response.body}");
     var res = json.decode(response.body);
     respo = res;
@@ -38,14 +43,70 @@ class _FundraiserHistoryState extends State<FundraiserHistory>
     print("listFundraise-${listFundraise}");
     if (response.statusCode == 200) {
       _buildUserWidget(listFundraise);
-    }
-    else {
-      throw Exception('Failed to load post');
-      print("Failed to load post");
+    } else {
+      throw Exception('Failed to load');
     }
     return response;
   }
 
+  Future get80GPdf(String donationId) async {
+    print("Get pdf");
+    final response = await http.post(
+      Uri.parse(
+          'https://crowdworksindia.org/test/api/web/v1/user/generate-pdf'),
+      body: {"user_id": LoginModel().userDetails.id.toString(), "donation_id": donationId},
+      headers: {
+        'Accept': 'application/json',
+      },
+    );
+    print("Response${response.body}");
+    var res = json.decode(response.body);
+    respon = res;
+    pdf = respon["pdf_path"];
+    baseUrl_pdf = respon["file_path"];
+    if (response.statusCode == 200) {
+      downloadPDF();
+    } else {
+      throw Exception('Failed to load');
+    }
+    return response;
+  }
+
+
+  Future<void> downloadPDF() async {
+    String filePath =pdf;
+    String desiredPath = filePath.split('public_html/')[1];
+    String desiredPath1 = filePath.split('pdf/')[1];
+    print("${baseUrl_pdf}/${desiredPath}");
+    print("gh=>${desiredPath1}");
+    final status = await Permission.storage.request();
+
+    if (status.isGranted) {
+      final response =
+      await http.get(Uri.parse("${baseUrl_pdf}/${desiredPath}"));
+
+      if (response.statusCode == 200) {
+        final savePath = Platform.isAndroid
+            ? (await getExternalStorageDirectory())?.path
+            : (await getApplicationDocumentsDirectory()).path;
+        print(savePath.toString());
+        String emulted0 = savePath.split('Android').first;
+        print(emulted0);
+        Fluttertoast.showToast(msg: "Download Started");
+        final uniqueFilename = '80GForm_$desiredPath1';
+        final filePath = '$emulted0/Download/$uniqueFilename';
+        final pdfFile = File(filePath);
+        await pdfFile.writeAsBytes(response.bodyBytes, flush: true);
+        print('PDF downloaded to: $filePath');
+        Fluttertoast.showToast(
+            msg: "Download Completed, check download folder");
+      } else {
+        print('Failed to download PDF. Status code: ${response.statusCode}');
+      }
+    } else {
+      print('Permission to access storage denied');
+    }
+  }
   @override
   void initState() {
     LoginModel().relatedItemsList.clear();
@@ -59,7 +120,7 @@ class _FundraiserHistoryState extends State<FundraiserHistory>
 
   void _scrollListener() {
     if (_itemsScrollController.offset >=
-        _itemsScrollController.position.maxScrollExtent &&
+            _itemsScrollController.position.maxScrollExtent &&
         !_itemsScrollController.position.outOfRange) {
       print("reach the bottom");
       // if (_bloc.hasNextPage) {
@@ -69,7 +130,7 @@ class _FundraiserHistoryState extends State<FundraiserHistory>
       // }
     }
     if (_itemsScrollController.offset <=
-        _itemsScrollController.position.minScrollExtent &&
+            _itemsScrollController.position.minScrollExtent &&
         !_itemsScrollController.position.outOfRange) {
       print("reach the top");
     }
@@ -78,7 +139,7 @@ class _FundraiserHistoryState extends State<FundraiserHistory>
   @override
   void dispose() {
     _itemsScrollController.dispose();
-  //  _bloc.dispose();
+    //  _bloc.dispose();
     super.dispose();
   }
 
@@ -101,12 +162,12 @@ class _FundraiserHistoryState extends State<FundraiserHistory>
                 height: double.infinity,
                 width: double.infinity,
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      FutureBuilder(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: FutureBuilder(
                           future: getFundraise(),
                           builder: (BuildContext context, snapshot) {
                             if (snapshot.connectionState ==
@@ -120,41 +181,42 @@ class _FundraiserHistoryState extends State<FundraiserHistory>
                             } else {
                               if (snapshot.hasError) {
                                 return Expanded(
-                                  child: CommonApiResultsEmptyWidget("Results Empty"),
+                                  child: CommonApiResultsEmptyWidget(
+                                      "Results Empty"),
                                   flex: 1,
                                 );
                               } else {
                                 return _buildUserWidget(listFundraise);
                               }
                             }
-                          })
-                      // Expanded(
-                      //   child: StreamBuilder<ApiResponse<FundraiseHistoryResponse>>(
-                      //     stream: _bloc.paymentinfoStream,
-                      //     builder: (context, snapshot) {
-                      //       if (snapshot.hasData) {
-                      //         switch (snapshot.data.status) {
-                      //           case Status.LOADING:
-                      //             return CommonApiLoader();
-                      //             break;
-                      //           case Status.COMPLETED:
-                      //             FundraiseHistoryResponse response =snapshot.data.data;
-                      //             return _buildUserWidget(response.paymentHist);
-                      //             break;
-                      //           case Status.ERROR:
-                      //             return CommonApiErrorWidget(
-                      //                 snapshot.data.message, _errorWidgetFunction);
-                      //             break;
-                      //         }
-                      //       }
-                      //
-                      //       return Container();
-                      //     },
-                      //   ),
-                      //   flex: 1,
-                      // ),
-                    ],
-                  ),
+                          }),
+                    )
+                    // Expanded(
+                    //   child: StreamBuilder<ApiResponse<FundraiseHistoryResponse>>(
+                    //     stream: _bloc.paymentinfoStream,
+                    //     builder: (context, snapshot) {
+                    //       if (snapshot.hasData) {
+                    //         switch (snapshot.data.status) {
+                    //           case Status.LOADING:
+                    //             return CommonApiLoader();
+                    //             break;
+                    //           case Status.COMPLETED:
+                    //             FundraiseHistoryResponse response =snapshot.data.data;
+                    //             return _buildUserWidget(response.paymentHist);
+                    //             break;
+                    //           case Status.ERROR:
+                    //             return CommonApiErrorWidget(
+                    //                 snapshot.data.message, _errorWidgetFunction);
+                    //             break;
+                    //         }
+                    //       }
+                    //
+                    //       return Container();
+                    //     },
+                    //   ),
+                    //   flex: 1,
+                    // ),
+                  ],
                 )),
           ),
         ),
@@ -170,11 +232,10 @@ class _FundraiserHistoryState extends State<FundraiserHistory>
     if (paymentList != null) {
       if (paymentList.length > 0) {
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: 0.0,),
-          height: MediaQuery
-              .of(context)
-              .size
-              .height,
+          padding: EdgeInsets.symmetric(
+            horizontal: 0.0,
+          ),
+          height: MediaQuery.of(context).size.height,
           margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
           alignment: FractionalOffset.centerLeft,
           child: ListView.builder(
@@ -183,7 +244,7 @@ class _FundraiserHistoryState extends State<FundraiserHistory>
               scrollDirection: Axis.vertical,
               itemCount: paymentList.length,
               physics: ClampingScrollPhysics(),
-              padding: EdgeInsets.fromLTRB(0, 5, 5, 5),
+              padding: EdgeInsets.fromLTRB(0, 5, 10, 10),
               itemBuilder: (BuildContext ctx, int index) {
                 return Padding(
                     padding: const EdgeInsets.all(4.0),
@@ -191,48 +252,69 @@ class _FundraiserHistoryState extends State<FundraiserHistory>
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.54,
                       child: Card(
                         child: new Column(
                           children: <Widget>[
-                             ListTile(
-                           isThreeLine:true,
-                              leading: CircleAvatar(
-                                child: Icon(Icons.account_circle_outlined),
-                              ),
-                              title: new Text(
-                                "Donate to ${paymentList[index]["fundraiser_id"]["title"]}", style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              subtitle:  Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      "${paymentList[index]["created_at"]}"
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                     ElevatedButton(onPressed: (){}, child:Text("80G")),
-                                      SizedBox(width: 10,),
-                                      ElevatedButton(onPressed: (){}, child:Text("Receipt"))
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              trailing: Text("${paymentList[index]["amount"]}",
-                                style: TextStyle(color: Colors.green),),
+                            ListTile(
+                                isThreeLine: true,
+                                // leading: CircleAvatar(
+                                //   child: Icon(Icons.account_circle_outlined),
+                                // ),
+                                title: Text(
+                                  // "Donate to ${paymentList[index]["fundraiser_id"]["title"]}",
+                                  "Donate to ${paymentList[index]["show_donor_information"]}",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "₹ ${paymentList[index]["amount"]}",
+                                      style: TextStyle(
+                                          color: Colors.green,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text("${paymentList[index]["created_at"]}"),
+                                  ],
+                                ),
+                                trailing: paymentList[index]["status"] ==
+                                        "Certificate Exists"
+                                    ? SizedBox(
+                                        height: 25,
+                                        width: 80,
+                                        child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Color(
+                                                  colorCoderRedBg), // Set the background color to blue
+                                            ),
+                                            onPressed: () {
+                                              dontaion_id =
+                                                  paymentList[index]["id"];
+                                              get80GPdf(dontaion_id);
+                                            },
+                                            child: Row(
+                                              children: [
+                                                Text("80G"),
+                                                Icon(
+                                                  Icons.download_outlined,
+                                                  size: 17,
+                                                ),
+                                              ],
+                                            )),
+                                      )
+                                    : Text("")
                             ),
-
                           ],
                         ),
                       ),
                     ));
-              }
-          ),
+              }),
         );
       } else {
         return Column(
@@ -250,19 +332,18 @@ class _FundraiserHistoryState extends State<FundraiserHistory>
     } else {
       return Column(
         children: [
-          SizedBox(height: 120,),
-          Center(
-              child: CommonApiResultsEmptyWidget("No results found")),
+          SizedBox(
+            height: 120,
+          ),
+          Center(child: CommonApiResultsEmptyWidget("No results found")),
         ],
       );
     }
   }
 
-
   Future<bool> onWillPop() {
     return Future.value(true);
   }
-
 
   @override
   void refreshPage() {

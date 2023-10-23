@@ -24,11 +24,11 @@ class PaymentInputAmountScreen extends StatefulWidget {
 
   const PaymentInputAmountScreen(
       {Key key,
-        @required this.paymentType,
-        @required this.id,
-        this.amount = 0,
-        this.isCampaignRelated = false,
-        this.isForNgoTrust = false})
+      @required this.paymentType,
+      @required this.id,
+      this.amount = 0,
+      this.isCampaignRelated = false,
+      this.isForNgoTrust = false})
       : super(key: key);
 
   @override
@@ -60,7 +60,7 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
         baseOffset: 0,
         extentOffset: 1,
       );
-    } else if (widget.paymentType == PaymentType.Lend ) {
+    } else if (widget.paymentType == PaymentType.Lend) {
       _textEditingController.selection = TextSelection(
         baseOffset: 0,
         extentOffset: 1,
@@ -71,11 +71,11 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
       // });
     }
   }
+
   @override
   void dispose() {
     _panCardController.dispose();
     super.dispose();
-
   }
 
   @override
@@ -83,103 +83,111 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
     var _blankFocusNode = new FocusNode();
     return SafeArea(
         child: Scaffold(
-          backgroundColor: Color(colorCodeGreyPageBg),
-          resizeToAvoidBottomInset: true,
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(60.0), // here the desired height
-            child: CommonAppBar(
-              text: "Donate",
-              buttonHandler: _backPressFunction,
-            ),
-          ),
-          body: Container(
-            color: Colors.transparent,
-            height: double.infinity,
-            width: double.infinity,
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {
-                FocusScope.of(context).requestFocus(_blankFocusNode);
-              },
-              child: SingleChildScrollView(
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: MediaQuery.of(context).size.height * .02),
-                      Container(
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                        alignment: FractionalOffset.center,
-                        child: Text(
-                          "Choose a donation amount",
-                          style: TextStyle(
-                              color: Color(colorCoderBorderWhite),
-                              fontWeight: FontWeight.w600,
-                              fontSize: 15.0),
-                        ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height * .01),
-                      _buildAmountTypingSection(),
-                      SizedBox(height: MediaQuery.of(context).size.height * .01),
-                      Visibility(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(width: MediaQuery.of(context).size.width * .03),
-                              Icon(Icons.warning_amber_rounded,color: Colors.yellow,size: 20,),
-                              SizedBox(width: MediaQuery.of(context).size.width * .03),
-                              Text("₹ ${widget.amount} can be paid to complete your loan",style: TextStyle(color:Colors.white,fontSize: 12,
-                                  fontWeight: FontWeight.w600 ),),
-                            ],
-                          ),
-                          visible: widget.paymentType == PaymentType.Lend && widget.amount!= 0
-                      ),
-                      Visibility(
-                        child: _build80gFormCheckBoxSection(),
-                        visible: CommonMethods().isAuthTokenExist() && widget.paymentType == PaymentType.Donation
-                      ),
-                      // Visibility(
-                      //   child: _buildSubscribeSection(),
-                      //   visible: widget.isCampaignRelated &&
-                      //       CommonMethods().isAuthTokenExist(),
-                      // ),
-                      SizedBox(height: MediaQuery.of(context).size.height * .04),
-                    ],
+      backgroundColor: Color(colorCodeGreyPageBg),
+      resizeToAvoidBottomInset: true,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60.0), // here the desired height
+        child: CommonAppBar(
+          text: "Donate",
+          buttonHandler: _backPressFunction,
+        ),
+      ),
+      body: Container(
+        color: Colors.transparent,
+        height: double.infinity,
+        width: double.infinity,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            FocusScope.of(context).requestFocus(_blankFocusNode);
+          },
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(height: MediaQuery.of(context).size.height * .02),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    alignment: FractionalOffset.center,
+                    child: Text(
+                      "Choose a donation amount",
+                      style: TextStyle(
+                          color: Color(colorCoderBorderWhite),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15.0),
+                    ),
                   ),
-                ),
+                  SizedBox(height: MediaQuery.of(context).size.height * .01),
+                  _buildAmountTypingSection(),
+                  SizedBox(height: MediaQuery.of(context).size.height * .01),
+                  Visibility(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                              width: MediaQuery.of(context).size.width * .03),
+                          Icon(
+                            Icons.warning_amber_rounded,
+                            color: Colors.yellow,
+                            size: 20,
+                          ),
+                          SizedBox(
+                              width: MediaQuery.of(context).size.width * .03),
+                          Text(
+                            "₹ ${widget.amount} can be paid to complete your loan",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                      visible: widget.paymentType == PaymentType.Lend &&
+                          widget.amount != 0),
+                  Visibility(
+                      child: _build80gFormCheckBoxSection(),
+                      visible: CommonMethods().isAuthTokenExist() &&
+                          widget.paymentType == PaymentType.Donation),
+                  // Visibility(
+                  //   child: _buildSubscribeSection(),
+                  //   visible: widget.isCampaignRelated &&
+                  //       CommonMethods().isAuthTokenExist(),
+                  // ),
+                  SizedBox(height: MediaQuery.of(context).size.height * .04),
+                ],
               ),
             ),
           ),
-          bottomNavigationBar: Container(
-            height: 50.0,
-            width: double.infinity,
-            margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
-            child: CommonButton(
-                buttonText: "Next",
-                bgColorReceived: Color(colorCoderRedBg),
-                borderColorReceived: Color(colorCoderRedBg),
-                textColorReceived: Color(colorCodeWhite),
-                buttonHandler: _nextBtnClickFunction),
-          ),
-        ));
+        ),
+      ),
+      bottomNavigationBar: Container(
+        height: 50.0,
+        width: double.infinity,
+        margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
+        child: CommonButton(
+            buttonText: "Next",
+            bgColorReceived: Color(colorCoderRedBg),
+            borderColorReceived: Color(colorCoderRedBg),
+            textColorReceived: Color(colorCodeWhite),
+            buttonHandler: _nextBtnClickFunction),
+      ),
+    ));
   }
 
   Future<void> _nextBtnClickFunction() async {
     _amount = _textEditingController.text;
     if (_amount.isNotEmpty && int.parse(_amount) > 0) {
-      if (widget.paymentType == PaymentType.Donation && widget.paymentType == PaymentType.Lend
-          && !widget.isForNgoTrust) {
-        if (widget.amount < int.parse(_amount)) {
-          _textEditingController.text = "${widget.amount}";
-          Fluttertoast.showToast(
-              msg:
-              'Please note just Rs.${widget.amount} more needed, Thank you');
-          return;
-        }
+      if (widget.paymentType == PaymentType.Donation || widget.paymentType == PaymentType.Lend &&
+          !widget.isForNgoTrust &&
+          widget.amount < int.parse(_amount)) {
+        _textEditingController.text = "${widget.amount}";
+        Fluttertoast.showToast(
+            msg: 'Please note just Rs.${widget.amount} more needed, Thank you');
+        return;
       }
-
       PaymentInfo paymentInfo = PaymentInfo(
           paymentType: widget.paymentType,
           id: widget?.id ?? null,
@@ -187,38 +195,43 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
           isSubscriptionNeeded: _isSubscriptionAvailable);
 
       if (widget.paymentType == PaymentType.Lend) {
-        // CommonWidgets().show80GFormAlertDialog(context, paymentInfo);
-        Navigator.of(context).push(PageRouteBuilder(opaque: false, pageBuilder: (_, __, ___) => PaymentScreen(paymentInfo: paymentInfo,)));
+        Navigator.of(context).push(PageRouteBuilder(
+            opaque: false,
+            pageBuilder: (_, __, ___) => PaymentScreen(
+                  paymentInfo: paymentInfo,
+                )));
       } else if (widget.paymentType == PaymentType.Donation) {
-        if(CommonMethods().isAuthTokenExist() ? _isAnonymous : true)
-          Get.to(() =>
-              AddDonorInfoScreen(paymentInfo: paymentInfo));
+        if (CommonMethods().isAuthTokenExist() ? _isAnonymous : true)
+          Get.to(() => AddDonorInfoScreen(paymentInfo: paymentInfo));
         else {
-          paymentInfo.paymentType= widget.paymentType;
-          paymentInfo.id= widget?.id ?? null;
-          paymentInfo.amount= _amount;
-          paymentInfo.isSubscriptionNeeded= _isSubscriptionAvailable;
-          paymentInfo.name = LoginModel().userDetails.name??'';
-          paymentInfo.email = LoginModel().userDetails.email??'';
-          paymentInfo.countryCode = LoginModel().userDetails.countryCode?.toString()??'';
-          paymentInfo.mobile =LoginModel().userDetails.phoneNumber?.toString()??'';
-          paymentInfo.isAnonymous = CommonMethods().isAuthTokenExist() ? _isAnonymous : true;
+          paymentInfo.paymentType = widget.paymentType;
+          paymentInfo.id = widget?.id ?? null;
+          paymentInfo.amount = _amount;
+          paymentInfo.isSubscriptionNeeded = _isSubscriptionAvailable;
+          paymentInfo.name = LoginModel().userDetails.name ?? '';
+          paymentInfo.email = LoginModel().userDetails.email ?? '';
+          paymentInfo.countryCode =
+              LoginModel().userDetails.countryCode?.toString() ?? '';
+          paymentInfo.mobile =
+              LoginModel().userDetails.phoneNumber?.toString() ?? '';
+          paymentInfo.isAnonymous =
+              CommonMethods().isAuthTokenExist() ? _isAnonymous : true;
           if (_is80gFormRequired) {
             paymentInfo.form80G = Form80G(
-                name:  LoginModel().userDetails.name??'',
+                name: LoginModel().userDetails.name ?? '',
                 pan: _panCard.trim(),
                 address: address.trim(),
-                countryCode:LoginModel().userDetails.countryCode?.toString()??'',
-                mobile: LoginModel().userDetails.phoneNumber?.toString()??'');
+                countryCode:
+                    LoginModel().userDetails.countryCode?.toString() ?? '',
+                mobile: LoginModel().userDetails.phoneNumber?.toString() ?? '');
           }
 
           //       opaque: false,
           // fullscreenDialog: true
-          Get.to(() =>
-              PaymentScreen(paymentInfo: paymentInfo));
+          Get.to(() => PaymentScreen(paymentInfo: paymentInfo));
         }
       } else {
-        //neglect
+        print("Entha nadakunne");
       }
     } else {
       Fluttertoast.showToast(msg: 'Please provide a valid amount');
@@ -233,11 +246,11 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
   showAlertDialog(BuildContext context) {
     Widget cancelButton = TextButton(
       child: Text("No"),
-      onPressed:  () {},
+      onPressed: () {},
     );
     Widget OkButton = TextButton(
       child: Text("Yes"),
-      onPressed:  () {
+      onPressed: () {
         Get.back();
       },
     );
@@ -260,12 +273,12 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
       },
     );
   }
+
   void _backPressFunction() {
     print("_sendOtpFunction clicked");
     CommonWidgets().showBacktoSure();
-
-
   }
+
   _build80gFormCheckBoxSection() {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -370,7 +383,9 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
             maxLines: 1,
             minLines: 1,
             maxLength: 7,
-            onChanged: (val) { _amount = val;},
+            onChanged: (val) {
+              _amount = val;
+            },
             style: TextStyle(
                 fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,

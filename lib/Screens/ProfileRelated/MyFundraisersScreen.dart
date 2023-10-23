@@ -1,5 +1,8 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:ngo_app/Blocs/MyFundraisersBloc.dart';
 import 'package:ngo_app/Constants/CommonMethods.dart';
@@ -22,6 +25,9 @@ import 'package:ngo_app/Screens/Dashboard/ViewAllScreen.dart';
 import 'package:ngo_app/Screens/DetailPages/ItemDetailScreen.dart';
 import 'package:ngo_app/ServiceManager/ApiResponse.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:http/http.dart' as http;
 
 class MyFundraisersScreen extends StatefulWidget {
   @override
@@ -33,6 +39,69 @@ class _MyFundraisersScreenState extends State<MyFundraisersScreen>
   bool isLoadingMore = false;
   ScrollController _itemsScrollController;
   MyFundraisersBloc _myFundraisersBloc;
+  Map respo = {};
+  String pdf = "";
+  String baseUrl_pdf = "";
+  int fundraiser_id = 0;
+
+  Future getReceiptPdf(int fundraiserId) async {
+    print("Get pdf");
+    final response = await http.post(
+      Uri.parse(
+          'https://crowdworksindia.org/test/api/web/v1/user/generate-receipt'),
+      body: {
+        "fundraiser_id": fundraiserId.toString(),
+      },
+      headers: {
+        'Accept': 'application/json',
+      },
+    );
+    print("Response${response.body}");
+    var res = json.decode(response.body);
+    respo = res;
+    pdf = respo["pdf_path"];
+    baseUrl_pdf = respo["file_path"];
+    if (response.statusCode == 200) {
+      downloadPDF();
+    } else {
+      throw Exception('Failed to load');
+    }
+    return response;
+  }
+
+  Future<void> downloadPDF() async {
+    String filePath =pdf;
+    String desiredPath = filePath.split('public_html/')[1];
+    String desiredPath1 = filePath.split('receipt/')[1];
+    print("${baseUrl_pdf}/${desiredPath}");
+    final status = await Permission.storage.request();
+
+    if (status.isGranted) {
+      final response =
+      await http.get(Uri.parse("${baseUrl_pdf}/${desiredPath}"));
+
+      if (response.statusCode == 200) {
+        final savePath = Platform.isAndroid
+            ? (await getExternalStorageDirectory())?.path
+            : (await getApplicationDocumentsDirectory()).path;
+        print(savePath.toString());
+        String emulted0 = savePath.split('Android').first;
+        print(emulted0);
+        Fluttertoast.showToast(msg: "Download Started");
+        final uniqueFilename = 'payment_receipt_$desiredPath1';
+        final filePath = '$emulted0/Download/$uniqueFilename';
+        final pdfFile = File(filePath);
+        await pdfFile.writeAsBytes(response.bodyBytes, flush: true);
+        print('PDF downloaded to: $filePath');
+        Fluttertoast.showToast(
+            msg: "Download Completed, check download folder");
+      } else {
+        print('Failed to download PDF. Status code: ${response.statusCode}');
+      }
+    } else {
+      print('Permission to access storage denied');
+    }
+  }
 
   @override
   void initState() {
@@ -376,7 +445,6 @@ class _MyFundraisersScreenState extends State<MyFundraisersScreen>
   }
 
   _buildUserWidget(String imageBase, List<FundraiserItem> itemsList) {
-    print("length--->${itemsList.length}");
     if (itemsList != null) {
       if (itemsList.length > 0) {
         return SingleChildScrollView(
@@ -495,7 +563,7 @@ class _MyFundraisersScreenState extends State<MyFundraisersScreen>
                     child: Text(
                       "₹ ${CommonMethods().convertAmount(fundraiserItem.fundRequired)}",
                       style: TextStyle(
-                          color: Color(colorCoderItemSubTitle),
+                          color: Colors.green,
                           fontWeight: FontWeight.w500,
                           fontSize: 13.0),
                     ),
@@ -506,14 +574,33 @@ class _MyFundraisersScreenState extends State<MyFundraisersScreen>
                   Container(
                     padding: EdgeInsets.fromLTRB(15, 0, 5, 0),
                     alignment: FractionalOffset.centerLeft,
-                    child: Text(
-                      getApprovalStatus(fundraiserItem),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          color: getColor(fundraiserItem),
-                          fontWeight: FontWeight.w600,
-                          fontSize: 11.0),
+                    child: Row(
+                      children: [
+                        Text(
+                          getApprovalStatus(fundraiserItem),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: getColor(fundraiserItem),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 11.0),
+                        ),
+                        Spacer(),
+                        fundraiserItem.isApproved == 3
+                            ? SizedBox(
+                                height: 25,
+                                child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Color(
+                                          colorCoderRedBg), // Set the background color to blue
+                                    ),
+                                    onPressed: () {
+                                      fundraiser_id = fundraiserItem.id;
+                                      getReceiptPdf(fundraiser_id);
+                                    },
+                                    child: Text("Receipt")))
+                            : Text(""),
+                      ],
                     ),
                   ),
                 ],
@@ -553,12 +640,16 @@ class _MyFundraisersScreenState extends State<MyFundraisersScreen>
   String getApprovalStatus(FundraiserItem fundraiserItem) {
     if (fundraiserItem.isApproved == 1) {
       return "Approved";
-    }  else if (fundraiserItem.isApproved == 2) {
-      return "Transferred";
+    } else if (fundraiserItem.isApproved == 3) {
+      return "Amount \nTransferred";
     } else if (fundraiserItem.isApproved == 0) {
       return "Pending Approval";
-    } else {
+    } else if(fundraiserItem.isApproved == 4){
+      return "Closed";
+    } else if(fundraiserItem.isApproved == -1){
       return "Rejected";
+    }else{
+      return "";
     }
   }
 
@@ -567,8 +658,15 @@ class _MyFundraisersScreenState extends State<MyFundraisersScreen>
       return Colors.green;
     } else if (fundraiserItem.isApproved == 0) {
       return Colors.orange;
-    } else {
+    } else if (fundraiserItem.isApproved == 3) {
+      return Colors.blue;
+    }  else if (fundraiserItem.isApproved == 4) {
+      return Colors.brown;
+    } else if (fundraiserItem.isApproved == -1) {
       return Colors.red;
+    }
+    else {
+      return Colors.white;
     }
   }
 }

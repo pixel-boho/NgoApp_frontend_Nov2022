@@ -121,9 +121,9 @@ class _LoanHistoryState extends State<LoanHistory> with LoadMoreListener {
                     imageBase: imageBase,
                     listItem: itemsList[index]),
                 onTap: () {
-                  Get.to(() => LendDetailScreen(
-                        id: itemsList[index].id,
-                      ));
+                  // Get.to(() => LendDetailScreen(
+                  //       id: itemsList[index].id,
+                  //     ));
                 },
               );
             });

@@ -303,7 +303,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     child: InkWell(
                       onTap: () => launch("tel:+91 $number"),
                       child: Text(
-                        "+91 $number",
+                        "+91 - $number",
                         textAlign: TextAlign.justify,
                         style: TextStyle(
                             color: Colors.white,

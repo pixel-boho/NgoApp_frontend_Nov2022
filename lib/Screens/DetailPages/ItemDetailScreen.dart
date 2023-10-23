@@ -39,7 +39,6 @@ import 'package:ngo_app/Screens/Lend/PaymentInputAmountScreen.dart';
 import 'package:ngo_app/Screens/StartFundRaising/FormOne.dart';
 import 'package:ngo_app/ServiceManager/ApiResponse.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
-import 'package:open_app_file/open_app_file.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'AssuranceMsgScreen.dart';
@@ -50,7 +49,7 @@ import 'ViewAllDonorsScreen.dart';
 import 'ViewAllSupportersScreen.dart';
 import 'WebViewContainer.dart';
 import 'cancelRequestScreen.dart';
-
+import 'package:http/http.dart' as http;
 
 class ItemDetailScreen extends StatefulWidget {
   var fundraiserIdReceived;
@@ -70,9 +69,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
   ItemDetailResponse itemInfoFetched;
   String beneficiary_account_name = "";
   String beneficiary_account_number = "";
-
   String beneficiary_ifsc = "";
   int amount = 0;
+  int amountraised=0;
   @override
   void initState() {
     LoginModel().isFundraiserEditMode = false;
@@ -198,6 +197,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
         data.fundraiserDetails.beneficiaryAccountNumber;
     beneficiary_ifsc = data.fundraiserDetails.beneficiaryIfsc;
     amount = data.fundraiserDetails.fundRequired;
+    amountraised = data.fundraiserDetails.fundRaised;
     return CustomScrollView(slivers: <Widget>[
       SliverPadding(
         padding: EdgeInsets.fromLTRB(0.0, 0, 0, 70),
@@ -212,7 +212,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
                 _buildInfoSection(data),
                 _buildAccountDetails(data),
                 _buildPersonDetails(true, data),
-                _buildQrDetails(),
+                // _buildQrDetails(),
                 _buildPersonDetails(false, data),
                 _buildStorySection(data),
                 _buildDocumentsSection(data),
@@ -403,9 +403,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(0, 10, 15, 5),
-            child: Text("Note : Nominal charges will be applied",style: TextStyle(
-              fontWeight: FontWeight.w500,color: Colors.grey[700]
-            ),),
+            child: Text(
+              "Note : Nominal charges will be applied",
+              style: TextStyle(
+                  fontWeight: FontWeight.w500, color: Colors.grey[700]),
+            ),
           ),
           Visibility(
             child: Container(
@@ -419,9 +421,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
                   textColorReceived: Color(colorCodeWhite),
                   buttonHandler: () {
                     if (data.fundraiserDetails.isAmountCollected == 1) {
-                      Fluttertoast.showToast(
-                          msg:
-                              "Successfully collected the required amount, thank you");
+                      Fluttertoast.showToast(msg: "Successfully collected the required amount, thank you");
                     } else {
                       if (CommonMethods().isAuthTokenExist()) {
                         Get.to(() => PaymentInputAmountScreen(
@@ -479,13 +479,14 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
                           textColorReceived: Color(colorCodeWhite),
                           buttonHandler: () {
                             if (data.fundraiserDetails?.fundRaised != 0) {
-                              CommonWidgets().showCommonDialog(
-                                  "Are you sure you, you want to transfer now?",
-                                  AssetImage(
-                                      'assets/images/ic_notification_message.png'),
-                                  _transferFundraiserAmount,
-                                  false,
-                                  true);
+                              // CommonWidgets().showCommonDialog(
+                              //     "Are you sure you, you want to transfer now?",
+                              //     AssetImage(
+                              //         'assets/images/ic_notification_message.png'),
+                              //     _getTransfer(),
+                              //     false,
+                              //     true);
+                              _getTransfer();
                             } else {
                               Fluttertoast.showToast(
                                   msg:
@@ -513,7 +514,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
               ),
               visible: CommonMethods()
                           .checkIsOwner(data.fundraiserDetails?.createdBy) &&
-                      data.fundraiserDetails?.isApproved == 1 &&
+                      data.fundraiserDetails?.isApproved == 1 || data.fundraiserDetails?.isApproved == 4 &&
                       data.fundraiserDetails?.fundRequired ==
                           data.fundraiserDetails?.fundRaised ||
                   data.fundraiserDetails?.fundRequired <
@@ -631,7 +632,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
             width: 260,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary:  Color(colorCoderRedBg), // Background color
+                primary: Color(colorCoderRedBg), // Background color
                 onPrimary: Colors.white, // Text color
               ),
               onPressed: () {
@@ -640,16 +641,46 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
               child: Row(
                 children: [
                   Text('Share '),
-                  SizedBox(width: 10,),
-                  Image(image: AssetImage("assets/images/ic_whatsapp.png"), height: 25.0, width: 25.0,),
-                  SizedBox(width: 6,),
-                  Image(image: AssetImage("assets/images/ic_facebook.png"),height: 25.0, width: 25.0,),
-                  SizedBox(width: 6,),
-                  Image(image: AssetImage("assets/images/ic_instagram.png"),height: 25.0, width: 25.0,),
-                  SizedBox(width: 6,),
-                  Image(image: AssetImage("assets/images/ic_linkedin.png"),height: 25.0, width: 25.0,),
-                  SizedBox(width: 6,),
-                  Image(image: AssetImage("assets/images/ic_twitter.png"),height: 25.0, width: 25.0,),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Image(
+                    image: AssetImage("assets/images/ic_whatsapp.png"),
+                    height: 25.0,
+                    width: 25.0,
+                  ),
+                  SizedBox(
+                    width: 6,
+                  ),
+                  Image(
+                    image: AssetImage("assets/images/ic_facebook.png"),
+                    height: 25.0,
+                    width: 25.0,
+                  ),
+                  SizedBox(
+                    width: 6,
+                  ),
+                  Image(
+                    image: AssetImage("assets/images/ic_instagram.png"),
+                    height: 25.0,
+                    width: 25.0,
+                  ),
+                  SizedBox(
+                    width: 6,
+                  ),
+                  Image(
+                    image: AssetImage("assets/images/ic_linkedin.png"),
+                    height: 25.0,
+                    width: 25.0,
+                  ),
+                  SizedBox(
+                    width: 6,
+                  ),
+                  Image(
+                    image: AssetImage("assets/images/ic_twitter.png"),
+                    height: 25.0,
+                    width: 25.0,
+                  ),
                 ],
               ), // Replace with your button text
             ),
@@ -897,7 +928,6 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
   }
 
   _buildPersonDetails(bool isCampaigner, ItemDetailResponse data) {
-    print("camp---->${data.fundraiserDetails.isCampaign}");
     if (!isCampaigner && data.fundraiserDetails.isCampaign == 1) {
       return Container();
     } else {
@@ -1446,9 +1476,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
                       print("${downloadUrl}");
                       if (urlBase != null && documentItem.docUrl != null) {
                         if (urlBase != "" && documentItem.docUrl != "") {
-                           Get.to(() => WebViewContainer(downloadUrl));
+                          Get.to(() => WebViewContainer(downloadUrl));
                           // OpenAppFile.open(documentItem.docUrl);
-
                         }
                       }
                     },
@@ -1685,21 +1714,22 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
     );
   }
 
-  _transferFundraiserAmount() {
+  _getTransfer() {
+    print("amount->${amountraised}");
     Get.back();
     var bodyParams = {};
     var body = bodyParams["id"] = widget.fundraiserIdReceived;
-    ItemDetailResponse data;
+    print("Body-->${json.encode(bodyParams)}");
     CommonWidgets().showNetworkProcessingDialog();
     _commonBloc
-        .transferAmount(
-            json.encode(bodyParams),
-            beneficiary_account_name,
-            beneficiary_account_number,
-            beneficiary_ifsc,
-            widget.fundraiserIdReceived,
-            amount,
-            context)
+        .transfer(
+        json.encode(bodyParams),
+        beneficiary_account_name,
+        beneficiary_account_number,
+        beneficiary_ifsc,
+        widget.fundraiserIdReceived,
+        amountraised,
+        context)
         .then((value) {
       Get.back();
       CommonResponse commonResponse = value;
@@ -1707,6 +1737,31 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
       Get.back();
     });
   }
+
+
+  // _transferFundraiserAmount() {
+  //   print("Transfer");
+  //   Get.back();
+  //   var bodyParams = {};
+  //   var body = bodyParams["id"] = widget.fundraiserIdReceived;
+  //   ItemDetailResponse data;
+  //   CommonWidgets().showNetworkProcessingDialog();
+  //   _commonBloc
+  //       .transferAmount(
+  //           json.encode(bodyParams),
+  //           beneficiary_account_name,
+  //           beneficiary_account_number,
+  //           beneficiary_ifsc,
+  //           widget.fundraiserIdReceived,
+  //           amount,
+  //           context)
+  //       .then((value) {
+  //     Get.back();
+  //     CommonResponse commonResponse = value;
+  //     print("response->${commonResponse}");
+  //     Get.back();
+  //   });
+  // }
 
   void _shareYourInfo(ItemDetailResponse data) {
     if (data.webBaseUrl != null) {
@@ -1796,7 +1851,6 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
     }
   }
 
-
   void _shareToTwitter(ItemDetailResponse data) {
     if (data.webBaseUrl != null) {
       if (data.webBaseUrl != "") {
@@ -1813,7 +1867,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
     if (LoginModel().relatedItemsList != null) {
       if (LoginModel().relatedItemsList.length > 0) {
         return Container(
-          margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+          margin: EdgeInsets.fromLTRB(15, 10, 0, 0),
           alignment: FractionalOffset.centerLeft,
           child: Column(
             mainAxisSize: MainAxisSize.min,

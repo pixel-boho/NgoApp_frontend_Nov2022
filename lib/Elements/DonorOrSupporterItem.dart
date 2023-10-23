@@ -14,6 +14,7 @@ class DonorOrSupporterItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("infoItem--->${infoItem.name}");
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,

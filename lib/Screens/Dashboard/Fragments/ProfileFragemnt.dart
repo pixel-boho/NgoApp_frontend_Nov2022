@@ -113,7 +113,6 @@ class _ProfileFragmentState extends State<ProfileFragment> {
   }
 
   _buildInfoSection(String baseUrl, UserDetails userDetails) {
-    print("Points---${userDetails.points}");
     return Container(
       alignment: FractionalOffset.center,
       padding: EdgeInsets.fromLTRB(0, 10, 0, 10),

@@ -18,7 +18,6 @@ import 'package:ngo_app/Screens/Dashboard/viewFundRaiseScreen.dart';
 import 'package:ngo_app/Screens/DetailPages/ItemDetailScreen.dart';
 import 'package:ngo_app/ServiceManager/ApiResponse.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
-
 import '../AllCategoriesScreen.dart';
 import '../ViewAllScreen.dart';
 

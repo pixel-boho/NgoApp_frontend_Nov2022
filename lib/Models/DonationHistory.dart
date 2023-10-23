@@ -54,11 +54,11 @@ class Donate {
   String email;
   int amount;
   String showDonorInformation;
-  int status;
+  String status;
   String createdAt;
   String modifiedAt;
   String transactionId;
-  int donatedBy;
+  Null donatedBy;
   Null agencyId;
 
   Donate(

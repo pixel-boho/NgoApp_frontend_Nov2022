@@ -32,7 +32,6 @@ class _EachListItemWidgetState extends State<EachListItemWidget> {
   @override
   Widget build(BuildContext context) {
     IsCampaign =widget._fundraiserItem.isCampaign;
-    print("cammm====${IsCampaign}");
     return InkWell(
       child: Container(
         height: MediaQuery.of(context).size.height * .45,

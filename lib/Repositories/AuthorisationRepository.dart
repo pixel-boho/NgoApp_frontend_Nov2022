@@ -83,7 +83,6 @@ class AuthorisationRepository {
         "${pageNumber + 1}" +
         "&per_page=" +
         "$perPage");
-    print("response==> ${response.data}");
     return DonationHistoryResponse.fromJson(response.data);
   }
 

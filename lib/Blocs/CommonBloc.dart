@@ -160,13 +160,23 @@ class CommonBloc {
     }
   }
 
-  Future<CommonResponse> transferAmount(String body,accountName,accountNum,accountIfsc,int fundid,int amount,context) async {
+  // Future<CommonResponse> transferAmount(String body,accountName,accountNum,accountIfsc,int fundid,int amount,context) async {
+  //   try {
+  //     CommonResponse commonResponse =
+  //         await _commonInfoRepository.transferAmounts(body,accountName,accountNum,accountIfsc,fundid,amount,context);
+  //     return commonResponse;
+  //   } catch (error) {
+  //     // Fluttertoast.showToast(msg: "ksmklcmldm");
+  //     throw CommonMethods().getNetworkError(error);
+  //   }
+  // }
+
+  Future<CommonResponse> transfer(String body,accountName,accountNum,accountIfsc,int fundid,int amount,context) async {
     try {
       CommonResponse commonResponse =
-          await _commonInfoRepository.transferAmounts(body,accountName,accountNum,accountIfsc,fundid,amount,context);
+      await _commonInfoRepository.transfer(body,accountName,accountNum,accountIfsc,fundid,amount,context);
       return commonResponse;
     } catch (error) {
-      // Fluttertoast.showToast(msg: "ksmklcmldm");
       throw CommonMethods().getNetworkError(error);
     }
   }

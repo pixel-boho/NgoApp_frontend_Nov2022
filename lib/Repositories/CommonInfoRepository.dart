@@ -25,7 +25,6 @@ import 'package:ngo_app/ServiceManager/ApiProvider.dart';
 import 'package:ngo_app/ServiceManager/RemoteConfig.dart';
 import 'package:ngo_app/Utilities/LoginModel.dart';
 
-
 String contentTitle = "";
 
 class CommonInfoRepository {
@@ -117,7 +116,6 @@ class CommonInfoRepository {
   Future<ItemDetailResponse> getFundraiserDetail(int fundraiserId) async {
     final response = await apiProvider.getInstance().get(
         RemoteConfig.getFundraiserDetail + "?fundraiser_id=" + "$fundraiserId");
-    print("response=>${response.data["fundraiserDetails"]["content_title"]}");
     contentTitle = response.data["fundraiserDetails"]["content_title"];
     return ItemDetailResponse.fromJson(response.data);
   }
@@ -299,58 +297,104 @@ class CommonInfoRepository {
     return PointsResponse.fromJson(response.data);
   }
 
-  Future<CommonResponse> transferAmounts(String body, String acccountName,
+  Future<CommonResponse> transfer(String body, String acccountName,
       accountNum, accountIfsc, int fundid, int amount, context) async {
-    final response = await apiProvider
-        .getInstance()
-        .post(RemoteConfig.transferAmount, data: body);
-    print("response->${response}");
-    if (response.data["entity"] == "contact") {
-      final responseforfundaccount = await apiProvider
-          .getInstance()
-          .post("https://crowdworksindia.org/test/api/web/v1/razorpay/fund-account",
-              data: ({
-                "contact_id": response.data["id"],
-                "name": acccountName,
-                "ifsc": accountIfsc,
-                "account_number": accountNum
-              }));
-      String Contactid = responseforfundaccount.data["id"];
-      print("response->${responseforfundaccount.data["id"]}");
-      if (response.statusCode == 200) {
-        final responseforpayout = await apiProvider.getInstance().post(
-            "https://crowdworksindia.org/test/api/web/v1/razorpay/pay-out",
+    final response =
+        await apiProvider.getInstance().post(RemoteConfig.transferFisrt,
             data: ({
-              "amount": amount,
-              "fund_account_id": Contactid,
-              "account_no": accountNum
+              "id": fundid.toString(),
+              "amount":amount.toString()
             }));
-        if (responseforpayout.data["notes"]["notes_key_1"] ==
-            "Amount Transffered Successfully.") {
-          String message = responseforpayout.data["notes"]["notes_key_1"];
-          print("Suceess");
-          Withdraw(fundid, context, message);
+    double transferred_amount = response.data['transfer_data']['transferred_amount'];
+    String TransferAmount=transferred_amount.toStringAsFixed(2).toString();
+    if (response.statusCode==200){
+      final transferamount= await apiProvider
+          .getInstance()
+          .post(RemoteConfig.transferAmount, data: body);
+      if (transferamount.data["entity"] == "contact") {
+        final responseforfundaccount = await apiProvider.getInstance().post(
+            "https://crowdworksindia.org/test/api/web/v1/razorpay/fund-account",
+            data: ({
+              "contact_id": transferamount.data["id"],
+              "name": acccountName,
+              "ifsc": accountIfsc,
+              "account_number": accountNum
+            }));
+        String Contactid = responseforfundaccount.data["id"];
+        if (response.statusCode == 200) {
+          final responseforpayout = await apiProvider.getInstance().post(
+              "https://crowdworksindia.org/test/api/web/v1/razorpay/pay-out",
+              data: ({
+                "amount": TransferAmount,
+                "fund_account_id": Contactid,
+                "account_no": accountNum
+              }));
+          if (responseforpayout.data["notes"]["notes_key_1"] ==
+              "Amount Transffered Successfully.") {
+            String message = responseforpayout.data["notes"]["notes_key_1"];
+            print("Suceess");
+            Withdraw(fundid, context, message);
+          }
+          return CommonResponse.fromJson(responseforpayout.data);
         }
-
-        //   final responseforwithdraw= await apiProvider.getInstance()
-        //       .post("https://www.cocoalabs.in/ngo/api/web/v1/fundraiser-scheme/withdraw",
-        //       data:({
-        //         "token":LoginModel().authToken,
-        //         "fundraiser_id":fundid,
-        //       }) );
-
-        //   return responseforwithdraw.data;
-        //
-        // }
-        // else {
-        //   Fluttertoast.showToast(msg:"Something Wrong");
-        // }
-        return CommonResponse.fromJson(responseforpayout.data);
+        return CommonResponse.fromJson(responseforfundaccount.data);
       }
-      return CommonResponse.fromJson(responseforfundaccount.data);
+      return CommonResponse.fromJson(transferamount.data);
+
     }
     return CommonResponse.fromJson(response.data);
   }
+
+  // Future<CommonResponse> transferAmounts(String body, String acccountName,
+  //     accountNum, accountIfsc, int fundid, int amount, context) async {
+  //   final response = await apiProvider
+  //       .getInstance()
+  //       .post(RemoteConfig.transferAmount, data: body);
+  //   if (response.data["entity"] == "contact") {
+  //     final responseforfundaccount = await apiProvider.getInstance().post(
+  //         "https://crowdworksindia.org/test/api/web/v1/razorpay/fund-account",
+  //         data: ({
+  //           "contact_id": response.data["id"],
+  //           "name": acccountName,
+  //           "ifsc": accountIfsc,
+  //           "account_number": accountNum
+  //         }));
+  //     String Contactid = responseforfundaccount.data["id"];
+  //     print("response->${responseforfundaccount.data["id"]}");
+  //     if (response.statusCode == 200) {
+  //       final responseforpayout = await apiProvider.getInstance().post(
+  //           "https://crowdworksindia.org/test/api/web/v1/razorpay/pay-out",
+  //           data: ({
+  //             "amount": amount,
+  //             "fund_account_id": Contactid,
+  //             "account_no": accountNum
+  //           }));
+  //       if (responseforpayout.data["notes"]["notes_key_1"] ==
+  //           "Amount Transffered Successfully.") {
+  //         String message = responseforpayout.data["notes"]["notes_key_1"];
+  //         print("Suceess");
+  //         Withdraw(fundid, context, message);
+  //       }
+  //
+  //       //   final responseforwithdraw= await apiProvider.getInstance()
+  //       //       .post("https://www.cocoalabs.in/ngo/api/web/v1/fundraiser-scheme/withdraw",
+  //       //       data:({
+  //       //         "token":LoginModel().authToken,
+  //       //         "fundraiser_id":fundid,
+  //       //       }) );
+  //
+  //       //   return responseforwithdraw.data;
+  //       //
+  //       // }
+  //       // else {
+  //       //   Fluttertoast.showToast(msg:"Something Wrong");
+  //       // }
+  //       return CommonResponse.fromJson(responseforpayout.data);
+  //     }
+  //     return CommonResponse.fromJson(responseforfundaccount.data);
+  //   }
+  //   return CommonResponse.fromJson(response.data);
+  // }
 
   Future<CommonResponse> removeSubscription(String body) async {
     final response = await apiProvider
@@ -384,7 +428,6 @@ class CommonInfoRepository {
     if (response.statusCode == 200) {
       Fluttertoast.showToast(msg: "Amount Transferred Successfully");
       Get.to(() => WithdrawScreen(message: message, fundid: id));
-
       // Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
       //     WithdrawScreen(message: message,fundid: id,)));
     } else {

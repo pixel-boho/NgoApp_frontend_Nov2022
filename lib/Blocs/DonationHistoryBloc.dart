@@ -82,10 +82,7 @@ class DonationHistoryBloc {
     }
     try {
       DonationHistoryResponse response;
-
       response = await _repository.fetchDonationHistory(pageNumber, perPage);
-      print("responsehujhkh---${response}");
-       print("Response${response.message}");
       hasNextPage = response.hasNextPage;
       pageNumber = response.page;
       if (isPagination) {

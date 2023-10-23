@@ -370,7 +370,7 @@ class _MyDonationsScreenState extends State<MyDonationsScreen>
                               subtitle: new Text(
                                   "${donateList[index].createdAt}"
                               ),
-                              trailing: Text("${donateList[index].amount}",style: TextStyle(color: Colors.green),),
+                              trailing: Text("₹ ${donateList[index].amount}",style: TextStyle(color: Colors.green,fontWeight: FontWeight.w500),),
                             ),
 
                           ],
@@ -448,7 +448,6 @@ class _MyDonationsScreenState extends State<MyDonationsScreen>
   void refreshPage() {
     if (mounted) {
       setState(() {
-        print("${LoginModel().relatedItemsList.length}");
         print("PageRefreshed");
       });
     }
