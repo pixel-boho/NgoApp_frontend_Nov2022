@@ -36,7 +36,6 @@ class _DonationHistoryState extends State<DonationHistory>
 
 
   Future get80GPdf(String donationId) async {
-    print("Get pdf");
     final response = await http.post(
       Uri.parse(
           'https://crowdworksindia.org/test/api/web/v1/user/generate-pdf'),

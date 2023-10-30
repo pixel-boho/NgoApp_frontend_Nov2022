@@ -1655,7 +1655,6 @@ class _ItemDetailScreenState extends State<ItemDetailScreen>
         });
       }
     } on PlatformException catch (e) {
-      print("Unsupported operation" + e.toString());
       Fluttertoast.showToast(msg: "Unable to add documents");
     }
   }
