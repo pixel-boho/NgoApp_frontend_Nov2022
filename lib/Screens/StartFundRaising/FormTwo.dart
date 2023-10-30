@@ -460,8 +460,6 @@ class _FormTwoScreenState extends State<FormTwoScreen>
     final String name = _paths.toList()[index].toString().split('/').last;
     String fileSize =
         CommonMethods().formatBytes(_paths[index].lengthSync(), 2) ?? "";
-    print("path-->$_paths");
-    print("name--->$name");
     return Container(
       margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
       padding: EdgeInsets.fromLTRB(5, 5, 5, 5),

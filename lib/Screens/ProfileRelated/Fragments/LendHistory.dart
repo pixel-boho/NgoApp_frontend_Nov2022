@@ -71,7 +71,6 @@ class _LendHistoryState extends State<LendHistory> with LoadMoreListener {
                   stream: _bloc.lendListItemsStream,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      print("response ${snapshot.data.status}");
                       switch (snapshot.data.status) {
                         case Status.LOADING:
                           return CommonApiLoader();
@@ -119,9 +118,9 @@ class _LendHistoryState extends State<LendHistory> with LoadMoreListener {
                     imageBase: imageBase,
                     listItem: itemsList[index]),
                 onTap: () {
-                  Get.to(() => LendDetailScreen(
-                        id: itemsList[index].id,
-                      ));
+                  // Get.to(() => LendDetailScreen(
+                  //       id: itemsList[index].id,
+                  //     ));
                 },
               );
             });

@@ -341,7 +341,7 @@ class _LendDetailScreenState extends State<LendDetailScreen> {
                       borderColorReceived: Color(colorCoderRedBg),
                       textColorReceived: Color(colorCodeWhite),
                       buttonHandler: () {
-                        initPayment(0);
+                        initPayment(response.loanDetails.amount - response.fundRaised);
                       }),
                 ),
                 flex: 1,

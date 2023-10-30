@@ -619,6 +619,8 @@ class _FormSetPricingState extends State<FormSetPricing> {
     _commonBloc.createFundraiser(formData).then((value) {
       Get.back();
       CommonResponse response = value;
+      print("response--->${response}");
+      print("Data-->${formData.fields}");
       if (response.success) {
         CommonWidgets().showCommonDialog(
             "FundRaiser scheme added successfully. Please wait until we verify your documents.",

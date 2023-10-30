@@ -34,7 +34,6 @@ class FundraiseHistoryBloc {
   }
 
   getFundraiseHistoryList(bool isPagination, int idReceived) async {
-    print(" bloccccc");
     if (isPagination) {
       _listener.refresh(true);
     } else {
@@ -44,7 +43,6 @@ class FundraiseHistoryBloc {
     try {
       FundraiseHistoryResponse response;
       response = await _repository.fetchFundraiseHistory(pageNumber, perPage);
-      print("FundraiseHistoryResponse->>>>>>>${response}");
       hasNextPage = response.hasNextPage;
       pageNumber = response.page;
       if (isPagination) {
