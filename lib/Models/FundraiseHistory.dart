@@ -127,7 +127,6 @@ class FundraiserId {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    print("sfds=>${this.title}");
     data['title'] = this.title;
     print("sfds=>${data['title']}");
     return data;
