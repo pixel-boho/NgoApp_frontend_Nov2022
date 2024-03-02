@@ -3,7 +3,6 @@ import 'package:get/route_manager.dart';
 import 'package:ngo_app/Blocs/PointsInfoBloc.dart';
 import 'package:ngo_app/Constants/CommonMethods.dart';
 import 'package:ngo_app/Constants/CustomColorCodes.dart';
-import 'package:ngo_app/Elements/CommonApiLoader.dart';
 import 'package:ngo_app/Models/PointsResponse.dart';
 import 'package:ngo_app/ServiceManager/ApiResponse.dart';
 

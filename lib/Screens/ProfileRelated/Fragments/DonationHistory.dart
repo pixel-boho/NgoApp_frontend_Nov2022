@@ -64,11 +64,9 @@ class _DonationHistoryState extends State<DonationHistory>
     print("${baseUrl_pdf}/${desiredPath}");
     print("gh=>${desiredPath1}");
     final status = await Permission.storage.request();
-
     if (status.isGranted) {
       final response =
       await http.get(Uri.parse("${baseUrl_pdf}/${desiredPath}"));
-
       if (response.statusCode == 200) {
         final savePath = Platform.isAndroid
             ? (await getExternalStorageDirectory())?.path

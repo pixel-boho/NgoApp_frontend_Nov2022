@@ -178,11 +178,13 @@ class _PaymentInputAmountScreenState extends State<PaymentInputAmountScreen> {
   }
 
   Future<void> _nextBtnClickFunction() async {
+    // widget.paymentType == PaymentType.Donation || widget.paymentType == PaymentType.Lend
     _amount = _textEditingController.text;
     if (_amount.isNotEmpty && int.parse(_amount) > 0) {
-      if (widget.paymentType == PaymentType.Donation || widget.paymentType == PaymentType.Lend &&
+      if (
           !widget.isForNgoTrust &&
-          widget.amount < int.parse(_amount)) {
+           widget.amount < int.parse(_amount)
+      ) {
         _textEditingController.text = "${widget.amount}";
         Fluttertoast.showToast(
             msg: 'Please note just Rs.${widget.amount} more needed, Thank you');

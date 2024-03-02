@@ -33,9 +33,9 @@ class _FormAccountDetailsState extends State<FormAccountDetails> {
   int value;
   PricingInfo selectedPricingInfo;
 
-  TextEditingController _codeController = new TextEditingController();
-  TextEditingController _accNameController = new TextEditingController();
-  TextEditingController _accNumberController = new TextEditingController();
+  TextEditingController _codeController =  TextEditingController();
+  TextEditingController _accNameController =  TextEditingController();
+  TextEditingController _accNumberController =  TextEditingController();
   TextEditingController _bankController = TextEditingController();
 
   BankInfo _bankInfoReceived;
