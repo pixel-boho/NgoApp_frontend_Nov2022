@@ -12,6 +12,7 @@ class PaymentRepository{
   Future<GatewayKeyResponse> getGatewayKey() async {
     final response = await apiProvider.getInstance().get('master/get-api-key');
     return GatewayKeyResponse.fromJson(response.data);
+
   }
 
 }
